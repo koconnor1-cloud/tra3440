@@ -3,286 +3,822 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TRA 3440 — Air Transportation Simulation</title>
+<title>TRA 3440 · Airline Simulation</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#F2F2F2;color:#111}
-.site-nav{background:#002244;display:flex;align-items:center;padding:0 24px;height:54px;gap:4px}
-.site-logo{font-size:14px;font-weight:500;color:white;margin-right:24px;white-space:nowrap}
-.nav-btn{font-size:13px;font-weight:500;color:white;padding:0 14px;height:54px;display:flex;align-items:center;cursor:pointer;border-bottom:3px solid transparent;background:none;border:none;border-bottom:3px solid transparent;letter-spacing:0.01em;opacity:0.75;transition:opacity 0.15s;font-family:Arial,sans-serif}
-.nav-btn:hover{opacity:1}
-.nav-btn.on{opacity:1;border-bottom:3px solid #FFC000}
-.hero{background:#003366;color:white;padding:36px 24px 32px;text-align:center}
-.hero h1{font-size:24px;font-weight:500;margin-bottom:10px}
-.hero p{font-size:14px;color:rgba(255,255,255,0.75);max-width:540px;margin:0 auto 18px;line-height:1.6}
-.hero-pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.pill{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.22);color:white;font-size:11px;padding:4px 14px;border-radius:20px}
-.page{max-width:860px;margin:0 auto;padding:28px 20px 56px;display:none}
-.page.on{display:block}
-.sec-label{font-size:11px;font-weight:600;color:#666;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;margin-top:28px}
-.sec-label:first-child{margin-top:0}
-.card{background:white;border:1px solid #DDD;border-radius:8px;padding:20px 24px;margin-bottom:16px}
-.round-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:28px}
-.rcard{background:white;border:1px solid #DDD;border-radius:6px;padding:12px 14px}
-.rcard.active{border:2px solid #003366}
-.rnum{font-size:10px;color:#888;margin-bottom:3px}
-.rtitle{font-size:12px;font-weight:600;color:#111;margin-bottom:4px;line-height:1.3}
-.rweek{font-size:10px;color:#888}
-.rbadge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;display:inline-block;margin-bottom:6px}
-.b-closed{background:#EEEEEE;color:#666}
-.b-warn{background:#FFF3CD;color:#856404}
-.b-open{background:#D4EDDA;color:#155724}
-.b-reg{background:#D1ECF1;color:#0C5460}
-.scenario-box{background:#F0F4FF;border-left:4px solid #003366;border-radius:0 6px 6px 0;padding:16px 20px;margin-bottom:22px}
-.scenario-box h3{font-size:14px;font-weight:600;color:#003366;margin-bottom:8px}
-.scenario-box p{font-size:13px;color:#333;line-height:1.65}
-.reg-box{background:#EBF5FB;border:1px solid #AED6F1;border-radius:8px;padding:24px;margin-bottom:22px;text-align:center}
-.reg-box h3{font-size:16px;font-weight:600;color:#154360;margin-bottom:10px}
-.reg-box p{font-size:13px;color:#1A5276;line-height:1.6;margin-bottom:16px}
-.reg-btn{display:inline-flex;align-items:center;gap:8px;background:#003366;color:white;border:none;border-radius:6px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;font-family:Arial,sans-serif}
-.reg-btn:hover{background:#004488}
-.pending-box{background:#FAFAFA;border:1px solid #DDD;border-radius:8px;padding:40px 24px;text-align:center;margin-bottom:16px}
-.pending-box h3{font-size:16px;font-weight:600;color:#333;margin-bottom:10px}
-.pending-box p{font-size:13px;color:#666;line-height:1.6}
-.pending-icon{font-size:36px;margin-bottom:14px}
-.timeline{margin-top:4px}
-.tl-item{display:flex;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px solid #EEE}
-.tl-item:last-child{border-bottom:none}
-.tl-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0}
-.tl-dot.active{background:#003366}
-.tl-dot.pending{background:#CCC}
-.tl-dot.done{background:#28A745}
-.tl-text{font-size:13px;color:#555;line-height:1.5}
-.tl-text strong{color:#222;font-weight:600}
-.lb-wrap{overflow-x:auto}
-.lb-table{width:100%;border-collapse:collapse;font-size:13px;min-width:620px}
-.lb-table th{text-align:left;padding:9px 12px;background:#003366;color:white;font-weight:600;font-size:11px;border-bottom:2px solid #002244}
-.lb-table td{padding:10px 12px;border-bottom:1px solid #EEE;color:#222}
-.lb-table tr:last-child td{border-bottom:none}
-.lb-table tr.gold td{background:#FFFBEA}
-.lb-table tr.silver td{background:#FAFAF7}
-.lb-table tr:hover td{background:#F5F5F5}
-.band{font-size:11px;padding:3px 8px;border-radius:10px;font-weight:600;white-space:nowrap}
-.bd-elite{background:#FFF3CD;color:#856404}
-.bd-strong{background:#D4EDDA;color:#155724}
-.bd-dev{background:#EEEEEE;color:#555}
-.bd-struggle{background:#F8D7DA;color:#721C24}
-.submit-btn{display:inline-flex;align-items:center;gap:8px;background:#003366;color:white;border:none;border-radius:6px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;margin-top:14px;text-decoration:none;font-family:Arial,sans-serif}
-.submit-btn:hover{background:#004488}
-.info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0 18px}
-.info-card{background:#F5F5F5;border-radius:6px;padding:14px 16px}
-.info-label{font-size:11px;color:#888;margin-bottom:4px}
-.info-val{font-size:14px;font-weight:600;color:#111}
-.route-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:14px}
-.route-table th{background:#F5F5F5;padding:8px 12px;text-align:left;font-size:11px;font-weight:600;color:#666;border-bottom:1px solid #DDD}
-.route-table td{padding:9px 12px;border-bottom:1px solid #EEE;color:#222}
-.route-table tr:last-child td{border-bottom:none}
-.dec-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
-.dec-table th{background:#F5F5F5;padding:7px 12px;text-align:left;font-size:11px;font-weight:600;color:#666;border-bottom:1px solid #DDD}
-.dec-table td{padding:8px 12px;border-bottom:1px solid #EEE;color:#222}
-.dec-table tr:last-child td{border-bottom:none}
-.warn-box{background:#FFF3CD;border-left:4px solid #FFC107;border-radius:0 6px 6px 0;padding:14px 18px;margin-top:16px}
-.warn-box p{font-size:13px;color:#533F03;line-height:1.6}
-.strat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-.strat-card{background:#F5F5F5;border-radius:6px;padding:14px 16px}
-.strat-name{font-size:13px;font-weight:600;color:#111;margin-bottom:6px}
-.strat-desc{font-size:12px;color:#555;line-height:1.5}
-.footer{background:#002244;color:rgba(255,255,255,0.55);text-align:center;font-size:12px;padding:18px;margin-top:40px}
-@media(max-width:600px){
-  .round-grid{grid-template-columns:1fr 1fr}
-  .info-grid{grid-template-columns:1fr}
-  .strat-grid{grid-template-columns:1fr}
-  .site-logo{font-size:12px;margin-right:12px}
-  .nav-btn{padding:0 8px;font-size:12px}
+:root {
+  --navy: #0b1d3a;
+  --navy2: #142850;
+  --sky: #1a6fbb;
+  --gold: #e8a020;
+  --gold2: #f5c842;
+  --white: #f4f6fa;
+  --text: #cdd9ec;
+  --muted: #7a93b8;
+  --card: #112240;
+  --card2: #0d1e38;
+  --border: #1e3a5f;
+  --green: #2ecc71;
+  --red: #e74c3c;
+  --practice-accent: #9b59b6;
+  --practice-light: #c39bd3;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--navy);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+.nav {
+  background: var(--navy2);
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 24px;
+  position: sticky; top: 0; z-index: 100;
+  flex-wrap: wrap;
+}
+.nav-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--gold);
+  letter-spacing: 2px;
+  padding: 14px 20px 14px 0;
+  border-right: 1px solid var(--border);
+  margin-right: 8px;
+  white-space: nowrap;
+}
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 16px 16px;
+  cursor: pointer;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  border-bottom: 3px solid transparent;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.nav-btn:hover { color: var(--white); }
+.nav-btn.on { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ── PAGES ── */
+.page { display: none; padding: 32px 24px; max-width: 1100px; margin: 0 auto; }
+.page.on { display: block; }
+
+/* ── PRACTICE BANNER ── */
+.practice-banner {
+  background: linear-gradient(135deg, #1a0a2e 0%, #2d1154 50%, #1a0a2e 100%);
+  border: 2px solid var(--practice-accent);
+  border-radius: 12px;
+  padding: 20px 28px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.practice-banner-icon { font-size: 32px; }
+.practice-banner-text h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--practice-light);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+.practice-banner-text p {
+  font-size: 13px;
+  color: #b8a0cc;
+  line-height: 1.5;
+}
+.no-count-badge {
+  margin-left: auto;
+  background: rgba(155,89,182,.25);
+  border: 1px solid var(--practice-accent);
+  color: var(--practice-light);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── LEADERBOARD TABLE ── */
+.lb-wrap { overflow-x: auto; }
+table.lb {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+table.lb thead tr {
+  background: var(--navy2);
+  border-bottom: 2px solid var(--border);
+}
+table.lb thead th {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.lb-row {
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .15s;
+}
+.lb-row:hover { background: rgba(26,111,187,.12); }
+.lb-row td { padding: 13px 14px; }
+.rank-cell { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--gold2); min-width: 48px; }
+.airline-cell { font-weight: 600; color: var(--white); }
+.airline-link {
+  color: var(--sky);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(26,111,187,.4);
+  cursor: pointer;
+  transition: color .2s;
+}
+.airline-link:hover { color: var(--gold2); border-bottom-color: var(--gold2); }
+.pos { color: var(--green); font-family: 'DM Mono', monospace; font-weight: 500; }
+.neg { color: var(--red); font-family: 'DM Mono', monospace; font-weight: 500; }
+
+/* ── STRATEGY BADGES ── */
+.badge-cost,.badge-bal,.badge-prem,.badge-cargo {
+  font-size: 10px; font-weight: 700; padding: 3px 9px;
+  border-radius: 12px; letter-spacing: .6px; text-transform: uppercase;
+}
+.badge-cost  { background: rgba(46,204,113,.15); color: #2ecc71; border: 1px solid rgba(46,204,113,.3); }
+.badge-bal   { background: rgba(26,111,187,.15); color: #5dade2; border: 1px solid rgba(26,111,187,.3); }
+.badge-prem  { background: rgba(232,160,32,.15); color: var(--gold2); border: 1px solid rgba(232,160,32,.3); }
+.badge-cargo { background: rgba(155,89,182,.15); color: #bb8fce; border: 1px solid rgba(155,89,182,.3); }
+
+/* ── AIRLINE DETAIL PANEL ── */
+.detail-panel {
+  display: none;
+  background: var(--card);
+  border: 1px solid var(--practice-accent);
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 28px;
+  animation: slideIn .25s ease;
+}
+.detail-panel.on { display: block; }
+@keyframes slideIn { from { opacity:0; transform:translateY(-8px) } to { opacity:1; transform:translateY(0) } }
+.detail-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+}
+.detail-airline-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 30px; color: var(--white); letter-spacing: 2px;
+}
+.detail-rank {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px; color: var(--gold2); line-height: 1;
+}
+.detail-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px; margin-bottom: 20px;
+}
+.stat-box {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.stat-label { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.stat-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; color: var(--white); }
+.stat-val.green { color: var(--green); }
+.stat-val.red { color: var(--red); }
+.detail-narrative p {
+  font-size: 14px; color: var(--text); line-height: 1.75; margin-bottom: 14px;
+}
+.detail-narrative p:last-child { margin-bottom: 0; }
+.close-btn {
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 18px;
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+  flex-shrink: 0;
+}
+.close-btn:hover { background: rgba(255,255,255,.12); color: var(--white); }
+.flight-pills {
+  display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0;
+}
+.fpill {
+  background: rgba(26,111,187,.15);
+  border: 1px solid rgba(26,111,187,.3);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px; font-weight: 600; color: #5dade2;
+  font-family: 'DM Mono', monospace;
+}
+
+/* ── MY AIRLINE page ── */
+.page-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px; letter-spacing: 3px; color: var(--gold);
+  margin-bottom: 6px;
+}
+.page-sub {
+  font-size: 13px; color: var(--muted); margin-bottom: 28px;
+}
+.airline-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+.acard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.acard:hover {
+  border-color: var(--sky);
+  background: rgba(26,111,187,.1);
+  transform: translateY(-2px);
+}
+.acard-rank { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--gold2); }
+.acard-name { font-weight: 600; color: var(--white); font-size: 14px; line-height: 1.3; }
+.acard-strat { font-size: 11px; color: var(--muted); }
+
+/* ── ABOUT / ROUNDS pages ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+}
+.card h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px; letter-spacing: 1.5px; color: var(--gold);
+  margin-bottom: 14px;
+}
+.card p { font-size: 14px; line-height: 1.75; color: var(--text); margin-bottom: 12px; }
+.card p:last-child { margin-bottom: 0; }
+
+.round-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px; margin-bottom: 24px;
+}
+.round-card {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+}
+.round-card.practice-card { border-color: var(--practice-accent); }
+.round-card.open { border-color: var(--green); background: rgba(46,204,113,.06); }
+.round-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
+.round-name { font-family: 'Bebas Neue', sans-serif; font-size: 17px; color: var(--white); letter-spacing: 1px; margin-bottom: 4px; }
+.round-due { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+.round-status {
+  display: inline-block;
+  font-size: 10px; font-weight: 700; letter-spacing: .8px;
+  padding: 3px 10px; border-radius: 12px;
+  text-transform: uppercase;
+}
+.status-results { background: rgba(155,89,182,.2); color: var(--practice-light); border: 1px solid var(--practice-accent); }
+.status-open { background: rgba(46,204,113,.2); color: var(--green); border: 1px solid var(--green); }
+.status-upcoming { background: rgba(122,147,184,.1); color: var(--muted); border: 1px solid var(--border); }
+
+table.info-table {
+  width: 100%; border-collapse: collapse; font-size: 14px;
+}
+table.info-table th, table.info-table td {
+  padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border);
+}
+table.info-table thead th {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted);
+  background: var(--navy2);
+}
+table.info-table tr:last-child td { border-bottom: none; }
+table.info-table tr:hover td { background: rgba(26,111,187,.08); }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 12px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+
+@media (max-width: 600px) {
+  .nav { padding: 0 12px; }
+  .nav-btn { padding: 14px 10px; font-size: 11px; }
+  .page { padding: 20px 14px; }
+  table.lb { font-size: 12px; }
+  table.lb thead th, .lb-row td { padding: 10px 8px; }
 }
 </style>
 </head>
 <body>
 
-<nav class="site-nav">
-  <span class="site-logo">✈ TRA 3440 Simulation</span>
-  <button class="nav-btn on" onclick="showPage('home',this)">Home</button>
-  <button class="nav-btn" onclick="showPage('leaderboard',this)">Leaderboard</button>
-  <button class="nav-btn" onclick="showPage('submit',this)">Submit</button>
-  <button class="nav-btn" onclick="showPage('howto',this)">How It Works</button>
+<nav class="nav">
+  <div class="nav-brand">✈ TRA 3440</div>
+  <button class="nav-btn on" id="btnPractice" onclick="showPage('practice','btnPractice')">Practice Round</button>
+  <button class="nav-btn" id="btnAirlines" onclick="showPage('airlines','btnAirlines')">My Airline</button>
+  <button class="nav-btn" id="btnRounds" onclick="showPage('rounds','btnRounds')">Rounds</button>
+  <button class="nav-btn" id="btnAbout" onclick="showPage('about','btnAbout')">About</button>
 </nav>
 
-<div class="hero">
-  <h1>Air Transportation Simulation</h1>
-  <p>You are the founding management team of a regional airline based in Pensacola, FL. Make strategic decisions across five rounds and compete for the highest cumulative profit.</p>
-  <div class="hero-pills">
-    <span class="pill">PNS–ATL</span>
-    <span class="pill">PNS–MCO</span>
-    <span class="pill">PNS–DFW</span>
-    <span class="pill">5 Rounds</span>
-    <span class="pill">TRA 3440 · Summer 2026</span>
+<!-- ══════════════════════════════════════════════
+     PRACTICE ROUND PAGE
+════════════════════════════════════════════════ -->
+<div class="page on" id="practice">
+
+  <div class="practice-banner">
+    <div class="practice-banner-icon">🧪</div>
+    <div class="practice-banner-text">
+      <h2>Practice Round Results</h2>
+      <p>These results are for learning only. They do not affect your grade, cumulative profit, or leaderboard standing.
+         Use this to understand how your decisions played out before Round 1 begins.</p>
+    </div>
+    <div class="no-count-badge">Does Not Count</div>
+  </div>
+
+  <!-- Airline detail panel (hidden until clicked) -->
+  <div class="detail-panel" id="detailPanel">
+    <div class="detail-header">
+      <div>
+        <div class="detail-airline-name" id="detailName"></div>
+        <div id="detailBadge" style="margin-top:6px"></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div class="detail-rank" id="detailRank"></div>
+        <button class="close-btn" onclick="closeDetail()">✕</button>
+      </div>
+    </div>
+    <div class="detail-stats" id="detailStats"></div>
+    <div class="flight-pills" id="detailFlights"></div>
+    <div class="detail-narrative" id="detailNarrative"></div>
+  </div>
+
+  <div class="lb-wrap">
+    <table class="lb">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Airline</th>
+          <th>Strategy</th>
+          <th>Profit</th>
+          <th>Load Factor</th>
+          <th>Cargo %</th>
+        </tr>
+      </thead>
+      <tbody id="lbBody">
+        
+      <tr class="lb-row" onclick="showAirline('Fareline Air')">
+        <td class="rank-cell">🥇</td>
+        <td class="airline-cell"><span class="airline-link">Fareline Air</span></td>
+        <td><span class="badge-bal">Balanced</span></td>
+        <td class="pos">$481,564</td>
+        <td>81.1%</td>
+        <td>1.7%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Jet Lag Logistics')">
+        <td class="rank-cell">🥈</td>
+        <td class="airline-cell"><span class="airline-link">Jet Lag Logistics</span></td>
+        <td><span class="badge-cargo">Cargo</span></td>
+        <td class="pos">$388,108</td>
+        <td>92.9%</td>
+        <td>0.9%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('GULF COAST AIRWAYS')">
+        <td class="rank-cell">🥉</td>
+        <td class="airline-cell"><span class="airline-link">GULF COAST AIRWAYS</span></td>
+        <td><span class="badge-bal">Balanced</span></td>
+        <td class="pos">$296,075</td>
+        <td>100.0%</td>
+        <td>2.5%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Emerald  Argo Airlines')">
+        <td class="rank-cell">#4</td>
+        <td class="airline-cell"><span class="airline-link">Emerald  Argo Airlines</span></td>
+        <td><span class="badge-bal">Balanced</span></td>
+        <td class="pos">$293,940</td>
+        <td>100.0%</td>
+        <td>1.9%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('ADAPT Airlines')">
+        <td class="rank-cell">#5</td>
+        <td class="airline-cell"><span class="airline-link">ADAPT Airlines</span></td>
+        <td><span class="badge-bal">Balanced</span></td>
+        <td class="pos">$285,894</td>
+        <td>93.1%</td>
+        <td>2.7%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Jetset airlines')">
+        <td class="rank-cell">#6</td>
+        <td class="airline-cell"><span class="airline-link">Jetset airlines</span></td>
+        <td><span class="badge-bal">Balanced</span></td>
+        <td class="pos">$272,876</td>
+        <td>100.0%</td>
+        <td>2.6%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Gulf Coast Airways')">
+        <td class="rank-cell">#7</td>
+        <td class="airline-cell"><span class="airline-link">Gulf Coast Airways</span></td>
+        <td><span class="badge-bal">Balanced</span></td>
+        <td class="pos">$253,858</td>
+        <td>94.5%</td>
+        <td>2.6%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('East Cost Air')">
+        <td class="rank-cell">#8</td>
+        <td class="airline-cell"><span class="airline-link">East Cost Air</span></td>
+        <td><span class="badge-bal">Balanced</span></td>
+        <td class="pos">$244,420</td>
+        <td>63.3%</td>
+        <td>2.4%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Pensacola Airlines')">
+        <td class="rank-cell">#9</td>
+        <td class="airline-cell"><span class="airline-link">Pensacola Airlines</span></td>
+        <td><span class="badge-prem">Premium</span></td>
+        <td class="pos">$212,260</td>
+        <td>100.0%</td>
+        <td>3.4%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Sunbelt Airways')">
+        <td class="rank-cell">#10</td>
+        <td class="airline-cell"><span class="airline-link">Sunbelt Airways</span></td>
+        <td><span class="badge-cost">Cost Leader</span></td>
+        <td class="pos">$193,691</td>
+        <td>100.0%</td>
+        <td>3.7%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Skyhigh airways')">
+        <td class="rank-cell">#11</td>
+        <td class="airline-cell"><span class="airline-link">Skyhigh airways</span></td>
+        <td><span class="badge-bal">Balanced</span></td>
+        <td class="pos">$183,079</td>
+        <td>100.0%</td>
+        <td>4.7%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Pelican Air')">
+        <td class="rank-cell">#12</td>
+        <td class="airline-cell"><span class="airline-link">Pelican Air</span></td>
+        <td><span class="badge-cargo">Cargo</span></td>
+        <td class="pos">$182,870</td>
+        <td>85.1%</td>
+        <td>4.1%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Lo-Povvo Air')">
+        <td class="rank-cell">#13</td>
+        <td class="airline-cell"><span class="airline-link">Lo-Povvo Air</span></td>
+        <td><span class="badge-cost">Cost Leader</span></td>
+        <td class="pos">$177,712</td>
+        <td>100.0%</td>
+        <td>4.8%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Emerald Coast Airways')">
+        <td class="rank-cell">#14</td>
+        <td class="airline-cell"><span class="airline-link">Emerald Coast Airways</span></td>
+        <td><span class="badge-bal">Balanced</span></td>
+        <td class="pos">$172,072</td>
+        <td>100.0%</td>
+        <td>5.9%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('GUMPS aviation')">
+        <td class="rank-cell">#15</td>
+        <td class="airline-cell"><span class="airline-link">GUMPS aviation</span></td>
+        <td><span class="badge-cargo">Cargo</span></td>
+        <td class="pos">$167,002</td>
+        <td>94.1%</td>
+        <td>4.1%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Capital Airlines')">
+        <td class="rank-cell">#16</td>
+        <td class="airline-cell"><span class="airline-link">Capital Airlines</span></td>
+        <td><span class="badge-bal">Balanced</span></td>
+        <td class="pos">$165,180</td>
+        <td>100.0%</td>
+        <td>4.5%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Squawk Airlines')">
+        <td class="rank-cell">#17</td>
+        <td class="airline-cell"><span class="airline-link">Squawk Airlines</span></td>
+        <td><span class="badge-bal">Balanced</span></td>
+        <td class="pos">$162,770</td>
+        <td>100.0%</td>
+        <td>5.1%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Cargo Before Comfort Air')">
+        <td class="rank-cell">#18</td>
+        <td class="airline-cell"><span class="airline-link">Cargo Before Comfort Air</span></td>
+        <td><span class="badge-cargo">Cargo</span></td>
+        <td class="pos">$117,626</td>
+        <td>98.7%</td>
+        <td>7.2%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Five Flags Logistics & Transit Co.')">
+        <td class="rank-cell">#19</td>
+        <td class="airline-cell"><span class="airline-link">Five Flags Logistics & Transit Co.</span></td>
+        <td><span class="badge-bal">Balanced</span></td>
+        <td class="pos">$117,069</td>
+        <td>100.0%</td>
+        <td>7.5%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Blue Knight Airways')">
+        <td class="rank-cell">#20</td>
+        <td class="airline-cell"><span class="airline-link">Blue Knight Airways</span></td>
+        <td><span class="badge-prem">Premium</span></td>
+        <td class="pos">$84,885</td>
+        <td>100.0%</td>
+        <td>5.6%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Cornerstone Cargo')">
+        <td class="rank-cell">#21</td>
+        <td class="airline-cell"><span class="airline-link">Cornerstone Cargo</span></td>
+        <td><span class="badge-cargo">Cargo</span></td>
+        <td class="pos">$83,683</td>
+        <td>96.7%</td>
+        <td>7.2%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Latitude Airlines')">
+        <td class="rank-cell">#22</td>
+        <td class="airline-cell"><span class="airline-link">Latitude Airlines</span></td>
+        <td><span class="badge-cost">Cost Leader</span></td>
+        <td class="pos">$74,427</td>
+        <td>100.0%</td>
+        <td>4.7%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Apex Airways')">
+        <td class="rank-cell">#23</td>
+        <td class="airline-cell"><span class="airline-link">Apex Airways</span></td>
+        <td><span class="badge-cargo">Cargo</span></td>
+        <td class="pos">$68,297</td>
+        <td>86.6%</td>
+        <td>4.7%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('起飞')">
+        <td class="rank-cell">#24</td>
+        <td class="airline-cell"><span class="airline-link">起飞</span></td>
+        <td><span class="badge-cargo">Cargo</span></td>
+        <td class="neg">-$58,661</td>
+        <td>100.0%</td>
+        <td>11.7%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('GRY Air')">
+        <td class="rank-cell">#25</td>
+        <td class="airline-cell"><span class="airline-link">GRY Air</span></td>
+        <td><span class="badge-cargo">Cargo</span></td>
+        <td class="neg">-$84,079</td>
+        <td>94.8%</td>
+        <td>10.2%</td>
+      </tr>
+      <tr class="lb-row" onclick="showAirline('Big Bird Airlines')">
+        <td class="rank-cell">#26</td>
+        <td class="airline-cell"><span class="airline-link">Big Bird Airlines</span></td>
+        <td><span class="badge-cargo">Cargo</span></td>
+        <td class="neg">-$188,318</td>
+        <td>100.0%</td>
+        <td>29.3%</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="margin-top:16px;font-size:12px;color:var(--muted)">
+    Click any airline row to see a detailed summary of what happened and what to consider for Round 1.
+    Marcus Webb did not submit a practice round — results show 26 of 27 registered airlines.
+  </p>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MY AIRLINE PAGE
+════════════════════════════════════════════════ -->
+<div class="page" id="airlines">
+  <div class="page-title">My Airline</div>
+  <div class="page-sub">Find your airline below. Click it to see your practice round summary and what it means for Round 1.</div>
+  <div class="airline-grid">
+    
+        <div class="acard" onclick="showAirline('Fareline Air'); showPage('practice','btnPractice')">
+          <div class="acard-rank">🥇</div>
+          <div class="acard-name">Fareline Air</div>
+          <div class="acard-strat">Balanced Carrier</div>
+        </div>
+        <div class="acard" onclick="showAirline('Jet Lag Logistics'); showPage('practice','btnPractice')">
+          <div class="acard-rank">🥈</div>
+          <div class="acard-name">Jet Lag Logistics</div>
+          <div class="acard-strat">Cargo-Focused</div>
+        </div>
+        <div class="acard" onclick="showAirline('GULF COAST AIRWAYS'); showPage('practice','btnPractice')">
+          <div class="acard-rank">🥉</div>
+          <div class="acard-name">GULF COAST AIRWAYS</div>
+          <div class="acard-strat">Balanced Carrier</div>
+        </div>
+        <div class="acard" onclick="showAirline('Emerald  Argo Airlines'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#4</div>
+          <div class="acard-name">Emerald  Argo Airlines</div>
+          <div class="acard-strat">Balanced Carrier</div>
+        </div>
+        <div class="acard" onclick="showAirline('ADAPT Airlines'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#5</div>
+          <div class="acard-name">ADAPT Airlines</div>
+          <div class="acard-strat">Balanced Carrier</div>
+        </div>
+        <div class="acard" onclick="showAirline('Jetset airlines'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#6</div>
+          <div class="acard-name">Jetset airlines</div>
+          <div class="acard-strat">Balanced Carrier</div>
+        </div>
+        <div class="acard" onclick="showAirline('Gulf Coast Airways'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#7</div>
+          <div class="acard-name">Gulf Coast Airways</div>
+          <div class="acard-strat">Balanced Carrier</div>
+        </div>
+        <div class="acard" onclick="showAirline('East Cost Air'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#8</div>
+          <div class="acard-name">East Cost Air</div>
+          <div class="acard-strat">Balanced Carrier</div>
+        </div>
+        <div class="acard" onclick="showAirline('Pensacola Airlines'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#9</div>
+          <div class="acard-name">Pensacola Airlines</div>
+          <div class="acard-strat">Premium Service</div>
+        </div>
+        <div class="acard" onclick="showAirline('Sunbelt Airways'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#10</div>
+          <div class="acard-name">Sunbelt Airways</div>
+          <div class="acard-strat">Cost Leader</div>
+        </div>
+        <div class="acard" onclick="showAirline('Skyhigh airways'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#11</div>
+          <div class="acard-name">Skyhigh airways</div>
+          <div class="acard-strat">Balanced Carrier</div>
+        </div>
+        <div class="acard" onclick="showAirline('Pelican Air'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#12</div>
+          <div class="acard-name">Pelican Air</div>
+          <div class="acard-strat">Cargo-Focused</div>
+        </div>
+        <div class="acard" onclick="showAirline('Lo-Povvo Air'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#13</div>
+          <div class="acard-name">Lo-Povvo Air</div>
+          <div class="acard-strat">Cost Leader</div>
+        </div>
+        <div class="acard" onclick="showAirline('Emerald Coast Airways'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#14</div>
+          <div class="acard-name">Emerald Coast Airways</div>
+          <div class="acard-strat">Balanced Carrier</div>
+        </div>
+        <div class="acard" onclick="showAirline('GUMPS aviation'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#15</div>
+          <div class="acard-name">GUMPS aviation</div>
+          <div class="acard-strat">Cargo-Focused</div>
+        </div>
+        <div class="acard" onclick="showAirline('Capital Airlines'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#16</div>
+          <div class="acard-name">Capital Airlines</div>
+          <div class="acard-strat">Balanced Carrier</div>
+        </div>
+        <div class="acard" onclick="showAirline('Squawk Airlines'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#17</div>
+          <div class="acard-name">Squawk Airlines</div>
+          <div class="acard-strat">Balanced Carrier</div>
+        </div>
+        <div class="acard" onclick="showAirline('Cargo Before Comfort Air'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#18</div>
+          <div class="acard-name">Cargo Before Comfort Air</div>
+          <div class="acard-strat">Cargo-Focused</div>
+        </div>
+        <div class="acard" onclick="showAirline('Five Flags Logistics & Transit Co.'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#19</div>
+          <div class="acard-name">Five Flags Logistics & Transit Co.</div>
+          <div class="acard-strat">Balanced Carrier</div>
+        </div>
+        <div class="acard" onclick="showAirline('Blue Knight Airways'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#20</div>
+          <div class="acard-name">Blue Knight Airways</div>
+          <div class="acard-strat">Premium Service</div>
+        </div>
+        <div class="acard" onclick="showAirline('Cornerstone Cargo'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#21</div>
+          <div class="acard-name">Cornerstone Cargo</div>
+          <div class="acard-strat">Cargo-Focused</div>
+        </div>
+        <div class="acard" onclick="showAirline('Latitude Airlines'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#22</div>
+          <div class="acard-name">Latitude Airlines</div>
+          <div class="acard-strat">Cost Leader</div>
+        </div>
+        <div class="acard" onclick="showAirline('Apex Airways'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#23</div>
+          <div class="acard-name">Apex Airways</div>
+          <div class="acard-strat">Cargo-Focused</div>
+        </div>
+        <div class="acard" onclick="showAirline('起飞'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#24</div>
+          <div class="acard-name">起飞</div>
+          <div class="acard-strat">Cargo-Focused</div>
+        </div>
+        <div class="acard" onclick="showAirline('GRY Air'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#25</div>
+          <div class="acard-name">GRY Air</div>
+          <div class="acard-strat">Cargo-Focused</div>
+        </div>
+        <div class="acard" onclick="showAirline('Big Bird Airlines'); showPage('practice','btnPractice')">
+          <div class="acard-rank">#26</div>
+          <div class="acard-name">Big Bird Airlines</div>
+          <div class="acard-strat">Cargo-Focused</div>
+        </div>
   </div>
 </div>
 
-<!-- HOME PAGE -->
-<div id="home" class="page on">
+<!-- ══════════════════════════════════════════════
+     ROUNDS PAGE
+════════════════════════════════════════════════ -->
+<div class="page" id="rounds">
+  <div class="page-title">Simulation Rounds</div>
+  <div class="page-sub" style="margin-bottom:24px">Five competitive rounds plus a practice round. Each round has a unique market scenario.</div>
 
-  <div class="reg-box">
-    <h3>Step 1 — Register Your Airline</h3>
-    <p>Choose your public airline name, strategy, target market, and launch rationale. These are locked for the entire simulation. Due May 31 — submit through Canvas.</p>
-    <a class="reg-btn" href="https://uwf.instructure.com" target="_blank">Go to Canvas to Register →</a>
-  </div>
-
-  <div class="sec-label">Simulation Rounds</div>
   <div class="round-grid">
-    <div class="rcard">
-      <span class="rbadge b-reg">Registration</span>
-      <div class="rnum">Practice · Week 3</div>
-      <div class="rtitle">Practice Round</div>
-      <div class="rweek">Due May 31</div>
+    <div class="round-card practice-card">
+      <div class="round-label">Practice</div>
+      <div class="round-name">Baseline Practice</div>
+      <div class="round-due">Due: May 31</div>
+      <span class="round-status status-results">Results Posted</span>
     </div>
-    <div class="rcard">
-      <span class="rbadge b-closed">Upcoming</span>
-      <div class="rnum">Round 1 · Week 4</div>
-      <div class="rtitle">Baseline Launch</div>
-      <div class="rweek">Due June 7</div>
+    <div class="round-card open">
+      <div class="round-label">Round 1</div>
+      <div class="round-name">Baseline Launch</div>
+      <div class="round-due">Due: June 7</div>
+      <span class="round-status status-open">Open Now</span>
     </div>
-    <div class="rcard">
-      <span class="rbadge b-closed">Upcoming</span>
-      <div class="rnum">Round 2 · Week 7</div>
-      <div class="rtitle">ATL Business Rebound</div>
-      <div class="rweek">Due June 28</div>
+    <div class="round-card">
+      <div class="round-label">Round 2</div>
+      <div class="round-name">ATL Business Rebound</div>
+      <div class="round-due">Due: June 28</div>
+      <span class="round-status status-upcoming">Upcoming</span>
     </div>
-    <div class="rcard">
-      <span class="rbadge b-warn">Disruption ⚠</span>
-      <div class="rnum">Round 4 · Week 10</div>
-      <div class="rtitle">Fuel Spike + Weather</div>
-      <div class="rweek">Due July 19</div>
+    <div class="round-card">
+      <div class="round-label">Round 3</div>
+      <div class="round-name">DFW Cargo Surge</div>
+      <div class="round-due">Due: July 12</div>
+      <span class="round-status status-upcoming">Upcoming</span>
     </div>
-    <div class="rcard">
-      <span class="rbadge b-closed">Upcoming</span>
-      <div class="rnum">Round 5 · Week 11</div>
-      <div class="rtitle">Spirit Collapse</div>
-      <div class="rweek">Due July 26</div>
+    <div class="round-card">
+      <div class="round-label">Round 4</div>
+      <div class="round-name">Disruption Round</div>
+      <div class="round-due">Due: July 19</div>
+      <span class="round-status status-upcoming">Upcoming</span>
+    </div>
+    <div class="round-card">
+      <div class="round-label">Round 5</div>
+      <div class="round-name">Spirit Collapse</div>
+      <div class="round-due">Due: July 26</div>
+      <span class="round-status status-upcoming">Upcoming</span>
     </div>
   </div>
 
-  <div class="sec-label">Current Scenario</div>
-  <div class="scenario-box">
-    <h3>Registration Open — Simulation Begins Week 3</h3>
-    <p>Register your airline in Canvas before May 31. Choose your strategy carefully — it is locked for the entire simulation. The practice round also opens this week. Use it to experiment before results start counting.</p>
-  </div>
-
-  <div class="sec-label">Simulation Timeline</div>
   <div class="card">
-    <div class="timeline">
-      <div class="tl-item"><div class="tl-dot active"></div><div class="tl-text"><strong>Week 3 (May 25–31)</strong> — Register your airline and complete the practice round. Both due May 31 via Canvas.</div></div>
-      <div class="tl-item"><div class="tl-dot pending"></div><div class="tl-text"><strong>Week 4 (June 1–7)</strong> — Round 1 opens. Baseline launch — no scenario. Due June 7.</div></div>
-      <div class="tl-item"><div class="tl-dot pending"></div><div class="tl-text"><strong>Week 5 (June 8–14)</strong> — Round 1 results posted here. Review your performance.</div></div>
-      <div class="tl-item"><div class="tl-dot pending"></div><div class="tl-text"><strong>Week 6 (June 15–21)</strong> — Midterm week. No simulation round.</div></div>
-      <div class="tl-item"><div class="tl-dot pending"></div><div class="tl-text"><strong>Week 7 (June 22–28)</strong> — Round 2 opens. ATL business travel rebound scenario. Due June 28.</div></div>
-      <div class="tl-item"><div class="tl-dot pending"></div><div class="tl-text"><strong>Week 9 (July 6–12)</strong> — Round 3 opens. DFW e-commerce cargo surge scenario. Due July 12.</div></div>
-      <div class="tl-item"><div class="tl-dot pending"></div><div class="tl-text"><strong>Week 10 (July 13–19)</strong> — Round 4 opens. Disruption round — fuel spike and weather. Due July 19.</div></div>
-      <div class="tl-item"><div class="tl-dot pending"></div><div class="tl-text"><strong>Week 11 (July 20–26)</strong> — Round 5 opens. Spirit collapse — MCO opportunity. Due July 26.</div></div>
-      <div class="tl-item"><div class="tl-dot pending"></div><div class="tl-text"><strong>Week 12 (July 27–31)</strong> — Final week. Course wrap-up.</div></div>
-    </div>
-  </div>
-
-  <div class="sec-label">Current Standings</div>
-  <div class="pending-box">
-    <div class="pending-icon">🏆</div>
-    <h3>Results Posted After Round 1 Closes on June 7</h3>
-    <p>The leaderboard goes live after the first round deadline. Check back then to see where your airline stands. Rankings are by cumulative profit — your real name is never shown.</p>
-  </div>
-
-</div>
-
-<!-- LEADERBOARD PAGE -->
-<div id="leaderboard" class="page">
-  <div class="sec-label">Leaderboard</div>
-  <div class="pending-box">
-    <div class="pending-icon">📊</div>
-    <h3>Results Will Be Posted After Round 1 Closes on June 7</h3>
-    <p>Once Dr. O'Connor processes Round 1 submissions, the full leaderboard will appear here. Rankings are by cumulative profit. Your real name is never shown — only your public airline name.</p>
-  </div>
-  <p style="font-size:11px;color:#888;margin-top:8px">Bands: Elite = Rank 1–2 · Strong = Rank 3–5 · Developing = Rank 6–11 · Struggling = Rank 12–15</p>
-</div>
-
-<!-- SUBMIT PAGE -->
-<div id="submit" class="page">
-
-  <div class="sec-label">Step 1 — Register Your Airline (Due May 31)</div>
-  <div class="card">
-    <p style="font-size:13px;color:#555;line-height:1.6;margin-bottom:14px">Before you can submit weekly decisions you must register your airline in Canvas. Choose your public name, strategy, target market, and launch rationale. These are locked for the entire simulation.</p>
-    <a class="submit-btn" href="https://uwf.instructure.com" target="_blank">Open Canvas to Register →</a>
-  </div>
-
-  <div class="sec-label">Step 2 — Submit Weekly Decisions (Starting Round 1, Due June 7)</div>
-  <div class="card">
-    <p style="font-size:13px;color:#555;line-height:1.6;margin-bottom:10px">Each round, submit your decisions through the Canvas assignment for that week. Read the scenario first. Total flights must equal exactly 30.</p>
-    <div class="info-grid">
-      <div class="info-card"><div class="info-label">Current Round</div><div class="info-val">Practice Round</div></div>
-      <div class="info-card"><div class="info-label">Next Deadline</div><div class="info-val">May 31, 2026</div></div>
-      <div class="info-card"><div class="info-label">Flights Required</div><div class="info-val">Exactly 30</div></div>
-    </div>
-    <a class="submit-btn" href="https://uwf.instructure.com" target="_blank">Open Canvas to Submit →</a>
-    <p style="font-size:11px;color:#888;margin-top:10px">All submissions go through Canvas. Contact Dr. O'Connor at koconnor1@uwf.edu with any issues.</p>
-  </div>
-
-  <div class="sec-label">Quick Decision Reference</div>
-  <div class="card">
-    <table class="route-table">
-      <thead><tr><th>Route</th><th>Market Fare</th><th>Price Sensitivity</th><th>Cargo Yield</th><th>Cost/Flight</th></tr></thead>
+    <h3>Decision Variables — Every Round</h3>
+    <table class="info-table">
+      <thead><tr><th>Variable</th><th>Options</th><th>Notes</th></tr></thead>
       <tbody>
-        <tr><td><strong>PNS–ATL</strong></td><td>$185</td><td>Moderate (1.3)</td><td>$420/unit</td><td>$11,000</td></tr>
-        <tr><td><strong>PNS–MCO</strong></td><td>$115</td><td>High (1.8)</td><td>$300/unit</td><td>$8,500</td></tr>
-        <tr><td><strong>PNS–DFW</strong></td><td>$210</td><td>Low (1.1)</td><td>$520/unit</td><td>$14,500</td></tr>
-      </tbody>
-    </table>
-    <table class="dec-table" style="margin-top:16px">
-      <thead><tr><th>Mix Option</th><th>Passenger Seats</th><th>Cargo Slots</th><th>Best Used On</th></tr></thead>
-      <tbody>
-        <tr><td>90/10</td><td>108 seats</td><td>2 slots</td><td>MCO — maximize passenger volume</td></tr>
-        <tr><td>75/25</td><td>90 seats</td><td>5 slots</td><td>ATL — good balance</td></tr>
-        <tr><td>60/40</td><td>72 seats</td><td>8 slots</td><td>DFW — meaningful cargo</td></tr>
-        <tr><td>50/50</td><td>60 seats</td><td>10 slots</td><td>DFW — strong cargo market</td></tr>
-        <tr><td>40/60</td><td>48 seats</td><td>12 slots</td><td>DFW — maximum cargo (Round 3)</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- HOW IT WORKS PAGE -->
-<div id="howto" class="page">
-
-  <div class="sec-label">Your Airline</div>
-  <div class="card">
-    <p style="font-size:13px;color:#444;line-height:1.65">You manage a small regional airline based in Pensacola, FL. Your airline operates three routes and has exactly 30 weekly flights to allocate. Your strategy, airline name, and target market are locked at registration. Every other decision is yours to make each round.</p>
-    <div class="strat-grid">
-      <div class="strat-card"><div class="strat-name">Cost Leader</div><div class="strat-desc">Lower costs, higher volume, thinner margins. Most resilient in disruptions. Less cargo pull.</div></div>
-      <div class="strat-card"><div class="strat-name">Balanced Carrier</div><div class="strat-desc">No special advantages or penalties. Steady and forgiving. Rewards consistent smart decisions.</div></div>
-      <div class="strat-card"><div class="strat-name">Premium Service</div><div class="strat-desc">Higher passenger demand and satisfaction, higher costs. Pricing discipline is critical.</div></div>
-      <div class="strat-card"><div class="strat-name">Cargo-Focused</div><div class="strat-desc">35% cargo demand boost. Lower pax demand. Rewards smart DFW routing and OC investment.</div></div>
-    </div>
-  </div>
-
-  <div class="sec-label">The Five Decisions</div>
-  <div class="card">
-    <table class="dec-table">
-      <thead><tr><th>Decision</th><th>Set Per</th><th>What It Does</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Average Fare ($)</strong></td><td>Route</td><td>Higher fares reduce bookings on price-sensitive routes. Lower fares boost volume but may not cover costs.</td></tr>
-        <tr><td><strong>Pax/Cargo Mix</strong></td><td>Route</td><td>Splits 120 seats and 20 cargo slots per flight. Cargo most valuable on DFW ($520/unit).</td></tr>
-        <tr><td><strong>Flight Allocation</strong></td><td>Route</td><td>30 total flights. Min 3, max 18 per route. Must equal exactly 30.</td></tr>
-        <tr><td><strong>Market Development (0–4)</strong></td><td>Airline</td><td>Boosts demand on all routes. Costs $0–$50K/week. Diminishing returns above level 2.</td></tr>
-        <tr><td><strong>Operational Capability (0–4)</strong></td><td>Airline</td><td>Improves on-time %, cargo efficiency, satisfaction. Critical for Round 4 disruption protection.</td></tr>
+        <tr><td><strong>ATL Fare</strong></td><td>Any dollar amount</td><td>Market avg $185. Price sensitivity 1.3×</td></tr>
+        <tr><td><strong>MCO Fare</strong></td><td>Any dollar amount</td><td>Market avg $115. High sensitivity 1.8×</td></tr>
+        <tr><td><strong>DFW Fare</strong></td><td>Any dollar amount</td><td>Market avg $210. Low sensitivity 1.1×</td></tr>
+        <tr><td><strong>Pax/Cargo Mix</strong></td><td>90/10 · 75/25 · 60/40 · 50/50 · 40/60</td><td>Per route. Cargo strongest on DFW</td></tr>
+        <tr><td><strong>Flight Allocation</strong></td><td>3–18 per route, total = 30</td><td>Must equal exactly 30</td></tr>
+        <tr><td><strong>Market Development</strong></td><td>0–4</td><td>Boosts demand. Costs $0–$50K</td></tr>
+        <tr><td><strong>Operational Capability</strong></td><td>0–4</td><td>Improves efficiency. Costs $0–$50K</td></tr>
       </tbody>
     </table>
   </div>
 
-  <div class="sec-label">Round 4 Warning</div>
-  <div class="warn-box">
-    <p><strong>Round 4 is a disruption round.</strong> A fuel spike and severe weather event will hit all airlines simultaneously. Your Operational Capability level determines how much of the $20,000 disruption penalty you absorb. OC=0 means the full penalty. OC=3 reduces it by 55%. Invest in OC during Rounds 1–3 — you cannot protect yourself retroactively.</p>
-  </div>
-
-  <div class="sec-label">Grading</div>
   <div class="card">
-    <table class="dec-table">
+    <h3>Grading</h3>
+    <table class="info-table">
       <thead><tr><th>Assignment</th><th>Due</th><th>Points</th></tr></thead>
       <tbody>
         <tr><td>Airline Registration</td><td>May 31</td><td>20</td></tr>
@@ -292,25 +828,515 @@ body{font-family:Arial,sans-serif;background:#F2F2F2;color:#111}
         <tr><td>Round 3 — DFW Cargo Surge</td><td>July 12</td><td>50</td></tr>
         <tr><td>Round 4 — Disruption Round</td><td>July 19</td><td>50</td></tr>
         <tr><td>Round 5 — Spirit Collapse</td><td>July 26</td><td>50</td></tr>
-        <tr><td><strong>Total Simulation Points</strong></td><td></td><td><strong>290</strong></td></tr>
+        <tr><td><strong>Total</strong></td><td></td><td><strong>290</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ABOUT PAGE
+════════════════════════════════════════════════ -->
+<div class="page" id="about">
+  <div class="page-title">About the Simulation</div>
+
+  <div class="card">
+    <h3>Overview</h3>
+    <p>You are the CEO of a startup regional airline operating out of Pensacola (PNS) with routes to Atlanta (ATL), Orlando (MCO), and Dallas-Fort Worth (DFW). Each round, you set fares, allocate flights, choose your passenger/cargo mix, and invest in market development and operational capability.</p>
+    <p>Your goal: maximize cumulative profit over five rounds. Market conditions change each round — what works in Round 1 may not work in Round 4. Adapt or fall behind.</p>
+  </div>
+
+  <div class="card">
+    <h3>Strategies</h3>
+    <table class="info-table">
+      <thead><tr><th>Strategy</th><th>Pax Mult</th><th>Cargo Mult</th><th>Cost Mult</th><th>Best For</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge-cost">Cost Leader</span></td><td>0.95×</td><td>0.90×</td><td>0.90×</td><td>High volume, thin margins</td></tr>
+        <tr><td><span class="badge-bal">Balanced</span></td><td>1.00×</td><td>1.00×</td><td>1.00×</td><td>Flexibility, middle ground</td></tr>
+        <tr><td><span class="badge-prem">Premium</span></td><td>1.10×</td><td>0.85×</td><td>1.10×</td><td>High-fare, less price-sensitive routes</td></tr>
+        <tr><td><span class="badge-cargo">Cargo</span></td><td>0.85×</td><td>1.30×</td><td>1.05×</td><td>DFW heavy cargo plays</td></tr>
       </tbody>
     </table>
   </div>
 
+  <div class="card">
+    <h3>Market Reference</h3>
+    <table class="info-table">
+      <thead><tr><th>Route</th><th>Market Fare</th><th>Price Sensitivity</th><th>Cargo Yield</th><th>Character</th></tr></thead>
+      <tbody>
+        <tr><td><strong>PNS–ATL</strong></td><td>$185</td><td>1.3×</td><td>$90/unit</td><td>Mixed business/leisure</td></tr>
+        <tr><td><strong>PNS–MCO</strong></td><td>$115</td><td>1.8×</td><td>$80/unit</td><td>Price-sensitive leisure</td></tr>
+        <tr><td><strong>PNS–DFW</strong></td><td>$210</td><td>1.1×</td><td>$120/unit</td><td>Long-haul, cargo-rich</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Contact</h3>
+    <p>TRA 3440 · Introduction to Air Transportation · University of West Florida · Summer 2026</p>
+    <p>Dr. Kenny O'Connor · <a href="mailto:koconnor1@uwf.edu" style="color:var(--sky)">koconnor1@uwf.edu</a></p>
+  </div>
 </div>
 
 <div class="footer">
-  TRA 3440 · Introduction to Air Transportation · University of West Florida · Summer 2026 · Dr. Kenny O'Connor · koconnor1@uwf.edu
+  TRA 3440 · Introduction to Air Transportation · University of West Florida · Summer 2026 · Dr. Kenny O'Connor
 </div>
 
 <script>
+// ── Airline data ──────────────────────────────────────────────
+const AIRLINES = {
+  "Fareline Air": {
+    "rank": 1,
+    "strategy": "Balanced Carrier",
+    "profit": 481563.7972972973,
+    "load_factor": 81.12584892584894,
+    "cargo_pct": 1.7037759978045304,
+    "total_rev": 787075.2972972973,
+    "total_cost": 305511.5,
+    "atl_flt": 13,
+    "mco_flt": 6,
+    "dfw_flt": 11,
+    "p1": "Fareline Air was the standout performer of the practice round, posting $481,564 in profit and finishing 1 of 26. The Balanced Carrier model generated $787,075 in revenue against $305,512 in costs \u2014 a margin that reflects strong pricing discipline and route strategy. The airline achieved solid load factors (81.1% load factor) with passenger-dominant revenue (1.7% of revenue).",
+    "p2": "Flying spreading 13/6/11 flights across ATL/MCO/DFW, the airline's decisions aligned well with market conditions. The key risk going into Round 1: competitors will be watching and adjusting. Consider whether fares can be pushed slightly higher given strong load factors, whether Market Development investment would sustain demand growth, and whether the current flight mix is optimized for the scenario conditions ahead. A great start \u2014 now protect it."
+  },
+  "Jet Lag Logistics": {
+    "rank": 2,
+    "strategy": "Cargo-Focused",
+    "profit": 388108.15,
+    "load_factor": 92.91975308641976,
+    "cargo_pct": 0.9443323378450746,
+    "total_rev": 726862.75,
+    "total_cost": 338754.6,
+    "atl_flt": 12,
+    "mco_flt": 3,
+    "dfw_flt": 15,
+    "p1": "Jet Lag Logistics was the standout performer of the practice round, posting $388,108 in profit and finishing 2 of 26. The Cargo-Focused model generated $726,863 in revenue against $338,755 in costs \u2014 a margin that reflects strong pricing discipline and route strategy. The airline achieved strong passenger demand (92.9% load factor) with passenger-dominant revenue (0.9% of revenue).",
+    "p2": "Flying concentrating 15 of 30 weekly flights on DFW, the airline's decisions aligned well with market conditions. The key risk going into Round 1: competitors will be watching and adjusting. Consider whether fares can be pushed slightly higher given strong load factors, whether Market Development investment would sustain demand growth, and whether the current flight mix is optimized for the scenario conditions ahead. A great start \u2014 now protect it."
+  },
+  "GULF COAST AIRWAYS": {
+    "rank": 3,
+    "strategy": "Balanced Carrier",
+    "profit": 296075.0,
+    "load_factor": 100.0,
+    "cargo_pct": 2.4649383765405863,
+    "total_rev": 588250.0,
+    "total_cost": 292175.0,
+    "atl_flt": 10,
+    "mco_flt": 10,
+    "dfw_flt": 10,
+    "p1": "GULF COAST AIRWAYS had a strong practice round, posting $296,075 in profit and finishing 3 of 26. The Balanced Carrier approach generated $588,250 in total revenue at a cost of $292,175. On the demand side, the airline saw filling virtually every seat (100.0% load factor) and passenger-dominant revenue (2.5% of revenue).",
+    "p2": "Flying spreading 10/10/10 flights across ATL/MCO/DFW, the airline found a workable equilibrium between fares and market demand. The fundamentals are working. The focus for Round 1 should be on sharpening the edges \u2014 fine-tuning fare levels by route, considering whether investment in Market Development or Operational Capability would yield a positive return, and locking in the flight mix that produced these results."
+  },
+  "Emerald\u00a0 Argo Airlines": {
+    "rank": 4,
+    "strategy": "Balanced Carrier",
+    "profit": 293940.0,
+    "load_factor": 100.0,
+    "cargo_pct": 1.904284640440992,
+    "total_rev": 598650.0,
+    "total_cost": 304710.0,
+    "atl_flt": 10,
+    "mco_flt": 12,
+    "dfw_flt": 8,
+    "p1": "Emerald\u00a0 Argo Airlines had a strong practice round, posting $293,940 in profit and finishing 4 of 26. The Balanced Carrier approach generated $598,650 in total revenue at a cost of $304,710. On the demand side, the airline saw filling virtually every seat (100.0% load factor) and passenger-dominant revenue (1.9% of revenue).",
+    "p2": "Flying spreading 10/12/8 flights across ATL/MCO/DFW, the airline found a workable equilibrium between fares and market demand. The fundamentals are working. The focus for Round 1 should be on sharpening the edges \u2014 fine-tuning fare levels by route, considering whether investment in Market Development or Operational Capability would yield a positive return, and locking in the flight mix that produced these results."
+  },
+  "ADAPT Airlines": {
+    "rank": 5,
+    "strategy": "Balanced Carrier",
+    "profit": 285893.82962162164,
+    "load_factor": 93.07472178060414,
+    "cargo_pct": 2.6651446639718754,
+    "total_rev": 634430.1016216216,
+    "total_cost": 348536.272,
+    "atl_flt": 12,
+    "mco_flt": 12,
+    "dfw_flt": 6,
+    "p1": "ADAPT Airlines had a strong practice round, posting $285,894 in profit and finishing 5 of 26. The Balanced Carrier approach generated $634,430 in total revenue at a cost of $348,536. On the demand side, the airline saw strong passenger demand (93.1% load factor) and passenger-dominant revenue (2.7% of revenue).",
+    "p2": "Flying spreading 12/12/6 flights across ATL/MCO/DFW, the airline found a workable equilibrium between fares and market demand. The fundamentals are working. The focus for Round 1 should be on sharpening the edges \u2014 fine-tuning fare levels by route, considering whether investment in Market Development or Operational Capability would yield a positive return, and locking in the flight mix that produced these results."
+  },
+  "Jetset airlines": {
+    "rank": 6,
+    "strategy": "Balanced Carrier",
+    "profit": 272876.0,
+    "load_factor": 100.0,
+    "cargo_pct": 2.5631095306833784,
+    "total_rev": 568060.0,
+    "total_cost": 295184.0,
+    "atl_flt": 8,
+    "mco_flt": 10,
+    "dfw_flt": 12,
+    "p1": "Jetset airlines had a strong practice round, posting $272,876 in profit and finishing 6 of 26. The Balanced Carrier approach generated $568,060 in total revenue at a cost of $295,184. On the demand side, the airline saw filling virtually every seat (100.0% load factor) and passenger-dominant revenue (2.6% of revenue).",
+    "p2": "Flying spreading 8/10/12 flights across ATL/MCO/DFW, the airline found a workable equilibrium between fares and market demand. The fundamentals are working. The focus for Round 1 should be on sharpening the edges \u2014 fine-tuning fare levels by route, considering whether investment in Market Development or Operational Capability would yield a positive return, and locking in the flight mix that produced these results."
+  },
+  "Gulf Coast Airways": {
+    "rank": 7,
+    "strategy": "Balanced Carrier",
+    "profit": 253857.82608695654,
+    "load_factor": 94.53686200378073,
+    "cargo_pct": 2.6307303866394913,
+    "total_rev": 535972.8260869565,
+    "total_cost": 282115.0,
+    "atl_flt": 10,
+    "mco_flt": 15,
+    "dfw_flt": 5,
+    "p1": "Gulf Coast Airways had a strong practice round, posting $253,858 in profit and finishing 7 of 26. The Balanced Carrier approach generated $535,973 in total revenue at a cost of $282,115. On the demand side, the airline saw strong passenger demand (94.5% load factor) and passenger-dominant revenue (2.6% of revenue).",
+    "p2": "Flying concentrating 15 of 30 weekly flights on MCO, the airline found a workable equilibrium between fares and market demand. The fundamentals are working. The focus for Round 1 should be on sharpening the edges \u2014 fine-tuning fare levels by route, considering whether investment in Market Development or Operational Capability would yield a positive return, and locking in the flight mix that produced these results."
+  },
+  "East Cost Air": {
+    "rank": 8,
+    "strategy": "Balanced Carrier",
+    "profit": 244420.0,
+    "load_factor": 63.31782945736434,
+    "cargo_pct": 2.404809619238477,
+    "total_rev": 548900.0,
+    "total_cost": 304480.0,
+    "atl_flt": 9,
+    "mco_flt": 7,
+    "dfw_flt": 14,
+    "p1": "East Cost Air had a strong practice round, posting $244,420 in profit and finishing 8 of 26. The Balanced Carrier approach generated $548,900 in total revenue at a cost of $304,480. On the demand side, the airline saw below-average seat utilization (63.3% load factor) and passenger-dominant revenue (2.4% of revenue).",
+    "p2": "Flying concentrating 14 of 30 weekly flights on DFW, the airline found a workable equilibrium between fares and market demand. The fundamentals are working. The focus for Round 1 should be on sharpening the edges \u2014 fine-tuning fare levels by route, considering whether investment in Market Development or Operational Capability would yield a positive return, and locking in the flight mix that produced these results."
+  },
+  "Pensacola Airlines": {
+    "rank": 9,
+    "strategy": "Premium Service",
+    "profit": 212259.99999999994,
+    "load_factor": 100.0,
+    "cargo_pct": 3.358226262813674,
+    "total_rev": 538975.0,
+    "total_cost": 326715.00000000006,
+    "atl_flt": 10,
+    "mco_flt": 10,
+    "dfw_flt": 10,
+    "p1": "Pensacola Airlines had a strong practice round, posting $212,260 in profit and finishing 9 of 26. The Premium Service approach generated $538,975 in total revenue at a cost of $326,715. On the demand side, the airline saw filling virtually every seat (100.0% load factor) and passenger-dominant revenue (3.4% of revenue).",
+    "p2": "Flying spreading 10/10/10 flights across ATL/MCO/DFW, the airline found a workable equilibrium between fares and market demand. The fundamentals are working. The focus for Round 1 should be on sharpening the edges \u2014 fine-tuning fare levels by route, considering whether investment in Market Development or Operational Capability would yield a positive return, and locking in the flight mix that produced these results."
+  },
+  "Sunbelt Airways": {
+    "rank": 10,
+    "strategy": "Cost Leader",
+    "profit": 193691.0,
+    "load_factor": 100.0,
+    "cargo_pct": 3.735806249105147,
+    "total_rev": 453985.0,
+    "total_cost": 260294.0,
+    "atl_flt": 10,
+    "mco_flt": 13,
+    "dfw_flt": 7,
+    "p1": "Sunbelt Airways had a solid practice round, posting $193,691 in profit and finishing 10 of 26. The Cost Leader approach generated $453,985 in total revenue at a cost of $260,294. On the demand side, the airline saw filling virtually every seat (100.0% load factor) and passenger-dominant revenue (3.7% of revenue).",
+    "p2": "Flying spreading 10/13/7 flights across ATL/MCO/DFW, the airline found a workable equilibrium between fares and market demand. There is room to push higher \u2014 experimenting with slightly higher fares on strong routes or shifting more flights to the most profitable corridor could push profits further."
+  },
+  "Skyhigh airways": {
+    "rank": 11,
+    "strategy": "Balanced Carrier",
+    "profit": 183079.0,
+    "load_factor": 100.0,
+    "cargo_pct": 4.658420870730915,
+    "total_rev": 477415.0,
+    "total_cost": 294336.0,
+    "atl_flt": 12,
+    "mco_flt": 10,
+    "dfw_flt": 8,
+    "p1": "Skyhigh airways had a solid practice round, posting $183,079 in profit and finishing 11 of 26. The Balanced Carrier approach generated $477,415 in total revenue at a cost of $294,336. On the demand side, the airline saw filling virtually every seat (100.0% load factor) and modest cargo revenue (4.7% of revenue).",
+    "p2": "Flying spreading 12/10/8 flights across ATL/MCO/DFW, the airline found a workable equilibrium between fares and market demand. There is room to push higher \u2014 experimenting with slightly higher fares on strong routes or shifting more flights to the most profitable corridor could push profits further."
+  },
+  "Pelican Air": {
+    "rank": 12,
+    "strategy": "Cargo-Focused",
+    "profit": 182870.08695652173,
+    "load_factor": 85.0807453416149,
+    "cargo_pct": 4.0629531056422525,
+    "total_rev": 500621.0869565217,
+    "total_cost": 317751.0,
+    "atl_flt": 9,
+    "mco_flt": 9,
+    "dfw_flt": 12,
+    "p1": "Pelican Air had a solid practice round, posting $182,870 in profit and finishing 12 of 26. The Cargo-Focused approach generated $500,621 in total revenue at a cost of $317,751. On the demand side, the airline saw solid load factors (85.1% load factor) and modest cargo revenue (4.1% of revenue).",
+    "p2": "Flying spreading 9/9/12 flights across ATL/MCO/DFW, the airline found a workable equilibrium between fares and market demand. There is room to push higher \u2014 experimenting with slightly higher fares on strong routes or shifting more flights to the most profitable corridor could push profits further."
+  },
+  "Lo-Povvo Air": {
+    "rank": 13,
+    "strategy": "Cost Leader",
+    "profit": 177712.40000000002,
+    "load_factor": 100.0,
+    "cargo_pct": 4.7913460426470715,
+    "total_rev": 449644.0,
+    "total_cost": 271931.6,
+    "atl_flt": 13,
+    "mco_flt": 7,
+    "dfw_flt": 10,
+    "p1": "Lo-Povvo Air had a solid practice round, posting $177,712 in profit and finishing 13 of 26. The Cost Leader approach generated $449,644 in total revenue at a cost of $271,932. On the demand side, the airline saw filling virtually every seat (100.0% load factor) and modest cargo revenue (4.8% of revenue).",
+    "p2": "Flying spreading 13/7/10 flights across ATL/MCO/DFW, the airline found a workable equilibrium between fares and market demand. There is room to push higher \u2014 experimenting with slightly higher fares on strong routes or shifting more flights to the most profitable corridor could push profits further."
+  },
+  "Emerald Coast Airways": {
+    "rank": 14,
+    "strategy": "Balanced Carrier",
+    "profit": 172072.0,
+    "load_factor": 100.0,
+    "cargo_pct": 5.883819496384941,
+    "total_rev": 481320.0,
+    "total_cost": 309248.0,
+    "atl_flt": 10,
+    "mco_flt": 8,
+    "dfw_flt": 12,
+    "p1": "Emerald Coast Airways had a solid practice round, posting $172,072 in profit and finishing 14 of 26. The Balanced Carrier approach generated $481,320 in total revenue at a cost of $309,248. On the demand side, the airline saw filling virtually every seat (100.0% load factor) and modest cargo revenue (5.9% of revenue).",
+    "p2": "Flying spreading 10/8/12 flights across ATL/MCO/DFW, the airline found a workable equilibrium between fares and market demand. There is room to push higher \u2014 experimenting with slightly higher fares on strong routes or shifting more flights to the most profitable corridor could push profits further."
+  },
+  "GUMPS aviation": {
+    "rank": 15,
+    "strategy": "Cargo-Focused",
+    "profit": 167002.3808860407,
+    "load_factor": 94.13736994551381,
+    "cargo_pct": 4.076357067787496,
+    "total_rev": 484716.1953190304,
+    "total_cost": 317713.8144329897,
+    "atl_flt": 15,
+    "mco_flt": 5,
+    "dfw_flt": 10,
+    "p1": "GUMPS aviation had a solid practice round, posting $167,002 in profit and finishing 15 of 26. The Cargo-Focused approach generated $484,716 in total revenue at a cost of $317,714. On the demand side, the airline saw strong passenger demand (94.1% load factor) and modest cargo revenue (4.1% of revenue).",
+    "p2": "Flying concentrating 15 of 30 weekly flights on ATL, the airline found a workable equilibrium between fares and market demand. There is room to push higher \u2014 experimenting with slightly higher fares on strong routes or shifting more flights to the most profitable corridor could push profits further."
+  },
+  "Capital Airlines": {
+    "rank": 16,
+    "strategy": "Balanced Carrier",
+    "profit": 165180.0,
+    "load_factor": 100.0,
+    "cargo_pct": 4.4895316209799265,
+    "total_rev": 463300.0,
+    "total_cost": 298120.0,
+    "atl_flt": 10,
+    "mco_flt": 10,
+    "dfw_flt": 10,
+    "p1": "Capital Airlines had a solid practice round, posting $165,180 in profit and finishing 16 of 26. The Balanced Carrier approach generated $463,300 in total revenue at a cost of $298,120. On the demand side, the airline saw filling virtually every seat (100.0% load factor) and modest cargo revenue (4.5% of revenue).",
+    "p2": "Flying spreading 10/10/10 flights across ATL/MCO/DFW, the airline found a workable equilibrium between fares and market demand. There is room to push higher \u2014 experimenting with slightly higher fares on strong routes or shifting more flights to the most profitable corridor could push profits further."
+  },
+  "Squawk Airlines": {
+    "rank": 17,
+    "strategy": "Balanced Carrier",
+    "profit": 162770.0,
+    "load_factor": 100.0,
+    "cargo_pct": 5.137376036416843,
+    "total_rev": 461325.0,
+    "total_cost": 298555.0,
+    "atl_flt": 10,
+    "mco_flt": 10,
+    "dfw_flt": 10,
+    "p1": "Squawk Airlines had a solid practice round, posting $162,770 in profit and finishing 17 of 26. The Balanced Carrier approach generated $461,325 in total revenue at a cost of $298,555. On the demand side, the airline saw filling virtually every seat (100.0% load factor) and modest cargo revenue (5.1% of revenue).",
+    "p2": "Flying spreading 10/10/10 flights across ATL/MCO/DFW, the airline found a workable equilibrium between fares and market demand. There is room to push higher \u2014 experimenting with slightly higher fares on strong routes or shifting more flights to the most profitable corridor could push profits further."
+  },
+  "Cargo Before Comfort Air": {
+    "rank": 18,
+    "strategy": "Cargo-Focused",
+    "profit": 117626.34782608697,
+    "load_factor": 98.73941460642229,
+    "cargo_pct": 7.21039431772416,
+    "total_rev": 456008.347826087,
+    "total_cost": 338382.0,
+    "atl_flt": 9,
+    "mco_flt": 3,
+    "dfw_flt": 18,
+    "p1": "Cargo Before Comfort Air had a solid practice round, posting $117,626 in profit and finishing 18 of 26. The Cargo-Focused approach generated $456,008 in total revenue at a cost of $338,382. On the demand side, the airline saw strong passenger demand (98.7% load factor) and modest cargo revenue (7.2% of revenue).",
+    "p2": "Flying concentrating 18 of 30 weekly flights on DFW, the airline found a workable equilibrium between fares and market demand. There is room to push higher \u2014 experimenting with slightly higher fares on strong routes or shifting more flights to the most profitable corridor could push profits further."
+  },
+  "Five Flags Logistics & Transit Co.": {
+    "rank": 19,
+    "strategy": "Balanced Carrier",
+    "profit": 117069.0,
+    "load_factor": 100.0,
+    "cargo_pct": 7.46970581167828,
+    "total_rev": 436965.0,
+    "total_cost": 319896.0,
+    "atl_flt": 6,
+    "mco_flt": 6,
+    "dfw_flt": 18,
+    "p1": "Five Flags Logistics & Transit Co. had a solid practice round, posting $117,069 in profit and finishing 19 of 26. The Balanced Carrier approach generated $436,965 in total revenue at a cost of $319,896. On the demand side, the airline saw filling virtually every seat (100.0% load factor) and modest cargo revenue (7.5% of revenue).",
+    "p2": "Flying concentrating 18 of 30 weekly flights on DFW, the airline found a workable equilibrium between fares and market demand. There is room to push higher \u2014 experimenting with slightly higher fares on strong routes or shifting more flights to the most profitable corridor could push profits further."
+  },
+  "Blue Knight Airways": {
+    "rank": 20,
+    "strategy": "Premium Service",
+    "profit": 84884.99999999994,
+    "load_factor": 100.0,
+    "cargo_pct": 5.561574575659082,
+    "total_rev": 415350.0,
+    "total_cost": 330465.00000000006,
+    "atl_flt": 10,
+    "mco_flt": 10,
+    "dfw_flt": 10,
+    "p1": "Blue Knight Airways turned a slim profit of $84,885 this practice round, ranking 20 of 26. As a Premium Service, the airline brought in $415,350 in revenue against $330,465 in operating costs. Performance was mixed: filling virtually every seat on the passenger side (100.0%), with modest cargo revenue at 5.6% of total revenue.",
+    "p2": "The airline was spreading 10/10/10 flights across ATL/MCO/DFW. There's a real business here, but the margins are thin \u2014 small improvements in fare pricing or flight allocation could meaningfully move the needle. For Round 1, focus on identifying which route is underperforming and whether fares are too far above or below market averages. Even a $10\u201315 fare adjustment on the right route can shift results significantly."
+  },
+  "Cornerstone Cargo": {
+    "rank": 21,
+    "strategy": "Cargo-Focused",
+    "profit": 83682.79999999999,
+    "load_factor": 96.65671641791045,
+    "cargo_pct": 7.185944363103953,
+    "total_rev": 409800.0,
+    "total_cost": 326117.2,
+    "atl_flt": 4,
+    "mco_flt": 12,
+    "dfw_flt": 14,
+    "p1": "Cornerstone Cargo turned a slim profit of $83,683 this practice round, ranking 21 of 26. As a Cargo-Focused, the airline brought in $409,800 in revenue against $326,117 in operating costs. Performance was mixed: strong passenger demand on the passenger side (96.7%), with modest cargo revenue at 7.2% of total revenue.",
+    "p2": "The airline was concentrating 14 of 30 weekly flights on DFW. There's a real business here, but the margins are thin \u2014 small improvements in fare pricing or flight allocation could meaningfully move the needle. For Round 1, focus on identifying which route is underperforming and whether fares are too far above or below market averages. Even a $10\u201315 fare adjustment on the right route can shift results significantly."
+  },
+  "Latitude Airlines": {
+    "rank": 22,
+    "strategy": "Cost Leader",
+    "profit": 74427.20000000001,
+    "load_factor": 100.0,
+    "cargo_pct": 4.735741377476871,
+    "total_rev": 338532.0,
+    "total_cost": 264104.8,
+    "atl_flt": 8,
+    "mco_flt": 14,
+    "dfw_flt": 8,
+    "p1": "Latitude Airlines turned a slim profit of $74,427 this practice round, ranking 22 of 26. As a Cost Leader, the airline brought in $338,532 in revenue against $264,105 in operating costs. Performance was mixed: filling virtually every seat on the passenger side (100.0%), with modest cargo revenue at 4.7% of total revenue.",
+    "p2": "The airline was concentrating 14 of 30 weekly flights on MCO. There's a real business here, but the margins are thin \u2014 small improvements in fare pricing or flight allocation could meaningfully move the needle. For Round 1, focus on identifying which route is underperforming and whether fares are too far above or below market averages. Even a $10\u201315 fare adjustment on the right route can shift results significantly."
+  },
+  "Apex Airways": {
+    "rank": 23,
+    "strategy": "Cargo-Focused",
+    "profit": 68297.20000000001,
+    "load_factor": 86.63973063973064,
+    "cargo_pct": 4.660949742526936,
+    "total_rev": 378292.0,
+    "total_cost": 309994.8,
+    "atl_flt": 12,
+    "mco_flt": 10,
+    "dfw_flt": 8,
+    "p1": "Apex Airways turned a slim profit of $68,297 this practice round, ranking 23 of 26. As a Cargo-Focused, the airline brought in $378,292 in revenue against $309,995 in operating costs. Performance was mixed: solid load factors on the passenger side (86.6%), with modest cargo revenue at 4.7% of total revenue.",
+    "p2": "The airline was spreading 12/10/8 flights across ATL/MCO/DFW. There's a real business here, but the margins are thin \u2014 small improvements in fare pricing or flight allocation could meaningfully move the needle. For Round 1, focus on identifying which route is underperforming and whether fares are too far above or below market averages. Even a $10\u201315 fare adjustment on the right route can shift results significantly."
+  },
+  "\u8d77\u98de": {
+    "rank": 24,
+    "strategy": "Cargo-Focused",
+    "profit": -58661.174080000026,
+    "load_factor": 100.0,
+    "cargo_pct": 11.740753980891842,
+    "total_rev": 369139.7952,
+    "total_cost": 427800.96928,
+    "atl_flt": 6,
+    "mco_flt": 6,
+    "dfw_flt": 18,
+    "p1": "\u8d77\u98de posted a net loss of $58,661 this practice round, finishing 24 of 26. Operating as a Cargo-Focused, the airline generated $369,140 in total revenue but incurred $427,801 in costs \u2014 a gap driven by a combination of fare pricing and cost structure that didn't align with market conditions. The airline saw filling virtually every seat (100.0% load factor) with a meaningful cargo contribution (11.7% of revenue).",
+    "p2": "The core challenge: \u8d77\u98de was concentrating 18 of 30 weekly flights on DFW, but fare and mix decisions created a cost-revenue imbalance. For Round 1, the key lesson is to revisit fare levels relative to market averages (ATL $185, MCO $115, DFW $210), reconsider cargo mix decisions relative to Operational Capability investment, and ensure the flight allocation reflects where the real money is. This was the right round to make these mistakes."
+  },
+  "GRY Air": {
+    "rank": 25,
+    "strategy": "Cargo-Focused",
+    "profit": -84078.88,
+    "load_factor": 94.76786703601108,
+    "cargo_pct": 10.187866347182004,
+    "total_rev": 307495.2,
+    "total_cost": 391574.08,
+    "atl_flt": 10,
+    "mco_flt": 3,
+    "dfw_flt": 17,
+    "p1": "GRY Air posted a net loss of $84,079 this practice round, finishing 25 of 26. Operating as a Cargo-Focused, the airline generated $307,495 in total revenue but incurred $391,574 in costs \u2014 a gap driven by a combination of fare pricing and cost structure that didn't align with market conditions. The airline saw strong passenger demand (94.8% load factor) with a meaningful cargo contribution (10.2% of revenue).",
+    "p2": "The core challenge: GRY Air was concentrating 17 of 30 weekly flights on DFW, but fare and mix decisions created a cost-revenue imbalance. For Round 1, the key lesson is to revisit fare levels relative to market averages (ATL $185, MCO $115, DFW $210), reconsider cargo mix decisions relative to Operational Capability investment, and ensure the flight allocation reflects where the real money is. This was the right round to make these mistakes."
+  },
+  "Big Bird Airlines": {
+    "rank": 26,
+    "strategy": "Cargo-Focused",
+    "profit": -188318.40000000002,
+    "load_factor": 100.0,
+    "cargo_pct": 29.274805975131436,
+    "total_rev": 143796.0,
+    "total_cost": 332114.4,
+    "atl_flt": 6,
+    "mco_flt": 10,
+    "dfw_flt": 14,
+    "p1": "Big Bird Airlines posted a net loss of $188,318 this practice round, finishing 26 of 26. Operating as a Cargo-Focused, the airline generated $143,796 in total revenue but incurred $332,114 in costs \u2014 a gap driven by a combination of fare pricing and cost structure that didn't align with market conditions. The airline saw filling virtually every seat (100.0% load factor) with a heavily cargo-dependent revenue mix (29.3% of revenue).",
+    "p2": "The core challenge: Big Bird Airlines was concentrating 14 of 30 weekly flights on DFW, but fare and mix decisions created a cost-revenue imbalance. For Round 1, the key lesson is to revisit fare levels relative to market averages (ATL $185, MCO $115, DFW $210), reconsider cargo mix decisions relative to Operational Capability investment, and ensure the flight allocation reflects where the real money is. This was the right round to make these mistakes."
+  }
+};
+
 function showPage(id, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
   document.getElementById(id).classList.add('on');
-  btn.classList.add('on');
+  if (btn) document.getElementById(btn).classList.add('on');
+  closeDetail();
+  window.scrollTo(0, 0);
+}
+
+function stratBadge(s) {
+  const map = {
+    'Cost Leader': ['badge-cost','Cost Leader'],
+    'Balanced Carrier': ['badge-bal','Balanced Carrier'],
+    'Premium Service': ['badge-prem','Premium Service'],
+    'Cargo-Focused': ['badge-cargo','Cargo-Focused'],
+  };
+  const [cls, label] = map[s] || ['badge-bal', s];
+  return `<span class="${cls}">${label}</span>`;
+}
+
+function medalStr(rank) {
+  if (rank === 1) return '🥇 1st';
+  if (rank === 2) return '🥈 2nd';
+  if (rank === 3) return '🥉 3rd';
+  return `#${rank}`;
+}
+
+function showAirline(name) {
+  const d = AIRLINES[name];
+  if (!d) return;
+
+  document.getElementById('detailName').textContent = name;
+  document.getElementById('detailRank').textContent = medalStr(d.rank);
+  document.getElementById('detailBadge').innerHTML = stratBadge(d.strategy);
+
+  const profitFmt = d.profit >= 0
+    ? `+${d.profit.toLocaleString('en-US', {maximumFractionDigits:0})}`
+    : `-$${Math.abs(d.profit).toLocaleString('en-US', {maximumFractionDigits:0})}`;
+  const profitClass = d.profit >= 0 ? 'green' : 'red';
+
+  document.getElementById('detailStats').innerHTML = `
+    <div class="stat-box">
+      <div class="stat-label">Net Profit</div>
+      <div class="stat-val ${profitClass}">${profitFmt}</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Total Revenue</div>
+      <div class="stat-val">$${d.total_rev.toLocaleString('en-US',{maximumFractionDigits:0})}</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Total Cost</div>
+      <div class="stat-val">$${d.total_cost.toLocaleString('en-US',{maximumFractionDigits:0})}</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Load Factor</div>
+      <div class="stat-val">${d.load_factor.toFixed(1)}%</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Cargo Rev %</div>
+      <div class="stat-val">${d.cargo_pct.toFixed(1)}%</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Rank</div>
+      <div class="stat-val">${d.rank} / 26</div>
+    </div>
+  `;
+
+  document.getElementById('detailFlights').innerHTML = `
+    <div class="fpill">✈ ATL: ${d.atl_flt} flights</div>
+    <div class="fpill">✈ MCO: ${d.mco_flt} flights</div>
+    <div class="fpill">✈ DFW: ${d.dfw_flt} flights</div>
+  `;
+
+  document.getElementById('detailNarrative').innerHTML = `
+    <p>${d.p1}</p>
+    <p>${d.p2}</p>
+  `;
+
+  const panel = document.getElementById('detailPanel');
+  panel.classList.add('on');
+  panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function closeDetail() {
+  document.getElementById('detailPanel').classList.remove('on');
 }
 </script>
-
 </body>
 </html>
