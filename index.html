@@ -3,1439 +3,846 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TRA 3440 · Airline Simulation</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>TRA 3440 — Airline Simulation</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --navy:#0b1d3a; --navy2:#142850; --sky:#1a6fbb; --gold:#e8a020; --gold2:#f5c842;
-  --white:#f4f6fa; --text:#cdd9ec; --muted:#7a93b8; --card:#112240; --card2:#0d1e38;
-  --border:#1e3a5f; --green:#2ecc71; --red:#e74c3c;
-  --purple:#9b59b6; --purple-light:#c39bd3;
+  --navy: #0a1628;
+  --navy2: #122040;
+  --blue: #1a4a8a;
+  --sky: #2e7dd1;
+  --gold: #f0a500;
+  --gold2: #ffd166;
+  --green: #22c55e;
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --white: #ffffff;
+  --gray: #94a3b8;
+  --light: #e2e8f0;
+  --surface: #0f2035;
+  --surface2: #162840;
+  --text: #f0f4f8;
+  --text2: #94a3b8;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--navy);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;min-height:100vh}
 
-/* NAV */
-.nav{background:var(--navy2);border-bottom:2px solid var(--border);display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:100;flex-wrap:wrap}
-.nav-brand{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold);letter-spacing:2px;padding:14px 20px 14px 0;border-right:1px solid var(--border);margin-right:8px;white-space:nowrap}
-.nav-btn{background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:16px;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap}
-.nav-btn:hover{color:var(--white)}
-.nav-btn.on{color:var(--gold);border-bottom-color:var(--gold)}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* PAGES */
-.page{display:none;padding:32px 24px;max-width:1100px;margin:0 auto}
-.page.on{display:block}
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--navy);
+  color: var(--text);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(42,100,180,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(240,165,0,0.08) 0%, transparent 50%);
+}
 
-/* PRACTICE BANNER */
-.practice-banner{background:linear-gradient(135deg,#1a0a2e,#2d1154,#1a0a2e);border:2px solid var(--purple);border-radius:12px;padding:20px 28px;margin-bottom:28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.practice-banner-icon{font-size:32px}
-.practice-banner-text h2{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--purple-light);letter-spacing:2px;margin-bottom:4px}
-.practice-banner-text p{font-size:13px;color:#b8a0cc;line-height:1.6}
-.no-count-badge{margin-left:auto;background:rgba(155,89,182,.25);border:1px solid var(--purple);color:var(--purple-light);font-size:11px;font-weight:600;padding:6px 14px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(135deg, var(--navy2) 0%, #0d1f3c 100%);
+  border-bottom: 2px solid var(--gold);
+  padding: 0 2rem;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+.header-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; gap: 2rem;
+  height: 64px;
+}
+.logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.5rem; font-weight: 800; letter-spacing: 0.05em;
+  color: var(--white);
+  white-space: nowrap;
+}
+.logo span { color: var(--gold); }
+.nav { display: flex; gap: 0.25rem; margin-left: auto; }
+.nav-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.4rem 1rem; border-radius: 4px;
+  border: none; cursor: pointer;
+  background: transparent; color: var(--gray);
+  transition: all 0.15s;
+}
+.nav-btn:hover { color: var(--white); background: rgba(255,255,255,0.08); }
+.nav-btn.on { color: var(--gold); background: rgba(240,165,0,0.12); }
 
-/* TABLE */
-.lb-wrap{overflow-x:auto}
-table.lb{width:100%;border-collapse:collapse;font-size:14px}
-table.lb thead tr{background:var(--navy2);border-bottom:2px solid var(--border)}
-table.lb thead th{padding:12px 14px;text-align:left;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
-.lb-row{border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
-.lb-row:hover{background:rgba(26,111,187,.12)}
-.lb-row td{padding:13px 14px}
-.rank-cell{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--gold2);min-width:48px}
-.airline-cell{font-weight:600;color:var(--white)}
-.airline-link{color:var(--sky);border-bottom:1px dashed rgba(26,111,187,.4);cursor:pointer;transition:color .2s}
-.airline-link:hover{color:var(--gold2)}
-.pos{color:var(--green);font-family:'DM Mono',monospace;font-weight:500}
-.neg{color:var(--red);font-family:'DM Mono',monospace;font-weight:500}
+/* ── MAIN LAYOUT ── */
+.main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+.page { display: none; }
+.page.on { display: block; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
 
-/* BADGES */
-.badge-cost,.badge-bal,.badge-prem,.badge-cargo{font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;letter-spacing:.6px;text-transform:uppercase}
-.badge-cost{background:rgba(46,204,113,.15);color:#2ecc71;border:1px solid rgba(46,204,113,.3)}
-.badge-bal{background:rgba(26,111,187,.15);color:#5dade2;border:1px solid rgba(26,111,187,.3)}
-.badge-prem{background:rgba(232,160,32,.15);color:var(--gold2);border:1px solid rgba(232,160,32,.3)}
-.badge-cargo{background:rgba(155,89,182,.15);color:#bb8fce;border:1px solid rgba(155,89,182,.3)}
-.invest-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;background:rgba(232,160,32,.12);color:var(--gold);border:1px solid rgba(232,160,32,.25);margin-left:6px;font-family:'DM Mono',monospace}
-.warn-tag{font-size:12px;margin-left:4px;opacity:.8;cursor:help}
+/* ── HERO ── */
+.hero {
+  text-align: center; padding: 3rem 1rem 2rem;
+  position: relative;
+}
+.round-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: rgba(240,165,0,0.15); border: 1px solid var(--gold);
+  color: var(--gold); border-radius: 100px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 0.35rem 1rem;
+  margin-bottom: 1rem;
+}
+.round-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+.hero h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800;
+  line-height: 1.05; letter-spacing: 0.02em;
+  color: var(--white); margin-bottom: 0.5rem;
+}
+.hero h1 span { color: var(--gold); }
+.hero p { color: var(--text2); font-size: 1rem; font-weight: 300; }
 
-/* DETAIL PANEL */
-.detail-panel{display:none;background:var(--card);border:1px solid var(--purple);border-radius:12px;padding:28px;margin-bottom:28px;animation:slideIn .25s ease}
-.detail-panel.on{display:block}
-@keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-.detail-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
-.detail-airline-name{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--white);letter-spacing:2px}
-.detail-rank{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--gold2);line-height:1}
-.detail-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:16px}
-.stat-box{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:14px 16px}
-.stat-label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
-.stat-val{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--white)}
-.stat-val.green{color:var(--green)}
-.stat-val.red{color:var(--red)}
-.stat-val.gold{color:var(--gold2)}
-.detail-narrative p{font-size:14px;color:var(--text);line-height:1.8;margin-bottom:14px}
-.detail-narrative p:last-child{margin-bottom:0}
-.close-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--muted);font-size:18px;width:32px;height:32px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
-.close-btn:hover{background:rgba(255,255,255,.12);color:var(--white)}
-.flight-pills{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 18px}
-.fpill{background:rgba(26,111,187,.15);border:1px solid rgba(26,111,187,.3);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;color:#5dade2;font-family:'DM Mono',monospace}
-.invest-pill{background:rgba(232,160,32,.1);border:1px solid rgba(232,160,32,.25);color:var(--gold);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;font-family:'DM Mono',monospace}
-.compliance-alert{background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.3);border-radius:8px;padding:12px 16px;margin-top:14px;font-size:13px;color:#f1948a}
+/* ── STATS ROW ── */
+.stats-row {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem;
+  margin: 2rem 0;
+}
+.stat-card {
+  background: var(--surface); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 1.25rem; text-align: center;
+}
+.stat-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 2rem; font-weight: 800; color: var(--gold);
+}
+.stat-lbl { font-size: 0.75rem; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 0.25rem; }
 
-/* MY AIRLINE */
-.page-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;color:var(--gold);margin-bottom:6px}
-.page-sub{font-size:13px;color:var(--muted);margin-bottom:28px}
-.airline-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
-.acard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 16px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:6px}
-.acard:hover{border-color:var(--sky);background:rgba(26,111,187,.1);transform:translateY(-2px)}
-.acard-rank{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold2)}
-.acard-name{font-weight:600;color:var(--white);font-size:14px;line-height:1.3}
-.acard-strat{font-size:11px;color:var(--muted)}
+/* ── LEADERBOARD TABLE ── */
+.lb-wrap {
+  background: var(--surface); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; overflow: hidden;
+}
+.lb-wrap table { width: 100%; border-collapse: collapse; }
+.lb-wrap thead tr {
+  background: var(--navy2);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text2);
+}
+.lb-wrap thead th { padding: 0.85rem 1rem; text-align: left; }
+.lb-row {
+  border-top: 1px solid rgba(255,255,255,0.05);
+  cursor: pointer; transition: background 0.12s;
+  font-size: 0.92rem;
+}
+.lb-row:hover { background: rgba(46,125,209,0.1); }
+.lb-row td { padding: 0.8rem 1rem; }
+.rank-cell { font-family:'Barlow Condensed',sans-serif; font-size:1.1rem; font-weight:800; }
+.name-cell .al-link { color: var(--sky); font-weight: 600; }
+.name-cell .al-link:hover { color: var(--gold2); }
+.profit-cell { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:1rem; color: var(--green); }
 
-/* CARDS / ROUNDS / ABOUT */
-.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:24px 28px;margin-bottom:20px}
-.card h3{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;color:var(--gold);margin-bottom:14px}
-.card p{font-size:14px;line-height:1.75;color:var(--text);margin-bottom:12px}
-.card p:last-child{margin-bottom:0}
-.round-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:24px}
-.round-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:18px 16px}
-.round-card.practice-card{border-color:var(--purple)}
-.round-card.open{border-color:var(--green);background:rgba(46,204,113,.06)}
-.round-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
-.round-name{font-family:'Bebas Neue',sans-serif;font-size:17px;color:var(--white);letter-spacing:1px;margin-bottom:4px}
-.round-due{font-size:12px;color:var(--muted);margin-bottom:8px}
-.round-status{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.8px;padding:3px 10px;border-radius:12px;text-transform:uppercase}
-.status-results{background:rgba(155,89,182,.2);color:var(--purple-light);border:1px solid var(--purple)}
-.status-open{background:rgba(46,204,113,.2);color:var(--green);border:1px solid var(--green)}
-.status-upcoming{background:rgba(122,147,184,.1);color:var(--muted);border:1px solid var(--border)}
-table.info-table{width:100%;border-collapse:collapse;font-size:14px}
-table.info-table th,table.info-table td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
-table.info-table thead th{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);background:var(--navy2)}
-table.info-table tr:last-child td{border-bottom:none}
-table.info-table tr:hover td{background:rgba(26,111,187,.08)}
+/* strategy badges */
+.badge-cost,.badge-bal,.badge-prem,.badge-cargo {
+  display:inline-block; padding:0.2rem 0.6rem; border-radius:4px;
+  font-size:0.72rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;
+}
+.badge-cost { background:rgba(34,197,94,0.15); color:#4ade80; border:1px solid rgba(34,197,94,0.3); }
+.badge-bal  { background:rgba(46,125,209,0.15); color:#7dd3fc; border:1px solid rgba(46,125,209,0.3); }
+.badge-prem { background:rgba(240,165,0,0.15);  color:#fbbf24; border:1px solid rgba(240,165,0,0.3); }
+.badge-cargo{ background:rgba(249,115,22,0.15); color:#fb923c; border:1px solid rgba(249,115,22,0.3); }
 
-/* ROUND 4 WARNING */
-.disruption-box{background:rgba(231,76,60,.06);border:1px solid rgba(231,76,60,.3);border-radius:10px;padding:18px 22px;margin-top:16px}
-.disruption-box h4{font-family:'Bebas Neue',sans-serif;font-size:17px;color:#e74c3c;letter-spacing:1px;margin-bottom:8px}
-.disruption-box p{font-size:13px;color:#f1948a;line-height:1.65;margin:0}
+/* band cells */
+.band-elite { color:#fbbf24; font-weight:700; }
+.band-strong { color:#86efac; font-weight:600; }
+.band-dev   { color:#7dd3fc; }
+.band-str   { color:#f87171; }
 
-.footer{text-align:center;padding:24px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);margin-top:40px}
+/* ── DETAIL PANEL ── */
+.detail-panel {
+  display: none;
+  background: var(--surface2); border: 1px solid rgba(46,125,209,0.3);
+  border-radius: 12px; margin-top: 1.5rem;
+  overflow: hidden;
+  animation: slideDown 0.2s ease;
+}
+@keyframes slideDown { from{opacity:0;transform:translateY(-8px);} to{opacity:1;transform:translateY(0);} }
+.detail-panel.on { display: block; }
 
-@media(max-width:600px){
-  .nav{padding:0 12px}
-  .nav-btn{padding:14px 10px;font-size:11px}
-  .page{padding:20px 14px}
-  table.lb{font-size:12px}
-  table.lb thead th,.lb-row td{padding:10px 8px}
+.detail-header {
+  background: linear-gradient(135deg, var(--blue) 0%, #1a3a6a 100%);
+  padding: 1.5rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap;
+}
+.detail-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.8rem; font-weight: 800; color: var(--white);
+}
+.detail-rank {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.1rem; font-weight: 700; color: var(--gold);
+  background: rgba(240,165,0,0.15); border: 1px solid var(--gold);
+  padding: 0.3rem 0.9rem; border-radius: 6px;
+}
+.close-btn {
+  background: rgba(255,255,255,0.1); border: none; color: var(--white);
+  font-size: 1.2rem; width: 32px; height: 32px; border-radius: 6px;
+  cursor: pointer; display:flex; align-items:center; justify-content:center;
+  transition: background 0.12s; flex-shrink:0;
+}
+.close-btn:hover { background: rgba(255,255,255,0.2); }
+
+.detail-body { padding: 1.5rem 2rem; }
+
+.metrics-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
+  gap: 0.75rem; margin-bottom: 1.5rem;
+}
+.metric {
+  background: var(--surface); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 1rem; text-align: center;
+}
+.metric-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.5rem; font-weight: 800; color: var(--gold);
+}
+.metric-lbl { font-size: 0.7rem; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 0.2rem; }
+
+.routes-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.route-card {
+  background: var(--surface); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 1rem;
+}
+.route-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--sky); margin-bottom: 0.6rem;
+}
+.route-stat { font-size: 0.85rem; color: var(--text2); margin: 0.2rem 0; }
+.route-stat strong { color: var(--text); }
+.lf-bar-wrap { margin-top: 0.6rem; background: rgba(255,255,255,0.08); border-radius:100px; height:6px; overflow:hidden; }
+.lf-bar { height:100%; border-radius:100px; background: linear-gradient(90deg, var(--sky), var(--gold)); transition: width 0.5s; }
+
+.feedback-section { margin-top: 0.5rem; }
+.feedback-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 0.5rem; padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(240,165,0,0.2);
+}
+.feedback-p { font-size: 0.92rem; line-height: 1.65; color: var(--text2); margin-bottom: 1rem; }
+.feedback-p:last-child { margin-bottom: 0; }
+
+.feedback-block {
+  background: var(--surface); border-left: 3px solid var(--sky);
+  border-radius: 0 8px 8px 0; padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+.feedback-block.r2 { border-left-color: var(--gold); }
+.feedback-block-lbl {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--sky); margin-bottom: 0.4rem;
+}
+.feedback-block.r2 .feedback-block-lbl { color: var(--gold); }
+
+/* ── INFO PAGES ── */
+.info-section { margin-bottom: 2rem; }
+.section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.4rem; font-weight: 800; color: var(--gold);
+  letter-spacing: 0.05em; text-transform: uppercase;
+  margin-bottom: 1rem; padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(240,165,0,0.2);
+}
+.info-card {
+  background: var(--surface); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 1.25rem; margin-bottom: 0.75rem;
+}
+.info-card p { font-size:0.9rem; line-height:1.65; color:var(--text2); }
+.info-card h3 { font-family:'Barlow Condensed',sans-serif; font-weight:700; color:var(--white); margin-bottom:0.5rem; }
+
+.rounds-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:0.75rem; }
+.round-card {
+  background: var(--surface); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; padding:1.1rem;
+}
+.round-card.active { border-color:var(--gold); background:rgba(240,165,0,0.06); }
+.round-num {
+  font-family:'Barlow Condensed',sans-serif; font-weight:800;
+  font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em;
+  color:var(--text2); margin-bottom:0.3rem;
+}
+.round-card.active .round-num { color:var(--gold); }
+.round-name { font-weight:600; font-size:0.9rem; color:var(--white); margin-bottom:0.4rem; }
+.round-desc { font-size:0.8rem; color:var(--text2); line-height:1.5; }
+.round-status {
+  display:inline-block; margin-top:0.5rem;
+  font-size:0.68rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+  padding:0.2rem 0.6rem; border-radius:4px;
+}
+.status-done { background:rgba(34,197,94,0.15); color:#4ade80; }
+.status-next { background:rgba(240,165,0,0.15); color:var(--gold); }
+.status-future { background:rgba(255,255,255,0.06); color:var(--text2); }
+
+.param-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
+.param-table th {
+  background:var(--navy2); color:var(--text2);
+  font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700;
+  letter-spacing:0.08em; text-transform:uppercase; padding:0.65rem 0.9rem; text-align:left;
+}
+.param-table td { padding:0.6rem 0.9rem; border-top:1px solid rgba(255,255,255,0.05); color:var(--text2); }
+.param-table td:first-child { color:var(--text); font-weight:500; }
+
+/* ── FOOTER ── */
+.footer {
+  text-align:center; padding:2rem; margin-top:3rem;
+  color:var(--text2); font-size:0.78rem;
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+
+@media (max-width:700px) {
+  .stats-row { grid-template-columns:repeat(2,1fr); }
+  .routes-grid { grid-template-columns:1fr; }
+  .detail-header { flex-direction:column; align-items:flex-start; }
+  .lb-wrap thead th:nth-child(5),
+  .lb-wrap thead th:nth-child(6),
+  .lb-row td:nth-child(5),
+  .lb-row td:nth-child(6) { display:none; }
 }
 </style>
 </head>
 <body>
 
-<nav class="nav">
-  <div class="nav-brand">✈ TRA 3440</div>
-  <button class="nav-btn on"  id="btnPractice"  onclick="showPage('practice','btnPractice')">Practice Round</button>
-  <button class="nav-btn"     id="btnAirlines"  onclick="showPage('airlines','btnAirlines')">My Airline</button>
-  <button class="nav-btn"     id="btnRounds"    onclick="showPage('rounds','btnRounds')">Rounds</button>
-  <button class="nav-btn"     id="btnAbout"     onclick="showPage('about','btnAbout')">About</button>
-</nav>
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">TRA <span>3440</span> · Airline Simulation</div>
+    <nav class="nav">
+      <button class="nav-btn on" onclick="showPage('pg-lb',this)">Leaderboard</button>
+      <button class="nav-btn" onclick="showPage('pg-rounds',this)">Rounds</button>
+      <button class="nav-btn" onclick="showPage('pg-params',this)">Parameters</button>
+      <button class="nav-btn" onclick="showPage('pg-about',this)">About</button>
+    </nav>
+  </div>
+</div>
 
-<!-- ══ PRACTICE ROUND ═══════════════════════════════════════════ -->
-<div class="page on" id="practice">
-  <div class="practice-banner">
-    <div class="practice-banner-icon">🧪</div>
-    <div class="practice-banner-text">
-      <h2>Practice Round Results</h2>
-      <p>These results are for learning only — they do not affect your grade, cumulative profit, or leaderboard standing.
-         Click your airline to see a full breakdown and what it means for Round 1.</p>
-    </div>
-    <div class="no-count-badge">Does Not Count</div>
+<div class="main">
+
+<!-- ══ LEADERBOARD PAGE ══ -->
+<div id="pg-lb" class="page on">
+  <div class="hero">
+    <div class="round-badge">Round 1 Results — Baseline Launch</div>
+    <h1>The <span>Board</span> Is Set</h1>
+    <p>25 airlines competed. Click any row to see full results and Round 2 guidance.</p>
   </div>
 
-  <div class="detail-panel" id="detailPanel">
-    <div class="detail-header">
-      <div>
-        <div class="detail-airline-name" id="detailName"></div>
-        <div id="detailBadge" style="margin-top:6px"></div>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:12px">
-        <div class="detail-rank" id="detailRank"></div>
-        <button class="close-btn" onclick="closeDetail()">✕</button>
-      </div>
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-val">25</div>
+      <div class="stat-lbl">Airlines Flying</div>
     </div>
-    <div class="detail-stats" id="detailStats"></div>
-    <div class="flight-pills" id="detailFlights"></div>
-    <div class="detail-narrative" id="detailNarrative"></div>
-    <div id="detailCompliance"></div>
+    <div class="stat-card">
+      <div class="stat-val">$506K</div>
+      <div class="stat-lbl">Top Profit</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">$295K</div>
+      <div class="stat-lbl">Avg Profit</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">$91K</div>
+      <div class="stat-lbl">Lowest Profit</div>
+    </div>
   </div>
 
   <div class="lb-wrap">
-    <table class="lb">
-      <thead><tr>
-        <th>Rank</th><th>Airline</th><th>Strategy</th>
-        <th>Profit</th><th>Load Factor</th><th>Cargo %</th>
-      </tr></thead>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Airline</th>
+          <th>Strategy</th>
+          <th>Round 1 Profit</th>
+          <th>Avg LF</th>
+          <th>On-Time</th>
+          <th>Band</th>
+        </tr>
+      </thead>
       <tbody>
-      <tr class="lb-row" onclick="showAirline('Jet Lag Logistics')">
-        <td class="rank-cell">🥇</td>
-        <td class="airline-cell"><span class="airline-link">Jet Lag Logistics</span></td>
-        <td><span class="badge-cargo">Cargo</span> <span class="invest-tag">MD2 OC2</span></td>
-        <td class="pos">$332,579</td>
-        <td>78.1%</td>
-        <td>1.2%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('GULF COAST AIRWAYS')">
-        <td class="rank-cell">🥈</td>
-        <td class="airline-cell"><span class="airline-link">GULF COAST AIRWAYS</span></td>
-        <td><span class="badge-bal">Balanced</span> <span class="invest-tag">MD2 OC2</span></td>
-        <td class="pos">$331,180</td>
-        <td>100.0%</td>
-        <td>2.9%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Emerald  Argo Airlines')">
-        <td class="rank-cell">🥉</td>
-        <td class="airline-cell"><span class="airline-link">Emerald  Argo Airlines</span></td>
-        <td><span class="badge-bal">Balanced</span> <span class="invest-tag">MD2 OC0</span></td>
-        <td class="pos">$320,515</td>
-        <td>94.7%</td>
-        <td>2.0%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Jetset airlines')">
-        <td class="rank-cell">#4</td>
-        <td class="airline-cell"><span class="airline-link">Jetset airlines</span></td>
-        <td><span class="badge-bal">Balanced</span> <span class="invest-tag">MD2 OC3</span></td>
-        <td class="pos">$282,021</td>
-        <td>93.7%</td>
-        <td>3.5%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('ADAPT Airlines')">
-        <td class="rank-cell">#5</td>
-        <td class="airline-cell"><span class="airline-link">ADAPT Airlines</span></td>
-        <td><span class="badge-bal">Balanced</span> <span class="invest-tag">MD3 OC3</span></td>
-        <td class="pos">$270,771</td>
-        <td>80.2%</td>
-        <td>3.9%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Pensacola Airlines')">
-        <td class="rank-cell">#6</td>
-        <td class="airline-cell"><span class="airline-link">Pensacola Airlines</span></td>
-        <td><span class="badge-prem">Premium</span> </td>
-        <td class="pos">$228,785</td>
-        <td>90.5%</td>
-        <td>3.6%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Skyhigh airways')">
-        <td class="rank-cell">#7</td>
-        <td class="airline-cell"><span class="airline-link">Skyhigh airways</span></td>
-        <td><span class="badge-bal">Balanced</span> <span class="invest-tag">MD2 OC2</span></td>
-        <td class="pos">$222,756</td>
-        <td>100.0%</td>
-        <td>5.5%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Sunbelt Airways')">
-        <td class="rank-cell">#8</td>
-        <td class="airline-cell"><span class="airline-link">Sunbelt Airways</span></td>
-        <td><span class="badge-cost">Cost Leader</span> <span class="invest-tag">MD2 OC4</span></td>
-        <td class="pos">$220,746</td>
-        <td>100.0%</td>
-        <td>5.5%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Emerald Coast Airways')">
-        <td class="rank-cell">#9</td>
-        <td class="airline-cell"><span class="airline-link">Emerald Coast Airways</span></td>
-        <td><span class="badge-bal">Balanced</span> <span class="invest-tag">MD3 OC3</span></td>
-        <td class="pos">$211,298</td>
-        <td>100.0%</td>
-        <td>8.0%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Squawk Airlines')">
-        <td class="rank-cell">#10</td>
-        <td class="airline-cell"><span class="airline-link">Squawk Airlines</span></td>
-        <td><span class="badge-bal">Balanced</span> </td>
-        <td class="pos">$205,145</td>
-        <td>99.0%</td>
-        <td>5.2%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Lo-Povvo Air')">
-        <td class="rank-cell">#11</td>
-        <td class="airline-cell"><span class="airline-link">Lo-Povvo Air</span></td>
-        <td><span class="badge-cost">Cost Leader</span> <span class="invest-tag">MD3 OC3</span></td>
-        <td class="pos">$201,739</td>
-        <td>100.0%</td>
-        <td>6.5%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Gulf Coast Airways')">
-        <td class="rank-cell">#12</td>
-        <td class="airline-cell"><span class="airline-link">Gulf Coast Airways</span></td>
-        <td><span class="badge-bal">Balanced</span> </td>
-        <td class="pos">$196,242</td>
-        <td>72.2%</td>
-        <td>3.2%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Fareline Air')">
-        <td class="rank-cell">#13</td>
-        <td class="airline-cell"><span class="airline-link">Fareline Air</span></td>
-        <td><span class="badge-bal">Balanced</span> <span class="invest-tag">MD1 OC1</span></td>
-        <td class="pos">$195,592</td>
-        <td>49.4%</td>
-        <td>3.3%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Capital Airlines')">
-        <td class="rank-cell">#14</td>
-        <td class="airline-cell"><span class="airline-link">Capital Airlines</span></td>
-        <td><span class="badge-bal">Balanced</span> <span class="invest-tag">MD4 OC3</span></td>
-        <td class="pos">$178,238</td>
-        <td>100.0%</td>
-        <td>5.8%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('East Cost Air')">
-        <td class="rank-cell">#15</td>
-        <td class="airline-cell"><span class="airline-link">East Cost Air</span> <span class="warn-tag">⚠</span></td>
-        <td><span class="badge-bal">Balanced</span> <span class="invest-tag">MD3 OC2</span></td>
-        <td class="pos">$174,838</td>
-        <td>48.9%</td>
-        <td>3.8%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Cargo Before Comfort Air')">
-        <td class="rank-cell">#16</td>
-        <td class="airline-cell"><span class="airline-link">Cargo Before Comfort Air</span></td>
-        <td><span class="badge-cargo">Cargo</span> <span class="invest-tag">MD2 OC1</span></td>
-        <td class="pos">$158,576</td>
-        <td>94.6%</td>
-        <td>8.1%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Five Flags Logistics & Transit Co.')">
-        <td class="rank-cell">#17</td>
-        <td class="airline-cell"><span class="airline-link">Five Flags Logistics & Transit Co.</span></td>
-        <td><span class="badge-bal">Balanced</span> </td>
-        <td class="pos">$155,994</td>
-        <td>95.4%</td>
-        <td>7.7%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('GUMPS aviation')">
-        <td class="rank-cell">#18</td>
-        <td class="airline-cell"><span class="airline-link">GUMPS aviation</span></td>
-        <td><span class="badge-cargo">Cargo</span> <span class="invest-tag">MD3 OC2</span></td>
-        <td class="pos">$155,577</td>
-        <td>87.5%</td>
-        <td>5.3%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Pelican Air')">
-        <td class="rank-cell">#19</td>
-        <td class="airline-cell"><span class="airline-link">Pelican Air</span></td>
-        <td><span class="badge-cargo">Cargo</span> </td>
-        <td class="pos">$121,738</td>
-        <td>63.6%</td>
-        <td>5.2%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Blue Knight Airways')">
-        <td class="rank-cell">#20</td>
-        <td class="airline-cell"><span class="airline-link">Blue Knight Airways</span></td>
-        <td><span class="badge-prem">Premium</span> <span class="invest-tag">MD0 OC1</span></td>
-        <td class="pos">$112,599</td>
-        <td>88.4%</td>
-        <td>6.3%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Latitude Airlines')">
-        <td class="rank-cell">#21</td>
-        <td class="airline-cell"><span class="airline-link">Latitude Airlines</span></td>
-        <td><span class="badge-cost">Cost Leader</span> <span class="invest-tag">MD3 OC4</span></td>
-        <td class="pos">$95,575</td>
-        <td>100.0%</td>
-        <td>7.9%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Apex Airways')">
-        <td class="rank-cell">#22</td>
-        <td class="airline-cell"><span class="airline-link">Apex Airways</span> <span class="warn-tag">⚠</span></td>
-        <td><span class="badge-cargo">Cargo</span> <span class="invest-tag">MD2 OC4</span></td>
-        <td class="pos">$84,306</td>
-        <td>84.0%</td>
-        <td>7.7%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('起飞')">
-        <td class="rank-cell">#23</td>
-        <td class="airline-cell"><span class="airline-link">起飞</span></td>
-        <td><span class="badge-cargo">Cargo</span> <span class="invest-tag">MD4 OC4</span></td>
-        <td class="pos">$59,638</td>
-        <td>100.0%</td>
-        <td>14.5%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Big Bird Airlines')">
-        <td class="rank-cell">#24</td>
-        <td class="airline-cell"><span class="airline-link">Big Bird Airlines</span></td>
-        <td><span class="badge-cargo">Cargo</span> <span class="invest-tag">MD2 OC4</span></td>
-        <td class="pos">$37,993</td>
-        <td>100.0%</td>
-        <td>15.4%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('Cornerstone Cargo')">
-        <td class="rank-cell">#25</td>
-        <td class="airline-cell"><span class="airline-link">Cornerstone Cargo</span></td>
-        <td><span class="badge-cargo">Cargo</span> <span class="invest-tag">MD1 OC2</span></td>
-        <td class="pos">$30,767</td>
-        <td>69.7%</td>
-        <td>12.1%</td>
-      </tr>
-      <tr class="lb-row" onclick="showAirline('GRY Air')">
-        <td class="rank-cell">#26</td>
-        <td class="airline-cell"><span class="airline-link">GRY Air</span></td>
-        <td><span class="badge-cargo">Cargo</span> <span class="invest-tag">MD3 OC3</span></td>
-        <td class="neg">-$20,957</td>
-        <td>88.8%</td>
-        <td>12.9%</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-  <p style="margin-top:16px;font-size:12px;color:var(--muted)">
-    Click any row to see your full airline summary and takeaways for Round 1. &nbsp;·&nbsp;
-    ⚠ = flight total did not equal 30; a compliance penalty was applied. &nbsp;·&nbsp;
-    Marcus Webb did not submit a practice round (26 of 27 airlines shown).
-  </p>
-</div>
-
-<!-- ══ MY AIRLINE ════════════════════════════════════════════════ -->
-<div class="page" id="airlines">
-  <div class="page-title">My Airline</div>
-  <div class="page-sub">Find your airline below and click it to see your practice round summary and what to think about for Round 1.</div>
-  <div class="airline-grid">
-        <div class="acard" onclick="showAirline('Jet Lag Logistics'); showPage('practice','btnPractice')">
-          <div class="acard-rank">🥇</div>
-          <div class="acard-name">Jet Lag Logistics</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('GULF COAST AIRWAYS'); showPage('practice','btnPractice')">
-          <div class="acard-rank">🥈</div>
-          <div class="acard-name">GULF COAST AIRWAYS</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Emerald  Argo Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">🥉</div>
-          <div class="acard-name">Emerald  Argo Airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Jetset airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#4</div>
-          <div class="acard-name">Jetset airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('ADAPT Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#5</div>
-          <div class="acard-name">ADAPT Airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Pensacola Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#6</div>
-          <div class="acard-name">Pensacola Airlines</div>
-          <div class="acard-strat">Premium Service</div>
-        </div>
-        <div class="acard" onclick="showAirline('Skyhigh airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#7</div>
-          <div class="acard-name">Skyhigh airways</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Sunbelt Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#8</div>
-          <div class="acard-name">Sunbelt Airways</div>
-          <div class="acard-strat">Cost Leader</div>
-        </div>
-        <div class="acard" onclick="showAirline('Emerald Coast Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#9</div>
-          <div class="acard-name">Emerald Coast Airways</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Squawk Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#10</div>
-          <div class="acard-name">Squawk Airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Lo-Povvo Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#11</div>
-          <div class="acard-name">Lo-Povvo Air</div>
-          <div class="acard-strat">Cost Leader</div>
-        </div>
-        <div class="acard" onclick="showAirline('Gulf Coast Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#12</div>
-          <div class="acard-name">Gulf Coast Airways</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Fareline Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#13</div>
-          <div class="acard-name">Fareline Air</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Capital Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#14</div>
-          <div class="acard-name">Capital Airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('East Cost Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#15</div>
-          <div class="acard-name">East Cost Air</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Cargo Before Comfort Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#16</div>
-          <div class="acard-name">Cargo Before Comfort Air</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Five Flags Logistics & Transit Co.'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#17</div>
-          <div class="acard-name">Five Flags Logistics & Transit Co.</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('GUMPS aviation'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#18</div>
-          <div class="acard-name">GUMPS aviation</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Pelican Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#19</div>
-          <div class="acard-name">Pelican Air</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Blue Knight Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#20</div>
-          <div class="acard-name">Blue Knight Airways</div>
-          <div class="acard-strat">Premium Service</div>
-        </div>
-        <div class="acard" onclick="showAirline('Latitude Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#21</div>
-          <div class="acard-name">Latitude Airlines</div>
-          <div class="acard-strat">Cost Leader</div>
-        </div>
-        <div class="acard" onclick="showAirline('Apex Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#22</div>
-          <div class="acard-name">Apex Airways</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('起飞'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#23</div>
-          <div class="acard-name">起飞</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Big Bird Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#24</div>
-          <div class="acard-name">Big Bird Airlines</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Cornerstone Cargo'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#25</div>
-          <div class="acard-name">Cornerstone Cargo</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('GRY Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#26</div>
-          <div class="acard-name">GRY Air</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-  </div>
-          <div class="acard-name">GULF COAST AIRWAYS</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Jet Lag Logistics'); showPage('practice','btnPractice')">
-          <div class="acard-rank">🥈</div>
-          <div class="acard-name">Jet Lag Logistics</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Emerald  Argo Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">🥉</div>
-          <div class="acard-name">Emerald  Argo Airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Jetset airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#4</div>
-          <div class="acard-name">Jetset airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('ADAPT Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#5</div>
-          <div class="acard-name">ADAPT Airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Skyhigh airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#6</div>
-          <div class="acard-name">Skyhigh airways</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Pensacola Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#7</div>
-          <div class="acard-name">Pensacola Airlines</div>
-          <div class="acard-strat">Premium Service</div>
-        </div>
-        <div class="acard" onclick="showAirline('Sunbelt Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#8</div>
-          <div class="acard-name">Sunbelt Airways</div>
-          <div class="acard-strat">Cost Leader</div>
-        </div>
-        <div class="acard" onclick="showAirline('Emerald Coast Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#9</div>
-          <div class="acard-name">Emerald Coast Airways</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Lo-Povvo Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#10</div>
-          <div class="acard-name">Lo-Povvo Air</div>
-          <div class="acard-strat">Cost Leader</div>
-        </div>
-        <div class="acard" onclick="showAirline('Squawk Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#11</div>
-          <div class="acard-name">Squawk Airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Gulf Coast Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#12</div>
-          <div class="acard-name">Gulf Coast Airways</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Capital Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#13</div>
-          <div class="acard-name">Capital Airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Fareline Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#14</div>
-          <div class="acard-name">Fareline Air</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('East Cost Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#15</div>
-          <div class="acard-name">East Cost Air</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Cargo Before Comfort Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#16</div>
-          <div class="acard-name">Cargo Before Comfort Air</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Five Flags Logistics & Transit Co.'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#17</div>
-          <div class="acard-name">Five Flags Logistics & Transit Co.</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('GUMPS aviation'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#18</div>
-          <div class="acard-name">GUMPS aviation</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Pelican Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#19</div>
-          <div class="acard-name">Pelican Air</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Blue Knight Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#20</div>
-          <div class="acard-name">Blue Knight Airways</div>
-          <div class="acard-strat">Premium Service</div>
-        </div>
-        <div class="acard" onclick="showAirline('Latitude Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#21</div>
-          <div class="acard-name">Latitude Airlines</div>
-          <div class="acard-strat">Cost Leader</div>
-        </div>
-        <div class="acard" onclick="showAirline('Apex Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#22</div>
-          <div class="acard-name">Apex Airways</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('起飞'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#23</div>
-          <div class="acard-name">起飞</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Big Bird Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#24</div>
-          <div class="acard-name">Big Bird Airlines</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Cornerstone Cargo'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#25</div>
-          <div class="acard-name">Cornerstone Cargo</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('GRY Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#26</div>
-          <div class="acard-name">GRY Air</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-  </div>
-          <div class="acard-name">Emerald  Argo Airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('GULF COAST AIRWAYS'); showPage('practice','btnPractice')">
-          <div class="acard-rank">🥈</div>
-          <div class="acard-name">GULF COAST AIRWAYS</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('ADAPT Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">🥉</div>
-          <div class="acard-name">ADAPT Airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Pensacola Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#4</div>
-          <div class="acard-name">Pensacola Airlines</div>
-          <div class="acard-strat">Premium Service</div>
-        </div>
-        <div class="acard" onclick="showAirline('Jet Lag Logistics'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#5</div>
-          <div class="acard-name">Jet Lag Logistics</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Lo-Povvo Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#6</div>
-          <div class="acard-name">Lo-Povvo Air</div>
-          <div class="acard-strat">Cost Leader</div>
-        </div>
-        <div class="acard" onclick="showAirline('Skyhigh airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#7</div>
-          <div class="acard-name">Skyhigh airways</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Jetset airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#8</div>
-          <div class="acard-name">Jetset airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Squawk Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#9</div>
-          <div class="acard-name">Squawk Airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Emerald Coast Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#10</div>
-          <div class="acard-name">Emerald Coast Airways</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Gulf Coast Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#11</div>
-          <div class="acard-name">Gulf Coast Airways</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Capital Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#12</div>
-          <div class="acard-name">Capital Airlines</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Sunbelt Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#13</div>
-          <div class="acard-name">Sunbelt Airways</div>
-          <div class="acard-strat">Cost Leader</div>
-        </div>
-        <div class="acard" onclick="showAirline('Fareline Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#14</div>
-          <div class="acard-name">Fareline Air</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Five Flags Logistics & Transit Co.'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#15</div>
-          <div class="acard-name">Five Flags Logistics & Transit Co.</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Cargo Before Comfort Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#16</div>
-          <div class="acard-name">Cargo Before Comfort Air</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Pelican Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#17</div>
-          <div class="acard-name">Pelican Air</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Latitude Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#18</div>
-          <div class="acard-name">Latitude Airlines</div>
-          <div class="acard-strat">Cost Leader</div>
-        </div>
-        <div class="acard" onclick="showAirline('Blue Knight Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#19</div>
-          <div class="acard-name">Blue Knight Airways</div>
-          <div class="acard-strat">Premium Service</div>
-        </div>
-        <div class="acard" onclick="showAirline('GUMPS aviation'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#20</div>
-          <div class="acard-name">GUMPS aviation</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('起飞'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#21</div>
-          <div class="acard-name">起飞</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('East Cost Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#22</div>
-          <div class="acard-name">East Cost Air</div>
-          <div class="acard-strat">Balanced Carrier</div>
-        </div>
-        <div class="acard" onclick="showAirline('Apex Airways'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#23</div>
-          <div class="acard-name">Apex Airways</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Big Bird Airlines'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#24</div>
-          <div class="acard-name">Big Bird Airlines</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('Cornerstone Cargo'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#25</div>
-          <div class="acard-name">Cornerstone Cargo</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div>
-        <div class="acard" onclick="showAirline('GRY Air'); showPage('practice','btnPractice')">
-          <div class="acard-rank">#26</div>
-          <div class="acard-name">GRY Air</div>
-          <div class="acard-strat">Cargo-Focused</div>
-        </div></div>
-</div>
-
-<!-- ══ ROUNDS ════════════════════════════════════════════════════ -->
-<div class="page" id="rounds">
-  <div class="page-title">Simulation Rounds</div>
-  <div class="page-sub" style="margin-bottom:24px">Five competitive rounds plus a practice round. Market conditions evolve — what works early may not work later.</div>
-  <div class="round-grid">
-    <div class="round-card practice-card">
-      <div class="round-label">Practice</div>
-      <div class="round-name">Baseline Practice</div>
-      <div class="round-due">Due: May 31</div>
-      <span class="round-status status-results">Results Posted</span>
-    </div>
-    <div class="round-card open">
-      <div class="round-label">Round 1</div>
-      <div class="round-name">Baseline Launch</div>
-      <div class="round-due">Due: June 7</div>
-      <span class="round-status status-open">Open Now</span>
-    </div>
-    <div class="round-card">
-      <div class="round-label">Round 2</div>
-      <div class="round-name">ATL Business Rebound</div>
-      <div class="round-due">Due: June 28</div>
-      <span class="round-status status-upcoming">Upcoming</span>
-    </div>
-    <div class="round-card">
-      <div class="round-label">Round 3</div>
-      <div class="round-name">DFW Cargo Surge</div>
-      <div class="round-due">Due: July 12</div>
-      <span class="round-status status-upcoming">Upcoming</span>
-    </div>
-    <div class="round-card">
-      <div class="round-label">Round 4</div>
-      <div class="round-name">Disruption Round</div>
-      <div class="round-due">Due: July 19</div>
-      <span class="round-status status-upcoming">Upcoming</span>
-    </div>
-    <div class="round-card">
-      <div class="round-label">Round 5</div>
-      <div class="round-name">Spirit Collapse</div>
-      <div class="round-due">Due: July 26</div>
-      <span class="round-status status-upcoming">Upcoming</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3>Decision Variables — Every Round</h3>
-    <table class="info-table">
-      <thead><tr><th>Variable</th><th>Options</th><th>Notes</th></tr></thead>
-      <tbody>
-        <tr><td><strong>ATL Fare</strong></td><td>Any dollar amount</td><td>Market avg $185 · Sensitivity 1.3×</td></tr>
-        <tr><td><strong>MCO Fare</strong></td><td>Any dollar amount</td><td>Market avg $115 · High sensitivity 1.8×</td></tr>
-        <tr><td><strong>DFW Fare</strong></td><td>Any dollar amount</td><td>Market avg $210 · Low sensitivity 1.1×</td></tr>
-        <tr><td><strong>Pax/Cargo Mix</strong></td><td>90/10 · 75/25 · 60/40 · 50/50 · 40/60</td><td>These five options only · Cargo strongest on DFW</td></tr>
-        <tr><td><strong>Flight Allocation</strong></td><td>3–18 per route · total must = 30</td><td>Non-compliance carries a penalty</td></tr>
-        <tr><td><strong>Market Development (MD)</strong></td><td>0 · 1 · 2 · 3 · 4</td><td>Boosts passenger and cargo demand · $0–$42K · More impactful in Rounds 2 &amp; 5</td></tr>
-        <tr><td><strong>Operational Capability (OC)</strong></td><td>0 · 1 · 2 · 3 · 4</td><td>Cuts costs, lifts cargo efficiency, improves load factor · Critical in Round 4</td></tr>
-      </tbody>
-    </table>
-
-    <div class="disruption-box" style="margin-top:20px">
-      <h4>⚡ Round 4 Warning — Disruption Event</h4>
-      <p>Every airline faces a $75,000 disruption penalty in Round 4 (fuel spike + severe weather).
-         Your Operational Capability level determines how much you absorb:
-         OC=0 takes the full $75K hit · OC=2 reduces it to $45K · OC=4 reduces it to just $15K.
-         You cannot invest retroactively — build OC in Rounds 1–3 or pay the price in Round 4.</p>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3>MD &amp; OC — Why They Matter Each Round</h3>
-    <table class="info-table">
-      <thead><tr><th>Round</th><th>MD Effect</th><th>OC Effect</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Round 1</strong></td><td>Base demand lift (12–58%)</td><td>Cost reduction + cargo efficiency + load factor bonus</td></tr>
-        <tr><td><strong>Round 2</strong></td><td><strong>+15% bonus</strong> on top of base lift (ATL rebound)</td><td>Same as Round 1</td></tr>
-        <tr><td><strong>Round 3</strong></td><td>Base lift</td><td><strong>+20% bonus</strong> on cargo efficiency (DFW surge)</td></tr>
-        <tr><td><strong>Round 4</strong></td><td>Base lift</td><td><strong>Disruption protection</strong> — absorbs up to 80% of $75K penalty</td></tr>
-        <tr><td><strong>Round 5</strong></td><td><strong>+25% bonus</strong> on demand lift (Spirit collapse — grab market share)</td><td>Same as Round 1</td></tr>
+        
+    <tr class="lb-row" onclick="showDetail('Capital Airlines')">
+      <td class="rank-cell">🥇</td>
+      <td class="name-cell"><span class="al-link">Capital Airlines</span></td>
+      <td><span class="badge-bal">Balanced Carrier</span></td>
+      <td class="profit-cell">$506,996</td>
+      <td>85.1%</td>
+      <td>82%</td>
+      <td class="band-elite">⭐⭐⭐ Elite</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('East Coast Air')">
+      <td class="rank-cell">🥈</td>
+      <td class="name-cell"><span class="al-link">East Coast Air</span></td>
+      <td><span class="badge-bal">Balanced Carrier</span></td>
+      <td class="profit-cell">$394,542</td>
+      <td>85.2%</td>
+      <td>82%</td>
+      <td class="band-elite">⭐⭐⭐ Elite</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('起飞')">
+      <td class="rank-cell">🥉</td>
+      <td class="name-cell"><span class="al-link">起飞</span></td>
+      <td><span class="badge-bal">Balanced Carrier</span></td>
+      <td class="profit-cell">$359,094</td>
+      <td>68.9%</td>
+      <td>82%</td>
+      <td class="band-elite">⭐⭐⭐ Elite</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Gulf Coast Air')">
+      <td class="rank-cell">#4</td>
+      <td class="name-cell"><span class="al-link">Gulf Coast Air</span></td>
+      <td><span class="badge-bal">Balanced Carrier</span></td>
+      <td class="profit-cell">$346,394</td>
+      <td>75.6%</td>
+      <td>82%</td>
+      <td class="band-strong">⭐⭐ Strong</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Fareline Air')">
+      <td class="rank-cell">#5</td>
+      <td class="name-cell"><span class="al-link">Fareline Air</span></td>
+      <td><span class="badge-bal">Balanced Carrier</span></td>
+      <td class="profit-cell">$343,378</td>
+      <td>71.0%</td>
+      <td>82%</td>
+      <td class="band-strong">⭐⭐ Strong</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Fairline')">
+      <td class="rank-cell">#6</td>
+      <td class="name-cell"><span class="al-link">Fairline</span></td>
+      <td><span class="badge-bal">Balanced Carrier</span></td>
+      <td class="profit-cell">$340,359</td>
+      <td>91.0%</td>
+      <td>78%</td>
+      <td class="band-strong">⭐⭐ Strong</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Jet Lag Logistics')">
+      <td class="rank-cell">#7</td>
+      <td class="name-cell"><span class="al-link">Jet Lag Logistics</span></td>
+      <td><span class="badge-cargo">Cargo-Focused</span></td>
+      <td class="profit-cell">$340,298</td>
+      <td>72.5%</td>
+      <td>82%</td>
+      <td class="band-strong">⭐⭐ Strong</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Skyhigh Airways')">
+      <td class="rank-cell">#8</td>
+      <td class="name-cell"><span class="al-link">Skyhigh Airways</span></td>
+      <td><span class="badge-bal">Balanced Carrier</span></td>
+      <td class="profit-cell">$338,436</td>
+      <td>76.1%</td>
+      <td>82%</td>
+      <td class="band-strong">⭐⭐ Strong</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Latitude Airlines')">
+      <td class="rank-cell">#9</td>
+      <td class="name-cell"><span class="al-link">Latitude Airlines</span></td>
+      <td><span class="badge-prem">Premium Service</span></td>
+      <td class="profit-cell">$333,696</td>
+      <td>74.4%</td>
+      <td>92%</td>
+      <td class="band-dev">⭐ Developing</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('ADAPT Airlines')">
+      <td class="rank-cell">#10</td>
+      <td class="name-cell"><span class="al-link">ADAPT Airlines</span></td>
+      <td><span class="badge-bal">Balanced Carrier</span></td>
+      <td class="profit-cell">$327,028</td>
+      <td>71.6%</td>
+      <td>87%</td>
+      <td class="band-dev">⭐ Developing</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Emerald Argo Airlines')">
+      <td class="rank-cell">#11</td>
+      <td class="name-cell"><span class="al-link">Emerald Argo Airlines</span></td>
+      <td><span class="badge-cargo">Cargo-Focused</span></td>
+      <td class="profit-cell">$322,658</td>
+      <td>78.4%</td>
+      <td>78%</td>
+      <td class="band-dev">⭐ Developing</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Lo-Povo Air')">
+      <td class="rank-cell">#12</td>
+      <td class="name-cell"><span class="al-link">Lo-Povo Air</span></td>
+      <td><span class="badge-cost">Cost Leader</span></td>
+      <td class="profit-cell">$313,300</td>
+      <td>75.0%</td>
+      <td>92%</td>
+      <td class="band-dev">⭐ Developing</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Blue Knight Airways')">
+      <td class="rank-cell">#13</td>
+      <td class="name-cell"><span class="al-link">Blue Knight Airways</span></td>
+      <td><span class="badge-prem">Premium Service</span></td>
+      <td class="profit-cell">$305,401</td>
+      <td>79.3%</td>
+      <td>92%</td>
+      <td class="band-dev">⭐ Developing</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Emerald Coast Airways')">
+      <td class="rank-cell">#14</td>
+      <td class="name-cell"><span class="al-link">Emerald Coast Airways</span></td>
+      <td><span class="badge-bal">Balanced Carrier</span></td>
+      <td class="profit-cell">$293,170</td>
+      <td>71.1%</td>
+      <td>82%</td>
+      <td class="band-dev">⭐ Developing</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Pensacola Airlines')">
+      <td class="rank-cell">#15</td>
+      <td class="name-cell"><span class="al-link">Pensacola Airlines</span></td>
+      <td><span class="badge-bal">Balanced Carrier</span></td>
+      <td class="profit-cell">$292,322</td>
+      <td>76.8%</td>
+      <td>87%</td>
+      <td class="band-dev">⭐ Developing</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Big Bird Airways')">
+      <td class="rank-cell">#16</td>
+      <td class="name-cell"><span class="al-link">Big Bird Airways</span></td>
+      <td><span class="badge-cargo">Cargo-Focused</span></td>
+      <td class="profit-cell">$286,257</td>
+      <td>67.3%</td>
+      <td>92%</td>
+      <td class="band-str">📉 Struggling</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Gulf Coast Airways')">
+      <td class="rank-cell">#17</td>
+      <td class="name-cell"><span class="al-link">Gulf Coast Airways</span></td>
+      <td><span class="badge-bal">Balanced Carrier</span></td>
+      <td class="profit-cell">$274,748</td>
+      <td>70.2%</td>
+      <td>87%</td>
+      <td class="band-str">📉 Struggling</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Cargo Before Comfort Air')">
+      <td class="rank-cell">#18</td>
+      <td class="name-cell"><span class="al-link">Cargo Before Comfort Air</span></td>
+      <td><span class="badge-cargo">Cargo-Focused</span></td>
+      <td class="profit-cell">$272,222</td>
+      <td>60.5%</td>
+      <td>82%</td>
+      <td class="band-str">📉 Struggling</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('GRY Air')">
+      <td class="rank-cell">#19</td>
+      <td class="name-cell"><span class="al-link">GRY Air</span></td>
+      <td><span class="badge-cargo">Cargo-Focused</span></td>
+      <td class="profit-cell">$250,788</td>
+      <td>62.5%</td>
+      <td>87%</td>
+      <td class="band-str">📉 Struggling</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Sunbelt Airways')">
+      <td class="rank-cell">#20</td>
+      <td class="name-cell"><span class="al-link">Sunbelt Airways</span></td>
+      <td><span class="badge-cost">Cost Leader</span></td>
+      <td class="profit-cell">$220,036</td>
+      <td>74.3%</td>
+      <td>92%</td>
+      <td class="band-str">📉 Struggling</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Pelican Air')">
+      <td class="rank-cell">#21</td>
+      <td class="name-cell"><span class="al-link">Pelican Air</span></td>
+      <td><span class="badge-cargo">Cargo-Focused</span></td>
+      <td class="profit-cell">$200,360</td>
+      <td>60.5%</td>
+      <td>87%</td>
+      <td class="band-str">📉 Struggling</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('GUMPS aviation')">
+      <td class="rank-cell">#22</td>
+      <td class="name-cell"><span class="al-link">GUMPS aviation</span></td>
+      <td><span class="badge-cargo">Cargo-Focused</span></td>
+      <td class="profit-cell">$179,660</td>
+      <td>55.5%</td>
+      <td>87%</td>
+      <td class="band-str">📉 Struggling</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Five Flags Logistics & Transit')">
+      <td class="rank-cell">#23</td>
+      <td class="name-cell"><span class="al-link">Five Flags Logistics & Transit</span></td>
+      <td><span class="badge-cargo">Cargo-Focused</span></td>
+      <td class="profit-cell">$174,613</td>
+      <td>54.8%</td>
+      <td>92%</td>
+      <td class="band-str">📉 Struggling</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Squawk Airlines')">
+      <td class="rank-cell">#24</td>
+      <td class="name-cell"><span class="al-link">Squawk Airlines</span></td>
+      <td><span class="badge-bal">Balanced Carrier</span></td>
+      <td class="profit-cell">$137,407</td>
+      <td>49.5%</td>
+      <td>87%</td>
+      <td class="band-str">📉 Struggling</td>
+    </tr>
+    <tr class="lb-row" onclick="showDetail('Cornerstone Cargo')">
+      <td class="rank-cell">#25</td>
+      <td class="name-cell"><span class="al-link">Cornerstone Cargo</span></td>
+      <td><span class="badge-cargo">Cargo-Focused</span></td>
+      <td class="profit-cell">$90,816</td>
+      <td>52.9%</td>
+      <td>82%</td>
+      <td class="band-str">📉 Struggling</td>
+    </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="card">
-    <h3>Grading</h3>
-    <table class="info-table">
-      <thead><tr><th>Assignment</th><th>Due</th><th>Points</th></tr></thead>
-      <tbody>
-        <tr><td>Airline Registration</td><td>May 31</td><td>20</td></tr>
-        <tr><td>Practice Round</td><td>May 31</td><td>20</td></tr>
-        <tr><td>Round 1 — Baseline Launch</td><td>June 7</td><td>50</td></tr>
-        <tr><td>Round 2 — ATL Business Rebound</td><td>June 28</td><td>50</td></tr>
-        <tr><td>Round 3 — DFW Cargo Surge</td><td>July 12</td><td>50</td></tr>
-        <tr><td>Round 4 — Disruption Round</td><td>July 19</td><td>50</td></tr>
-        <tr><td>Round 5 — Spirit Collapse</td><td>July 26</td><td>50</td></tr>
-        <tr><td><strong>Total</strong></td><td></td><td><strong>290</strong></td></tr>
-      </tbody>
-    </table>
+  <!-- Detail panel -->
+  <div class="detail-panel" id="detailPanel">
+    <div class="detail-header">
+      <div>
+        <div class="detail-title" id="dTitle"></div>
+        <div style="color:var(--text2);font-size:0.85rem;margin-top:0.2rem;" id="dSub"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div class="detail-rank" id="dRank"></div>
+        <button class="close-btn" onclick="closeDetail()">✕</button>
+      </div>
+    </div>
+    <div class="detail-body">
+      <div class="metrics-grid" id="dMetrics"></div>
+      <div class="routes-grid" id="dRoutes"></div>
+      <div class="feedback-section">
+        <div class="feedback-label">Round 1 Analysis &amp; Round 2 Guidance</div>
+        <div class="feedback-block" id="dP1"></div>
+        <div class="feedback-block" id="dP2"></div>
+        <div class="feedback-block r2" id="dP3"></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ══ ABOUT ══════════════════════════════════════════════════════ -->
-<div class="page" id="about">
-  <div class="page-title">About the Simulation</div>
-  <div class="card">
-    <h3>Overview</h3>
-    <p>You are the CEO of a startup regional airline operating out of Pensacola (PNS) with routes to Atlanta (ATL), Orlando (MCO), and Dallas-Fort Worth (DFW). Each round you set fares, allocate flights, choose your passenger/cargo mix, and invest in Market Development and Operational Capability.</p>
-    <p>Your goal: maximize cumulative profit over five rounds. Market conditions change each round — what works in Round 1 may not work in Round 4. Adapt or fall behind.</p>
+<!-- ══ ROUNDS PAGE ══ -->
+<div id="pg-rounds" class="page">
+  <div class="hero" style="padding-bottom:1rem;">
+    <h1>Simulation <span>Rounds</span></h1>
+    <p>Five rounds, five different market conditions. Each round rewards different strategies.</p>
   </div>
-  <div class="card">
-    <h3>Strategies</h3>
-    <table class="info-table">
-      <thead><tr><th>Strategy</th><th>Pax Demand</th><th>Cargo</th><th>Cost</th><th>Best For</th></tr></thead>
-      <tbody>
-        <tr><td><span class="badge-cost">Cost Leader</span></td><td>0.95×</td><td>0.90×</td><td>0.90×</td><td>High volume, thin margins, price-sensitive routes</td></tr>
-        <tr><td><span class="badge-bal">Balanced</span></td><td>1.00×</td><td>1.00×</td><td>1.00×</td><td>Flexibility, steady performance across all markets</td></tr>
-        <tr><td><span class="badge-prem">Premium</span></td><td>1.10×</td><td>0.85×</td><td>1.10×</td><td>High-fare routes with low price sensitivity</td></tr>
-        <tr><td><span class="badge-cargo">Cargo</span></td><td>0.85×</td><td>1.30×</td><td>1.05×</td><td>DFW-heavy cargo plays, especially Rounds 3–4</td></tr>
-      </tbody>
-    </table>
+
+  <div class="info-section">
+    <div class="rounds-grid">
+      <div class="round-card active">
+        <div class="round-num">Round 1</div>
+        <div class="round-name">Baseline Launch</div>
+        <div class="round-desc">Standard market conditions. Establish your route network and pricing strategy. No scenario bonuses active.</div>
+        <span class="round-status status-done">✓ Complete</span>
+      </div>
+      <div class="round-card">
+        <div class="round-num">Round 2</div>
+        <div class="round-name">ATL Business Rebound</div>
+        <div class="round-desc">Business travel surges on ATL. Market Development investment earns a 15% bonus multiplier on all ATL demand.</div>
+        <span class="round-status status-next">↑ Next Round</span>
+      </div>
+      <div class="round-card">
+        <div class="round-num">Round 3</div>
+        <div class="round-name">DFW Cargo Surge</div>
+        <div class="round-desc">Freight demand spikes on DFW. Operational Capability earns a 20% cargo efficiency bonus on DFW routes.</div>
+        <span class="round-status status-future">Upcoming</span>
+      </div>
+      <div class="round-card">
+        <div class="round-num">Round 4</div>
+        <div class="round-name">Disruption Round</div>
+        <div class="round-desc">Fuel spike + weather event hits all airlines. A $75,000 base penalty applies — OC level determines how much you absorb.</div>
+        <span class="round-status status-future">Upcoming</span>
+      </div>
+      <div class="round-card">
+        <div class="round-num">Round 5</div>
+        <div class="round-name">Spirit Collapse</div>
+        <div class="round-desc">A major competitor exits the MCO market. MCO fares rise, demand surges. MD investment earns a 25% bonus multiplier.</div>
+        <span class="round-status status-future">Upcoming</span>
+      </div>
+    </div>
   </div>
-  <div class="card">
-    <h3>Market Reference</h3>
-    <table class="info-table">
-      <thead><tr><th>Route</th><th>Market Fare</th><th>Price Sensitivity</th><th>Cargo Yield</th><th>Character</th></tr></thead>
-      <tbody>
-        <tr><td><strong>PNS–ATL</strong></td><td>$185</td><td>1.3×</td><td>$90/unit</td><td>Mixed business/leisure — good MD payoff</td></tr>
-        <tr><td><strong>PNS–MCO</strong></td><td>$115</td><td>1.8×</td><td>$80/unit</td><td>Price-sensitive leisure — don't overprice</td></tr>
-        <tr><td><strong>PNS–DFW</strong></td><td>$210</td><td>1.1×</td><td>$120/unit</td><td>Long-haul, cargo-rich — OC pays off here</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="card">
-    <h3>Contact</h3>
-    <p>TRA 3440 · Introduction to Air Transportation · University of West Florida · Summer 2026</p>
-    <p>Dr. Kenny O'Connor · <a href="mailto:koconnor1@uwf.edu" style="color:var(--sky)">koconnor1@uwf.edu</a></p>
+
+  <div class="info-section">
+    <div class="section-title">Round 4 Disruption — OC Protection Table</div>
+    <div class="info-card">
+      <p style="margin-bottom:1rem;">The Round 4 disruption applies a <strong style="color:var(--white)">$75,000 base penalty</strong> to every airline. Your Operational Capability (OC) level determines how much of that penalty you absorb. Airlines that invested in OC early are protected.</p>
+      <table class="param-table">
+        <thead><tr><th>OC Level</th><th>Protection</th><th>Penalty Absorbed</th><th>Net Penalty</th></tr></thead>
+        <tbody>
+          <tr><td>OC = 0</td><td>0%</td><td>$0</td><td>$75,000</td></tr>
+          <tr><td>OC = 1</td><td>20%</td><td>$15,000</td><td>$60,000</td></tr>
+          <tr><td>OC = 2</td><td>40%</td><td>$30,000</td><td>$45,000</td></tr>
+          <tr><td>OC = 3</td><td>60%</td><td>$45,000</td><td>$30,000</td></tr>
+          <tr><td>OC = 4</td><td>80%</td><td>$60,000</td><td>$15,000</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
-<div class="footer">TRA 3440 · Introduction to Air Transportation · University of West Florida · Summer 2026 · Dr. Kenny O'Connor</div>
+<!-- ══ PARAMETERS PAGE ══ -->
+<div id="pg-params" class="page">
+  <div class="hero" style="padding-bottom:1rem;">
+    <h1>Simulation <span>Parameters</span></h1>
+    <p>The numbers behind the engine. Study these carefully.</p>
+  </div>
+
+  <div class="info-section">
+    <div class="section-title">Market Parameters</div>
+    <div class="info-card">
+      <table class="param-table">
+        <thead><tr><th>Route</th><th>Market Fare</th><th>Price Sensitivity</th><th>Cost/Flight</th><th>Cargo Yield/Unit</th></tr></thead>
+        <tbody>
+          <tr><td>PNS → ATL</td><td>$185</td><td>1.3</td><td>$8,000</td><td>$90</td></tr>
+          <tr><td>PNS → MCO</td><td>$115</td><td>1.8 (highest)</td><td>$7,200</td><td>$80</td></tr>
+          <tr><td>PNS → DFW</td><td>$210</td><td>1.1 (lowest)</td><td>$9,200</td><td>$120 (highest)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="section-title">Strategy Multipliers</div>
+    <div class="info-card">
+      <table class="param-table">
+        <thead><tr><th>Strategy</th><th>Pax Demand</th><th>Cargo Demand</th><th>Cost</th></tr></thead>
+        <tbody>
+          <tr><td>Cost Leader</td><td>×0.95</td><td>×0.90</td><td>×0.90</td></tr>
+          <tr><td>Balanced Carrier</td><td>×1.00</td><td>×1.00</td><td>×1.00</td></tr>
+          <tr><td>Premium Service</td><td>×1.10</td><td>×0.85</td><td>×1.10</td></tr>
+          <tr><td>Cargo-Focused</td><td>×0.85</td><td>×1.30</td><td>×1.05</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="section-title">MD &amp; OC Investment Levels</div>
+    <div class="info-card">
+      <table class="param-table">
+        <thead><tr><th>Level</th><th>MD Cost</th><th>MD Demand Lift</th><th>OC Cost</th><th>OC Cargo Eff.</th><th>OC Cost Reduction</th><th>OC LF Bonus</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>$0</td><td>×1.00</td><td>$0</td><td>×1.00</td><td>—</td><td>+0%</td></tr>
+          <tr><td>1</td><td>$6,000</td><td>×1.12</td><td>$6,000</td><td>×1.10</td><td>−3%</td><td>+1%</td></tr>
+          <tr><td>2</td><td>$14,000</td><td>×1.25</td><td>$14,000</td><td>×1.20</td><td>−6%</td><td>+2%</td></tr>
+          <tr><td>3</td><td>$26,000</td><td>×1.40</td><td>$26,000</td><td>×1.32</td><td>−10%</td><td>+3.5%</td></tr>
+          <tr><td>4</td><td>$42,000</td><td>×1.58</td><td>$42,000</td><td>×1.45</td><td>−15%</td><td>+5%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ABOUT PAGE ══ -->
+<div id="pg-about" class="page">
+  <div class="hero" style="padding-bottom:1rem;">
+    <h1>About the <span>Simulation</span></h1>
+  </div>
+  <div class="info-section">
+    <div class="info-card">
+      <h3>TRA 3440 — Introduction to Air Transportation</h3>
+      <p style="margin-top:0.5rem;">University of West Florida · Summer 2026 · Dr. Kenny O'Connor</p>
+      <p style="margin-top:1rem;">This simulation places you as the CEO of a regional airline operating out of Pensacola (PNS) with routes to Atlanta (ATL), Orlando (MCO), and Dallas-Fort Worth (DFW). Each round you set fares, allocate 30 flights across the three routes, choose a passenger-cargo mix, and invest in Market Development and Operational Capability.</p>
+      <p style="margin-top:0.75rem;">The simulation runs for 5 rounds, each with a different market scenario. Your cumulative profit across all rounds determines your final ranking.</p>
+    </div>
+  </div>
+  <div class="info-section">
+    <div class="section-title">Grading</div>
+    <div class="info-card">
+      <table class="param-table">
+        <thead><tr><th>Assignment</th><th>Due</th><th>Points</th></tr></thead>
+        <tbody>
+          <tr><td>Airline Registration</td><td>May 31</td><td>20</td></tr>
+          <tr><td>Practice Round</td><td>May 31</td><td>20</td></tr>
+          <tr><td>Round 1 — Baseline Launch</td><td>June 7</td><td>50</td></tr>
+          <tr><td>Round 2 — ATL Business Rebound</td><td>June 28</td><td>50</td></tr>
+          <tr><td>Round 3 — DFW Cargo Surge</td><td>July 12</td><td>50</td></tr>
+          <tr><td>Round 4 — Disruption Round</td><td>July 19</td><td>50</td></tr>
+          <tr><td>Round 5 — Spirit Collapse</td><td>July 26</td><td>50</td></tr>
+          <tr><td><strong>Total</strong></td><td></td><td><strong>290</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<div class="footer">
+  TRA 3440 · Introduction to Air Transportation · University of West Florida · Summer 2026 · Dr. Kenny O'Connor · koconnor1@uwf.edu
+</div>
 
 <script>
-const AIRLINES = {
-  "Jet Lag Logistics": {
-    "rank": 1,
-    "strategy": "Cargo-Focused",
-    "profit": 332579.25848214293,
-    "load_factor": 78.12748015873017,
-    "cargo_pct": 1.2195843781716722,
-    "total_rev": 613979.658482143,
-    "total_cost": 281400.4,
-    "atl_flt": 12,
-    "mco_flt": 3,
-    "dfw_flt": 15,
-    "md": 2,
-    "oc": 2,
-    "compliance": false,
-    "p1": "Jet Lag Logistics was among the top performers of the practice round, posting $332,579 in profit and finishing 1 of 26. The Cargo-Focused model generated $613,980 in revenue against $281,400 in costs — a margin that reflects strong pricing discipline and route strategy. The airline achieved solid load factors (78.1% load factor) with passenger-dominant revenue (1.2% of revenue). The MD=2/OC=2 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying concentrating 15 of 30 weekly flights on DFW, decisions aligned well with market conditions. For Round 1: consider whether fares can be pushed slightly higher on routes with strong load factors, and evaluate MD/OC investment seriously — MD pays a 15% bonus in Round 2 and 25% in Round 5, while OC determines how much of the $75,000 Round 4 disruption penalty you absorb. A strong start — now build on it strategically."
-  },
-  "GULF COAST AIRWAYS": {
-    "rank": 2,
-    "strategy": "Balanced Carrier",
-    "profit": 331180.0,
-    "load_factor": 100.0,
-    "cargo_pct": 2.9434153768079168,
-    "total_rev": 591150.0,
-    "total_cost": 259970.0,
-    "atl_flt": 10,
-    "mco_flt": 10,
-    "dfw_flt": 10,
-    "md": 2,
-    "oc": 2,
-    "compliance": false,
-    "p1": "GULF COAST AIRWAYS was among the top performers of the practice round, posting $331,180 in profit and finishing 2 of 26. The Balanced Carrier model generated $591,150 in revenue against $259,970 in costs — a margin that reflects strong pricing discipline and route strategy. The airline achieved filling virtually every seat (100.0% load factor) with passenger-dominant revenue (2.9% of revenue). The MD=2/OC=2 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying spreading flights 10/10/10 across ATL/MCO/DFW, decisions aligned well with market conditions. For Round 1: consider whether fares can be pushed slightly higher on routes with strong load factors, and evaluate MD/OC investment seriously — MD pays a 15% bonus in Round 2 and 25% in Round 5, while OC determines how much of the $75,000 Round 4 disruption penalty you absorb. A strong start — now build on it strategically."
-  },
-  "Emerald  Argo Airlines": {
-    "rank": 3,
-    "strategy": "Balanced Carrier",
-    "profit": 320515.0,
-    "load_factor": 94.71544715447155,
-    "cargo_pct": 1.9783938565664454,
-    "total_rev": 576225.0,
-    "total_cost": 255710.0,
-    "atl_flt": 10,
-    "mco_flt": 12,
-    "dfw_flt": 8,
-    "md": 2,
-    "oc": 0,
-    "compliance": false,
-    "p1": "Emerald  Argo Airlines was among the top performers of the practice round, posting $320,515 in profit and finishing 3 of 26. The Balanced Carrier model generated $576,225 in revenue against $255,710 in costs — a margin that reflects strong pricing discipline and route strategy. The airline achieved strong seat utilization (94.7% load factor) with passenger-dominant revenue (2.0% of revenue). The MD=2 market development investment boosted passenger demand, contributing to stronger load factors.",
-    "p2": "Flying spreading flights 10/12/8 across ATL/MCO/DFW, decisions aligned well with market conditions. For Round 1: consider whether fares can be pushed slightly higher on routes with strong load factors, and evaluate MD/OC investment seriously — MD pays a 15% bonus in Round 2 and 25% in Round 5, while OC determines how much of the $75,000 Round 4 disruption penalty you absorb. A strong start — now build on it strategically."
-  },
-  "Jetset airlines": {
-    "rank": 4,
-    "strategy": "Balanced Carrier",
-    "profit": 282021.31999999995,
-    "load_factor": 93.65131578947368,
-    "cargo_pct": 3.515723180702157,
-    "total_rev": 546664.2,
-    "total_cost": 264642.88,
-    "atl_flt": 8,
-    "mco_flt": 10,
-    "dfw_flt": 12,
-    "md": 2,
-    "oc": 3,
-    "compliance": false,
-    "p1": "Jetset airlines had a solid practice round, posting $282,021 in profit and finishing 4 of 26. The Balanced Carrier approach generated $546,664 in total revenue at a cost of $264,643. The airline achieved strong seat utilization (93.7% load factor) with passenger-dominant revenue (3.5% of revenue). The MD=2/OC=3 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying spreading flights 8/10/12 across ATL/MCO/DFW, the fundamentals are working. For Round 1, focus on sharpening the edges — fine-tuning fares by route and seriously considering whether MD or OC investment would push profits higher. In Round 2, MD pays a 15% demand bonus. In Round 4, OC is the difference between absorbing a $75,000 disruption penalty and taking the full hit."
-  },
-  "ADAPT Airlines": {
-    "rank": 5,
-    "strategy": "Balanced Carrier",
-    "profit": 270770.6946216216,
-    "load_factor": 80.2320747217806,
-    "cargo_pct": 3.908824865042492,
-    "total_rev": 539775.5266216216,
-    "total_cost": 269004.832,
-    "atl_flt": 12,
-    "mco_flt": 12,
-    "dfw_flt": 6,
-    "md": 3,
-    "oc": 3,
-    "compliance": false,
-    "p1": "ADAPT Airlines had a solid practice round, posting $270,771 in profit and finishing 5 of 26. The Balanced Carrier approach generated $539,776 in total revenue at a cost of $269,005. The airline achieved solid load factors (80.2% load factor) with passenger-dominant revenue (3.9% of revenue). The MD=3/OC=3 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying spreading flights 12/12/6 across ATL/MCO/DFW, the fundamentals are working. For Round 1, focus on sharpening the edges — fine-tuning fares by route and seriously considering whether MD or OC investment would push profits higher. In Round 2, MD pays a 15% demand bonus. In Round 4, OC is the difference between absorbing a $75,000 disruption penalty and taking the full hit."
-  },
-  "Pensacola Airlines": {
-    "rank": 6,
-    "strategy": "Premium Service",
-    "profit": 228785.0,
-    "load_factor": 90.54263565891473,
-    "cargo_pct": 3.5919825362175035,
-    "total_rev": 503900.0,
-    "total_cost": 275115.0,
-    "atl_flt": 10,
-    "mco_flt": 10,
-    "dfw_flt": 10,
-    "md": 0,
-    "oc": 0,
-    "compliance": false,
-    "p1": "Pensacola Airlines had a solid practice round, posting $228,785 in profit and finishing 6 of 26. The Premium Service approach generated $503,900 in total revenue at a cost of $275,115. The airline achieved strong seat utilization (90.5% load factor) with passenger-dominant revenue (3.6% of revenue). No MD or OC investment was made — a reasonable experiment for the practice round, but worth revisiting before Round 1.",
-    "p2": "Flying spreading flights 10/10/10 across ATL/MCO/DFW, the fundamentals are working. For Round 1, focus on sharpening the edges — fine-tuning fares by route and seriously considering whether MD or OC investment would push profits higher. In Round 2, MD pays a 15% demand bonus. In Round 4, OC is the difference between absorbing a $75,000 disruption penalty and taking the full hit."
-  },
-  "Skyhigh airways": {
-    "rank": 7,
-    "strategy": "Balanced Carrier",
-    "profit": 222755.8,
-    "load_factor": 100.0,
-    "cargo_pct": 5.538503682581979,
-    "total_rev": 481863.0,
-    "total_cost": 259107.2,
-    "atl_flt": 12,
-    "mco_flt": 10,
-    "dfw_flt": 8,
-    "md": 2,
-    "oc": 2,
-    "compliance": false,
-    "p1": "Skyhigh airways had a solid practice round, posting $222,756 in profit and finishing 7 of 26. The Balanced Carrier approach generated $481,863 in total revenue at a cost of $259,107. The airline achieved filling virtually every seat (100.0% load factor) with modest cargo revenue (5.5% of revenue). The MD=2/OC=2 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying spreading flights 12/10/8 across ATL/MCO/DFW, the fundamentals are working. For Round 1, focus on sharpening the edges — fine-tuning fares by route and seriously considering whether MD or OC investment would push profits higher. In Round 2, MD pays a 15% demand bonus. In Round 4, OC is the difference between absorbing a $75,000 disruption penalty and taking the full hit."
-  },
-  "Sunbelt Airways": {
-    "rank": 8,
-    "strategy": "Cost Leader",
-    "profit": 220745.6,
-    "load_factor": 100.0,
-    "cargo_pct": 5.540990055353704,
-    "total_rev": 462661.0,
-    "total_cost": 241915.4,
-    "atl_flt": 10,
-    "mco_flt": 13,
-    "dfw_flt": 7,
-    "md": 2,
-    "oc": 4,
-    "compliance": false,
-    "p1": "Sunbelt Airways had a solid practice round, posting $220,746 in profit and finishing 8 of 26. The Cost Leader approach generated $462,661 in total revenue at a cost of $241,915. The airline achieved filling virtually every seat (100.0% load factor) with modest cargo revenue (5.5% of revenue). The MD=2/OC=4 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying spreading flights 10/13/7 across ATL/MCO/DFW, the fundamentals are working. For Round 1, focus on sharpening the edges — fine-tuning fares by route and seriously considering whether MD or OC investment would push profits higher. In Round 2, MD pays a 15% demand bonus. In Round 4, OC is the difference between absorbing a $75,000 disruption penalty and taking the full hit."
-  },
-  "Emerald Coast Airways": {
-    "rank": 9,
-    "strategy": "Balanced Carrier",
-    "profit": 211298.43199999997,
-    "load_factor": 100.0,
-    "cargo_pct": 8.00347807777715,
-    "total_rev": 492409.92,
-    "total_cost": 281111.488,
-    "atl_flt": 10,
-    "mco_flt": 8,
-    "dfw_flt": 12,
-    "md": 3,
-    "oc": 3,
-    "compliance": false,
-    "p1": "Emerald Coast Airways had a solid practice round, posting $211,298 in profit and finishing 9 of 26. The Balanced Carrier approach generated $492,410 in total revenue at a cost of $281,111. The airline achieved filling virtually every seat (100.0% load factor) with significant cargo contribution (8.0% of revenue). The MD=3/OC=3 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying spreading flights 10/8/12 across ATL/MCO/DFW, the fundamentals are working. For Round 1, focus on sharpening the edges — fine-tuning fares by route and seriously considering whether MD or OC investment would push profits higher. In Round 2, MD pays a 15% demand bonus. In Round 4, OC is the difference between absorbing a $75,000 disruption penalty and taking the full hit."
-  },
-  "Squawk Airlines": {
-    "rank": 10,
-    "strategy": "Balanced Carrier",
-    "profit": 205145.0,
-    "load_factor": 99.04761904761905,
-    "cargo_pct": 5.189402233413619,
-    "total_rev": 456700.0,
-    "total_cost": 251555.0,
-    "atl_flt": 10,
-    "mco_flt": 10,
-    "dfw_flt": 10,
-    "md": 0,
-    "oc": 0,
-    "compliance": false,
-    "p1": "Squawk Airlines had a solid practice round, posting $205,145 in profit and finishing 10 of 26. The Balanced Carrier approach generated $456,700 in total revenue at a cost of $251,555. The airline achieved filling virtually every seat (99.0% load factor) with modest cargo revenue (5.2% of revenue). No MD or OC investment was made — a reasonable experiment for the practice round, but worth revisiting before Round 1.",
-    "p2": "Flying spreading flights 10/10/10 across ATL/MCO/DFW, the fundamentals are working. For Round 1, focus on sharpening the edges — fine-tuning fares by route and seriously considering whether MD or OC investment would push profits higher. In Round 2, MD pays a 15% demand bonus. In Round 4, OC is the difference between absorbing a $75,000 disruption penalty and taking the full hit."
-  },
-  "Lo-Povvo Air": {
-    "rank": 11,
-    "strategy": "Cost Leader",
-    "profit": 201738.55999999997,
-    "load_factor": 100.0,
-    "cargo_pct": 6.48215624492107,
-    "total_rev": 457773.6,
-    "total_cost": 256035.04,
-    "atl_flt": 13,
-    "mco_flt": 7,
-    "dfw_flt": 10,
-    "md": 3,
-    "oc": 3,
-    "compliance": false,
-    "p1": "Lo-Povvo Air had a solid practice round, posting $201,739 in profit and finishing 11 of 26. The Cost Leader approach generated $457,774 in total revenue at a cost of $256,035. The airline achieved filling virtually every seat (100.0% load factor) with modest cargo revenue (6.5% of revenue). The MD=3/OC=3 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying spreading flights 13/7/10 across ATL/MCO/DFW, the fundamentals are working. For Round 1, focus on sharpening the edges — fine-tuning fares by route and seriously considering whether MD or OC investment would push profits higher. In Round 2, MD pays a 15% demand bonus. In Round 4, OC is the difference between absorbing a $75,000 disruption penalty and taking the full hit."
-  },
-  "Gulf Coast Airways": {
-    "rank": 12,
-    "strategy": "Balanced Carrier",
-    "profit": 196241.52173913043,
-    "load_factor": 72.18651543793322,
-    "cargo_pct": 3.2461812576324798,
-    "total_rev": 434356.52173913043,
-    "total_cost": 238115.0,
-    "atl_flt": 10,
-    "mco_flt": 15,
-    "dfw_flt": 5,
-    "md": 0,
-    "oc": 0,
-    "compliance": false,
-    "p1": "Gulf Coast Airways had a solid practice round, posting $196,242 in profit and finishing 12 of 26. The Balanced Carrier approach generated $434,357 in total revenue at a cost of $238,115. The airline achieved solid load factors (72.2% load factor) with passenger-dominant revenue (3.2% of revenue). No MD or OC investment was made — a reasonable experiment for the practice round, but worth revisiting before Round 1.",
-    "p2": "Flying concentrating 15 of 30 weekly flights on MCO, the fundamentals are working. For Round 1, focus on sharpening the edges — fine-tuning fares by route and seriously considering whether MD or OC investment would push profits higher. In Round 2, MD pays a 15% demand bonus. In Round 4, OC is the difference between absorbing a $75,000 disruption penalty and taking the full hit."
-  },
-  "Fareline Air": {
-    "rank": 13,
-    "strategy": "Balanced Carrier",
-    "profit": 195591.5593443009,
-    "load_factor": 49.44006525321309,
-    "cargo_pct": 3.2725297168166847,
-    "total_rev": 450752.2093443009,
-    "total_cost": 255160.65,
-    "atl_flt": 13,
-    "mco_flt": 6,
-    "dfw_flt": 11,
-    "md": 1,
-    "oc": 1,
-    "compliance": false,
-    "p1": "Fareline Air had a solid practice round, posting $195,592 in profit and finishing 13 of 26. The Balanced Carrier approach generated $450,752 in total revenue at a cost of $255,161. The airline achieved low seat utilization (49.4% load factor) with passenger-dominant revenue (3.3% of revenue). The MD=1/OC=1 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying spreading flights 13/6/11 across ATL/MCO/DFW, the fundamentals are working. For Round 1, focus on sharpening the edges — fine-tuning fares by route and seriously considering whether MD or OC investment would push profits higher. In Round 2, MD pays a 15% demand bonus. In Round 4, OC is the difference between absorbing a $75,000 disruption penalty and taking the full hit."
-  },
-  "Capital Airlines": {
-    "rank": 14,
-    "strategy": "Balanced Carrier",
-    "profit": 178237.59999999998,
-    "load_factor": 100.0,
-    "cargo_pct": 5.842249061614279,
-    "total_rev": 469956.0,
-    "total_cost": 291718.4,
-    "atl_flt": 10,
-    "mco_flt": 10,
-    "dfw_flt": 10,
-    "md": 4,
-    "oc": 3,
-    "compliance": false,
-    "p1": "Capital Airlines had a solid practice round, posting $178,238 in profit and finishing 14 of 26. The Balanced Carrier approach generated $469,956 in total revenue at a cost of $291,718. The airline achieved filling virtually every seat (100.0% load factor) with modest cargo revenue (5.8% of revenue). The MD=4/OC=3 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying spreading flights 10/10/10 across ATL/MCO/DFW, the fundamentals are working. For Round 1, focus on sharpening the edges — fine-tuning fares by route and seriously considering whether MD or OC investment would push profits higher. In Round 2, MD pays a 15% demand bonus. In Round 4, OC is the difference between absorbing a $75,000 disruption penalty and taking the full hit."
-  },
-  "East Cost Air": {
-    "rank": 15,
-    "strategy": "Balanced Carrier",
-    "profit": 174837.78945945937,
-    "load_factor": 48.94213450659962,
-    "cargo_pct": 3.8058046197436712,
-    "total_rev": 458583.7094594594,
-    "total_cost": 283745.92000000004,
-    "atl_flt": 9,
-    "mco_flt": 7,
-    "dfw_flt": 14,
-    "md": 3,
-    "oc": 2,
-    "compliance": true,
-    "p1": "East Cost Air was among the top performers of the practice round, posting $174,838 in profit and finishing 15 of 26. The Balanced Carrier model generated $458,584 in revenue against $283,746 in costs — a margin that reflects strong pricing discipline and route strategy. The airline achieved low seat utilization (48.9% load factor) with passenger-dominant revenue (3.8% of revenue). The MD=3/OC=2 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying concentrating 14 of 30 weekly flights on DFW, decisions aligned well with market conditions. For Round 1: consider whether fares can be pushed slightly higher on routes with strong load factors, and evaluate MD/OC investment seriously — MD pays a 15% bonus in Round 2 and 25% in Round 5, while OC determines how much of the $75,000 Round 4 disruption penalty you absorb. A strong start — now build on it strategically. Note: flight total did not equal 30 and a $5,000 compliance penalty was applied — make sure ATL + MCO + DFW = exactly 30 in Round 1."
-  },
-  "Cargo Before Comfort Air": {
-    "rank": 16,
-    "strategy": "Cargo-Focused",
-    "profit": 158576.23260869563,
-    "load_factor": 94.63639528275078,
-    "cargo_pct": 8.07327496847305,
-    "total_rev": 447996.63260869565,
-    "total_cost": 289420.4,
-    "atl_flt": 9,
-    "mco_flt": 3,
-    "dfw_flt": 18,
-    "md": 2,
-    "oc": 1,
-    "compliance": false,
-    "p1": "Cargo Before Comfort Air was among the top performers of the practice round, posting $158,576 in profit and finishing 16 of 26. The Cargo-Focused model generated $447,997 in revenue against $289,420 in costs — a margin that reflects strong pricing discipline and route strategy. The airline achieved strong seat utilization (94.6% load factor) with significant cargo contribution (8.1% of revenue). The MD=2/OC=1 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying concentrating 18 of 30 weekly flights on DFW, decisions aligned well with market conditions. For Round 1: consider whether fares can be pushed slightly higher on routes with strong load factors, and evaluate MD/OC investment seriously — MD pays a 15% bonus in Round 2 and 25% in Round 5, while OC determines how much of the $75,000 Round 4 disruption penalty you absorb. A strong start — now build on it strategically."
-  },
-  "Five Flags Logistics & Transit Co.": {
-    "rank": 17,
-    "strategy": "Balanced Carrier",
-    "profit": 155994.0,
-    "load_factor": 95.42483660130719,
-    "cargo_pct": 7.681988279319353,
-    "total_rev": 424890.0,
-    "total_cost": 268896.0,
-    "atl_flt": 6,
-    "mco_flt": 6,
-    "dfw_flt": 18,
-    "md": 0,
-    "oc": 0,
-    "compliance": false,
-    "p1": "Five Flags Logistics & Transit Co. was among the top performers of the practice round, posting $155,994 in profit and finishing 17 of 26. The Balanced Carrier model generated $424,890 in revenue against $268,896 in costs — a margin that reflects strong pricing discipline and route strategy. The airline achieved strong seat utilization (95.4% load factor) with significant cargo contribution (7.7% of revenue). No MD or OC investment was made — a reasonable experiment for the practice round, but worth revisiting before Round 1.",
-    "p2": "Flying concentrating 18 of 30 weekly flights on DFW, decisions aligned well with market conditions. For Round 1: consider whether fares can be pushed slightly higher on routes with strong load factors, and evaluate MD/OC investment seriously — MD pays a 15% bonus in Round 2 and 25% in Round 5, while OC determines how much of the $75,000 Round 4 disruption penalty you absorb. A strong start — now build on it strategically."
-  },
-  "GUMPS aviation": {
-    "rank": 18,
-    "strategy": "Cargo-Focused",
-    "profit": 155577.1027027027,
-    "load_factor": 87.52109410615435,
-    "cargo_pct": 5.285306253119735,
-    "total_rev": 443872.1027027027,
-    "total_cost": 288295.0,
-    "atl_flt": 15,
-    "mco_flt": 5,
-    "dfw_flt": 10,
-    "md": 3,
-    "oc": 2,
-    "compliance": false,
-    "p1": "GUMPS aviation was among the top performers of the practice round, posting $155,577 in profit and finishing 18 of 26. The Cargo-Focused model generated $443,872 in revenue against $288,295 in costs — a margin that reflects strong pricing discipline and route strategy. The airline achieved solid load factors (87.5% load factor) with modest cargo revenue (5.3% of revenue). The MD=3/OC=2 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying concentrating 15 of 30 weekly flights on ATL, decisions aligned well with market conditions. For Round 1: consider whether fares can be pushed slightly higher on routes with strong load factors, and evaluate MD/OC investment seriously — MD pays a 15% bonus in Round 2 and 25% in Round 5, while OC determines how much of the $75,000 Round 4 disruption penalty you absorb. A strong start — now build on it strategically."
-  },
-  "Pelican Air": {
-    "rank": 19,
-    "strategy": "Cargo-Focused",
-    "profit": 121738.23913043481,
-    "load_factor": 63.61490683229813,
-    "cargo_pct": 5.22678652679633,
-    "total_rev": 389149.2391304348,
-    "total_cost": 267411.0,
-    "atl_flt": 9,
-    "mco_flt": 9,
-    "dfw_flt": 12,
-    "md": 0,
-    "oc": 0,
-    "compliance": false,
-    "p1": "Pelican Air was among the top performers of the practice round, posting $121,738 in profit and finishing 19 of 26. The Cargo-Focused model generated $389,149 in revenue against $267,411 in costs — a margin that reflects strong pricing discipline and route strategy. The airline achieved below-average seat utilization (63.6% load factor) with modest cargo revenue (5.2% of revenue). No MD or OC investment was made — a reasonable experiment for the practice round, but worth revisiting before Round 1.",
-    "p2": "Flying spreading flights 9/9/12 across ATL/MCO/DFW, decisions aligned well with market conditions. For Round 1: consider whether fares can be pushed slightly higher on routes with strong load factors, and evaluate MD/OC investment seriously — MD pays a 15% bonus in Round 2 and 25% in Round 5, while OC determines how much of the $75,000 Round 4 disruption penalty you absorb. A strong start — now build on it strategically."
-  },
-  "Blue Knight Airways": {
-    "rank": 20,
-    "strategy": "Premium Service",
-    "profit": 112598.75,
-    "load_factor": 88.44901960784316,
-    "cargo_pct": 6.3255281456596615,
-    "total_rev": 382576.75,
-    "total_cost": 269978.0,
-    "atl_flt": 10,
-    "mco_flt": 10,
-    "dfw_flt": 10,
-    "md": 0,
-    "oc": 1,
-    "compliance": false,
-    "p1": "Blue Knight Airways was among the top performers of the practice round, posting $112,599 in profit and finishing 20 of 26. The Premium Service model generated $382,577 in revenue against $269,978 in costs — a margin that reflects strong pricing discipline and route strategy. The airline achieved strong seat utilization (88.4% load factor) with modest cargo revenue (6.3% of revenue). The OC=1 investment reduced operating costs and improved cargo efficiency, strengthening the bottom line.",
-    "p2": "Flying spreading flights 10/10/10 across ATL/MCO/DFW, decisions aligned well with market conditions. For Round 1: consider whether fares can be pushed slightly higher on routes with strong load factors, and evaluate MD/OC investment seriously — MD pays a 15% bonus in Round 2 and 25% in Round 5, while OC determines how much of the $75,000 Round 4 disruption penalty you absorb. A strong start — now build on it strategically."
-  },
-  "Latitude Airlines": {
-    "rank": 21,
-    "strategy": "Cost Leader",
-    "profit": 95575.024,
-    "load_factor": 100.0,
-    "cargo_pct": 7.88068329053284,
-    "total_rev": 350089.44,
-    "total_cost": 254514.416,
-    "atl_flt": 8,
-    "mco_flt": 14,
-    "dfw_flt": 8,
-    "md": 3,
-    "oc": 4,
-    "compliance": false,
-    "p1": "Latitude Airlines was among the top performers of the practice round, posting $95,575 in profit and finishing 21 of 26. The Cost Leader model generated $350,089 in revenue against $254,514 in costs — a margin that reflects strong pricing discipline and route strategy. The airline achieved filling virtually every seat (100.0% load factor) with significant cargo contribution (7.9% of revenue). The MD=3/OC=4 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying concentrating 14 of 30 weekly flights on MCO, decisions aligned well with market conditions. For Round 1: consider whether fares can be pushed slightly higher on routes with strong load factors, and evaluate MD/OC investment seriously — MD pays a 15% bonus in Round 2 and 25% in Round 5, while OC determines how much of the $75,000 Round 4 disruption penalty you absorb. A strong start — now build on it strategically."
-  },
-  "Apex Airways": {
-    "rank": 22,
-    "strategy": "Cargo-Focused",
-    "profit": 84305.70000000001,
-    "load_factor": 83.99242424242424,
-    "cargo_pct": 7.687915332149327,
-    "total_rev": 365144.5,
-    "total_cost": 280838.8,
-    "atl_flt": 12,
-    "mco_flt": 10,
-    "dfw_flt": 8,
-    "md": 2,
-    "oc": 4,
-    "compliance": true,
-    "p1": "Apex Airways was among the top performers of the practice round, posting $84,306 in profit and finishing 22 of 26. The Cargo-Focused model generated $365,144 in revenue against $280,839 in costs — a margin that reflects strong pricing discipline and route strategy. The airline achieved solid load factors (84.0% load factor) with significant cargo contribution (7.7% of revenue). The MD=2/OC=4 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying spreading flights 12/10/8 across ATL/MCO/DFW, decisions aligned well with market conditions. For Round 1: consider whether fares can be pushed slightly higher on routes with strong load factors, and evaluate MD/OC investment seriously — MD pays a 15% bonus in Round 2 and 25% in Round 5, while OC determines how much of the $75,000 Round 4 disruption penalty you absorb. A strong start — now build on it strategically. Note: flight total did not equal 30 and a $5,000 compliance penalty was applied — make sure ATL + MCO + DFW = exactly 30 in Round 1."
-  },
-  "起飞": {
-    "rank": 23,
-    "strategy": "Cargo-Focused",
-    "profit": 59638.20000000001,
-    "load_factor": 100.0,
-    "cargo_pct": 14.517804855010862,
-    "total_rev": 381132.0,
-    "total_cost": 321493.8,
-    "atl_flt": 6,
-    "mco_flt": 6,
-    "dfw_flt": 18,
-    "md": 4,
-    "oc": 4,
-    "compliance": false,
-    "p1": "起飞 posted a slim profit of $59,638 this practice round, ranking 23 of 26. Operating as a Cargo-Focused, the airline generated $381,132 in revenue against $321,494 in costs. Performance was mixed: filling virtually every seat (100.0%), with heavily cargo-dependent revenue (14.5% of revenue). The MD=4/OC=4 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "The airline was concentrating 18 of 30 weekly flights on DFW. There is a real business here but the margins are thin — small fare adjustments or a shift in flight allocation could meaningfully move the needle. For Round 1, identify which route is underperforming and whether pricing is too far above or below market. Even a $10–15 adjustment on the right route can shift results significantly."
-  },
-  "Big Bird Airlines": {
-    "rank": 24,
-    "strategy": "Cargo-Focused",
-    "profit": 37993.29999999999,
-    "load_factor": 100.0,
-    "cargo_pct": 15.434972089831797,
-    "total_rev": 323538.0,
-    "total_cost": 285544.7,
-    "atl_flt": 6,
-    "mco_flt": 10,
-    "dfw_flt": 14,
-    "md": 2,
-    "oc": 4,
-    "compliance": false,
-    "p1": "Big Bird Airlines posted a slim profit of $37,993 this practice round, ranking 24 of 26. Operating as a Cargo-Focused, the airline generated $323,538 in revenue against $285,545 in costs. Performance was mixed: filling virtually every seat (100.0%), with heavily cargo-dependent revenue (15.4% of revenue). The MD=2/OC=4 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "The airline was concentrating 14 of 30 weekly flights on DFW. There is a real business here but the margins are thin — small fare adjustments or a shift in flight allocation could meaningfully move the needle. For Round 1, identify which route is underperforming and whether pricing is too far above or below market. Even a $10–15 adjustment on the right route can shift results significantly."
-  },
-  "Cornerstone Cargo": {
-    "rank": 25,
-    "strategy": "Cargo-Focused",
-    "profit": 30767.281600000104,
-    "load_factor": 69.68649552238806,
-    "cargo_pct": 12.129887957653793,
-    "total_rev": 300216.06240000005,
-    "total_cost": 269448.78079999995,
-    "atl_flt": 4,
-    "mco_flt": 12,
-    "dfw_flt": 14,
-    "md": 1,
-    "oc": 2,
-    "compliance": false,
-    "p1": "Cornerstone Cargo posted a slim profit of $30,767 this practice round, ranking 25 of 26. Operating as a Cargo-Focused, the airline generated $300,216 in revenue against $269,449 in costs. Performance was mixed: below-average seat utilization (69.7%), with heavily cargo-dependent revenue (12.1% of revenue). The MD=1/OC=2 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "The airline was concentrating 14 of 30 weekly flights on DFW. There is a real business here but the margins are thin — small fare adjustments or a shift in flight allocation could meaningfully move the needle. For Round 1, identify which route is underperforming and whether pricing is too far above or below market. Even a $10–15 adjustment on the right route can shift results significantly."
-  },
-  "GRY Air": {
-    "rank": 26,
-    "strategy": "Cargo-Focused",
-    "profit": -20957.035000000033,
-    "load_factor": 88.8310997229917,
-    "cargo_pct": 12.94126857975432,
-    "total_rev": 280294.005,
-    "total_cost": 301251.04000000004,
-    "atl_flt": 10,
-    "mco_flt": 3,
-    "dfw_flt": 17,
-    "md": 3,
-    "oc": 3,
-    "compliance": false,
-    "p1": "GRY Air posted a net loss of $20,957 this practice round, finishing 26 of 26. As a Cargo-Focused, the airline brought in $280,294 in revenue but incurred $301,251 in costs. The airline saw strong seat utilization (88.8% load factor) with heavily cargo-dependent revenue at 12.9% of total revenue. The MD=3/OC=3 investment paid off — stronger demand filled available seats and lower operating costs improved the margin.",
-    "p2": "Flying concentrating 17 of 30 weekly flights on DFW, the core issue was a cost-revenue mismatch — likely driven by fare levels sitting too far from market averages (ATL $185, MCO $115, DFW $210) or a cargo-heavy mix not supported by enough Operational Capability. For Round 1, get fares closer to market, reconsider the flight allocation, and evaluate whether OC investment would make the strategy viable."
-  }
-};
+const AIRLINES = {"Capital Airlines": {"rank": 1, "strategy": "Balanced Carrier", "profit": 506996, "lf": 85.1, "on_time": 82, "csat": 4.54, "md": 3, "oc": 2, "atl_f": 203, "atl_m": "90/10", "atl_n": 15, "atl_lf": 91.7, "mco_f": 120, "mco_m": "90/10", "mco_n": 3, "mco_lf": 83.7, "dfw_f": 230, "dfw_m": "90/10", "dfw_n": 12, "dfw_lf": 77.2, "p1": "Capital Airlines delivered the strongest performance in Round 1, posting a $506,996 profit — nearly $112,000 ahead of second place. The heavy ATL allocation of 15 flights, combined with strong Market Development investment, generated enormous passenger demand on that route, with a 91.7% load factor. Near-market pricing across all three routes kept planes full without leaving revenue on the table.", "p2": "The winning formula here was volume plus investment. ATL is the most lucrative route in the network when demand is strong, and concentrating flights there while investing in MD created a high-volume, high-margin outcome. Pricing stayed close to market on every route, which is exactly the right approach when you want planes full — the MD investment does the demand-building work, so there's no need to discount.", "p3": "Round 2 is the ATL Business Rebound — MD investment gets a bonus multiplier on top of its normal lift, and this airline is already positioned to benefit more than almost anyone else. The main question to consider: could reallocating even 1-2 flights from ATL to DFW unlock more profit there, where DFW ran at 77.2% — still strong but not maxed out? Also watch MCO — only 3 flights there limits upside if the market shifts."}, "East Coast Air": {"rank": 2, "strategy": "Balanced Carrier", "profit": 394542, "lf": 85.2, "on_time": 82, "csat": 4.55, "md": 3, "oc": 2, "atl_f": 189, "atl_m": "90/10", "atl_n": 11, "atl_lf": 92.0, "mco_f": 119, "mco_m": "90/10", "mco_n": 10, "mco_lf": 85.1, "dfw_f": 215, "dfw_m": "75/25", "dfw_n": 9, "dfw_lf": 77.0, "p1": "East Coast Air finished second with $394,542, turning in one of the most balanced performances of the round. All three routes ran above 77% load factor, with ATL hitting 92% — a strong signal that pricing was well-calibrated. The even flight distribution and moderate MD investment produced consistently strong demand without over-concentrating risk on any single route.", "p2": "The Balanced Carrier strategy at near-market fares is exactly what this simulation rewards at baseline. No extreme overpricing to crater demand, no extreme underpricing to sacrifice margin, and enough MD investment to lift demand meaningfully. Every route contributed without any one route dragging down the overall result — that kind of consistency is harder to achieve than it looks.", "p3": "Round 2's ATL bonus is a direct gift to East Coast Air's setup. Consider pushing ATL fare slightly higher — say $192-195 — and see if the MD demand cushion can absorb the price increase without significant load factor loss. DFW at $215 is also slightly above market; if you want to experiment, dropping to $210 and adding a flight there could test whether volume beats margin on that route. The main risk to manage is complacency — being well-positioned now means Round 2 is about maximizing the bonus, not just maintaining."}, "起飞": {"rank": 3, "strategy": "Balanced Carrier", "profit": 359094, "lf": 68.9, "on_time": 82, "csat": 4.43, "md": 2, "oc": 2, "atl_f": 193, "atl_m": "75/25", "atl_n": 10, "atl_lf": 77.0, "mco_f": 115, "mco_m": "90/10", "mco_n": 3, "mco_lf": 81.2, "dfw_f": 230, "dfw_m": "60/40", "dfw_n": 17, "dfw_lf": 62.0, "p1": "起飞 (Take Off) posted a strong third-place finish at $359,094, driven primarily by a bold DFW-heavy strategy — 17 of 30 flights concentrated on the highest-cost, highest-yield route in the network. DFW ran at 62% load factor at $230, which is lower than ideal but still profitable given the high yield per passenger. ATL and MCO served as supporting routes with reasonable efficiency.", "p2": "The DFW concentration produced high total revenue but also high total costs — 17 flights on the most expensive route in the network is a significant bet that requires strong load factors to pay off. Pricing at $230 on DFW (about 10% above market) suppressed demand enough to leave planes partially empty, which is the core tension in this strategy. The MCO allocation of just 3 flights also limited upside on a route that could have contributed more.", "p3": "For Round 2, the most important question is whether to hold the DFW concentration or rebalance. The ATL Business Rebound gives MD investment a bonus multiplier — and this airline currently has almost no ATL presence with only 10 flights. Consider shifting 2-3 flights from DFW to ATL and letting MD work harder there. On DFW pricing: dropping from $230 to $215-220 would likely push load factor above 70% and may well increase total DFW profit even at the lower fare."}, "Gulf Coast Air": {"rank": 4, "strategy": "Balanced Carrier", "profit": 346394, "lf": 75.6, "on_time": 82, "csat": 4.46, "md": 2, "oc": 2, "atl_f": 189, "atl_m": "75/25", "atl_n": 11, "atl_lf": 77.0, "mco_f": 119, "mco_m": "90/10", "mco_n": 9, "mco_lf": 76.2, "dfw_f": 219, "dfw_m": "75/25", "dfw_n": 10, "dfw_lf": 73.5, "p1": "Gulf Coast Air earned $346,394 and fourth place with a textbook Balanced Carrier approach — near-market fares on all three routes, even flight distribution, and moderate MD and OC investment. Load factors were solid across the board: 77% on ATL, 76.2% on MCO, and 73.5% on DFW. No single route was exceptional, but none was a drag either — consistent, efficient operations throughout.", "p2": "The slight overpricing on MCO and DFW cost some load factor points but not catastrophically. MCO is the most price-sensitive route in the network, so even a few dollars above market has a noticeable demand effect — but not a devastating one at the levels used here. The even 10/10/10 flight split is elegant but may slightly under-allocate to ATL, which is the highest-margin route when demand is strong.", "p3": "Round 2 is where Gulf Coast Air can make a real move. The ATL Business Rebound boosts MD returns — consider bumping to MD=3 and allocating 12-13 flights to ATL while pulling back slightly on MCO or DFW. Also worth testing: dropping MCO fare back to $115 (market) to see if the load factor gain outweighs the small per-passenger revenue drop. Gulf Coast Air has the financial cushion and strategic positioning to experiment aggressively in Round 2."}, "Fareline Air": {"rank": 5, "strategy": "Balanced Carrier", "profit": 343378, "lf": 71.0, "on_time": 82, "csat": 4.26, "md": 3, "oc": 2, "atl_f": 195, "atl_m": "75/25", "atl_n": 11, "atl_lf": 77.0, "mco_f": 135, "mco_m": "90/10", "mco_n": 10, "mco_lf": 62.9, "dfw_f": 240, "dfw_m": "75/25", "dfw_n": 9, "dfw_lf": 72.8, "p1": "Fareline Air posted $343,378 in fifth place, a solid result but one that hints at missed opportunity. The MD=3 investment is one of the highest in the class, yet the average load factor of 71% is lower than several airlines with less MD investment. The culprit is MCO pricing — at $135, this airline charged nearly 17% above market on the most price-sensitive route in the network, which significantly suppressed MCO demand.", "p2": "MCO is the route where passengers are most responsive to price changes — it takes the least overpricing to lose the most passengers there. A 17% premium on MCO means a substantial portion of potential passengers chose not to fly, which largely offset the demand lift from MD=3 investment. The ATL and DFW fares were more tolerable given those routes' lower price sensitivity, but MCO was the weak link that dragged down the overall result.", "p3": "Round 2 recommendation is straightforward: bring MCO fare down to $115-120 and let the MD=3 investment actually work on that route. The ATL Business Rebound also means MD=3 is about to become significantly more valuable — make sure ATL has enough flights (currently 11) to fully capture that bonus. Consider whether moving to 12-13 ATL flights is worth pulling from DFW, which at 9 flights and $240 fare is the most aggressively priced route in the portfolio."}, "Fairline": {"rank": 6, "strategy": "Balanced Carrier", "profit": 340359, "lf": 91.0, "on_time": 78, "csat": 4.51, "md": 3, "oc": 1, "atl_f": 169, "atl_m": "90/10", "atl_n": 13, "atl_lf": 91.0, "mco_f": 99, "mco_m": "90/10", "mco_n": 11, "mco_lf": 91.0, "dfw_f": 189, "dfw_m": "90/10", "dfw_n": 6, "dfw_lf": 91.0, "p1": "Fairline's sixth-place finish at $340,359 is one of the most interesting results in Round 1. Flying at or below market price on every route, this airline's below-market strategy generated the highest average load factor in the entire simulation at 91%. Every plane was essentially full. The strategy proved that volume can compete with margin, at least at baseline.", "p2": "When fares sit below market, passengers respond — demand surges and planes fill quickly. At 91% load factor across 30 flights, this airline was carrying near-maximum passengers on every route. The trade-off is lower revenue per seat — below-market MCO pricing means leaving money on the table with every ticket sold, multiplied across hundreds of passengers per flight. The strategy works, but the margin on each passenger is thinner than competitors running at market price.", "p3": "Round 2 is a critical decision point. The ATL Business Rebound rewards MD investment — and MD=3 is strong here. But if ATL fares stay below market, the demand bonus may just deepen the discount rather than capturing more revenue. Consider raising ATL fare toward market ($185) in Round 2 — MD=3 will still fill seats, but at a meaningfully better margin. MCO at $99 is the biggest margin leak; testing $108-112 would tell you quickly whether load factor holds up when you're not so far below market."}, "Jet Lag Logistics": {"rank": 7, "strategy": "Cargo-Focused", "profit": 340298, "lf": 72.5, "on_time": 82, "csat": 4.41, "md": 2, "oc": 2, "atl_f": 185, "atl_m": "90/10", "atl_n": 15, "atl_lf": 79.9, "mco_f": 115, "mco_m": "90/10", "mco_n": 3, "mco_lf": 69.3, "dfw_f": 215, "dfw_m": "75/25", "dfw_n": 12, "dfw_lf": 64.1, "p1": "Jet Lag Logistics finished seventh at $340,298, separated from sixth place by less than $100 — essentially a statistical tie with Fairline. The Cargo-Focused strategy with a heavy ATL allocation (15 flights) and passenger-heavy mix produced strong passenger revenue on ATL, while DFW at 12 flights gave reasonable cargo exposure. The MCO allocation of just 3 flights was a deliberate sacrifice that mostly worked given the focus elsewhere.", "p2": "The Cargo-Focused strategy carries a slight passenger demand penalty in exchange for a significant cargo boost — but that cargo advantage only activates when cargo capacity is actually being used. With a passenger-heavy mix on both ATL and MCO, cargo capacity is minimal on those routes, meaning the cargo strategy's real benefit was concentrated entirely on DFW. The result is a hybrid that isn't fully exploiting either the passenger or cargo side of the strategy.", "p3": "For Round 2, the most impactful change would be increasing cargo mix on DFW — moving from 75/25 to 60/40 or 50/50 on that route would let the Cargo-Focused strategy generate more cargo revenue where yield is highest. ATL is the right call to keep passenger-heavy given its strong passenger market. The ATL Business Rebound also creates an opportunity: this airline is well-positioned with 15 ATL flights, but the 90/10 mix there means the cargo multiplier has nothing to work with. Think through whether the ATL cargo tradeoff is worth it before Round 2."}, "Skyhigh Airways": {"rank": 8, "strategy": "Balanced Carrier", "profit": 338436, "lf": 76.1, "on_time": 82, "csat": 4.46, "md": 2, "oc": 2, "atl_f": 189, "atl_m": "75/25", "atl_n": 11, "atl_lf": 77.0, "mco_f": 119, "mco_m": "75/25", "mco_n": 10, "mco_lf": 76.2, "dfw_f": 215, "dfw_m": "75/25", "dfw_n": 9, "dfw_lf": 75.0, "p1": "Skyhigh Airways posted $338,436 in eighth place, turning in a steady and reliable performance. The consistent 75/25 mix across all three routes, combined with slight overpricing, produced load factors in the 75-76% range across the board. The stated goal of testing whether above-market fares with moderate MD and OC investment could sustain strong load factors — the answer from Round 1 is: mostly yes, but there's a ceiling.", "p2": "Slight overpricing on each route is within the tolerance range where demand doesn't drop sharply, but it does mean load factors settle in the mid-70s rather than pushing into the 85%+ range. The strategy is internally consistent and costs are well-controlled — one of the lower cost structures in the class — which is why the profit is respectable despite the modest load factors. The MD and OC investments are doing real work even if the load factor numbers don't look dramatic.", "p3": "Skyhigh Airways is well-positioned for Round 2 but needs a differentiating move to climb the leaderboard. The ATL Business Rebound is a natural opportunity — consider bumping MD to 3 and testing whether the bonus multiplier justifies the additional investment. On pricing: ATL at $189 could potentially go to $192-193 with MD=3 cushioning the demand impact. MCO at $119 is worth watching — it's the most price-sensitive route, so even a few dollars above market costs load factor. Consider bringing MCO back to $115 and recapturing those passengers."}, "Latitude Airlines": {"rank": 9, "strategy": "Premium Service", "profit": 333696, "lf": 74.4, "on_time": 92, "csat": 4.62, "md": 3, "oc": 4, "atl_f": 200, "atl_m": "75/25", "atl_n": 11, "atl_lf": 80.0, "mco_f": 125, "mco_m": "90/10", "mco_n": 11, "mco_lf": 87.3, "dfw_f": 310, "dfw_m": "75/25", "dfw_n": 8, "dfw_lf": 49.0, "p1": "Latitude Airlines finished ninth at $333,696, posting the highest revenue in the simulation at $626,844 — but also the highest costs at $293,148. The Premium Service strategy with OC=4 and MD=3 represents the biggest investment commitment in the class, and the DFW fare of $310 is by far the most aggressive price point any airline set. The result is excellent service metrics — 92% on-time, 4.62 customer satisfaction — but profit that trails several less-expensive competitors.", "p2": "The DFW situation is the key issue. At $310 — nearly 48% above market — demand was suppressed to a 49% load factor on DFW, meaning those 8 flights were running nearly half-empty at high cost. Pricing that far above market on any route pushes passengers away faster than any investment can pull them back. The Premium Service strategy's real value is in capturing higher revenue per passenger — but that only works when passengers are actually boarding. ATL and MCO both performed well, which shows the Premium Service multiplier works when pricing is reasonable.", "p3": "Round 2 recommendation: bring DFW fare down significantly — $235-245 would likely push load factor above 70% and generate more total DFW revenue even at the lower price. ATL and MCO are performing well, so the focus should be entirely on fixing DFW. The OC=4 investment is a major long-term asset — in Round 4, when the disruption hits, this airline will absorb 80% of the $75,000 penalty and lose only $15,000 while competitors at OC=0 lose the full amount. That positioning is smart. Short-term, fix the DFW pricing before Round 2."}, "ADAPT Airlines": {"rank": 10, "strategy": "Balanced Carrier", "profit": 327028, "lf": 71.6, "on_time": 87, "csat": 4.47, "md": 2, "oc": 3, "atl_f": 195, "atl_m": "75/25", "atl_n": 15, "atl_lf": 78.5, "mco_f": 125, "mco_m": "90/10", "mco_n": 10, "mco_lf": 70.3, "dfw_f": 260, "dfw_m": "50/50", "dfw_n": 5, "dfw_lf": 53.5, "p1": "ADAPT Airlines earned $327,028 in tenth place with a high-ATL strategy — 15 of 30 flights to Atlanta — that generated strong volume but ran into challenges elsewhere. ATL load factor hit 78.5% and MCO at 70.3% were decent, but DFW at only 53.5% on just 5 flights at $260 significantly underperformed. The OC=3 investment kept on-time performance strong at 87% and costs reasonable, but DFW was a consistent drag.", "p2": "The DFW problem here is a combination of too few flights at too high a price. With only 5 DFW flights, the route's fixed operating costs need to be covered by a small number of flights — and at $260 (24% above market), demand was suppressed enough to leave those planes running half-empty. It's a double squeeze: high per-flight cost and low revenue efficiency. Meanwhile, the high ATL concentration was the right instinct, but pricing just slightly above market limited how much of the potential ATL demand the MD investment could capture.", "p3": "For Round 2, the DFW situation needs attention. Either drop the fare to $215-220 and let load factor recover, or reallocate those 5 flights to ATL or MCO where they'll be more productive. Round 2's ATL bonus makes adding to ATL attractive — but ATL is already at 15 flights, the maximum allowed. That means the real opportunity is fixing DFW pricing and potentially shifting 1-2 flights from DFW to MCO while bringing MCO price back to market. OC=3 is solid and worth maintaining through Round 4."}, "Emerald Argo Airlines": {"rank": 11, "strategy": "Cargo-Focused", "profit": 322658, "lf": 78.4, "on_time": 78, "csat": 4.36, "md": 4, "oc": 1, "atl_f": 185, "atl_m": "90/10", "atl_n": 12, "atl_lf": 91.0, "mco_f": 125, "mco_m": "90/10", "mco_n": 12, "mco_lf": 72.7, "dfw_f": 250, "dfw_m": "75/25", "dfw_n": 6, "dfw_lf": 64.7, "p1": "Emerald Argo Airlines finished eleventh at $322,658, deploying the highest Market Development investment in Round 1 — MD=4. That investment drove ATL load factor to a remarkable 91%, filling those 12 flights to near capacity. MCO and DFW were more mixed: MCO at 72.7% on 12 flights was decent, but DFW at 64.7% on just 6 flights at $250 left room on the table. The OC=1 investment kept operational costs lower, but on-time performance was the weakest in the simulation at 78%.", "p2": "MD=4 is the most powerful demand tool in the simulation and the ATL results prove it — 91% load factor at market pricing shows the investment working exactly as intended. However, DFW at $250 (19% above market) created a drag: overpricing on any route pushes passengers away, and only 6 DFW flights meant the route's high fixed costs needed to be spread thin. The Cargo-Focused strategy's cargo advantage is also not being fully exploited — passenger-heavy mixes on ATL and MCO leave the cargo multiplier with little to work with on those routes.", "p3": "Round 2 is a pivotal moment. MD=4 becomes even more powerful with the Round 2 ATL bonus multiplier — this ATL operation is likely to be one of the strongest in the simulation next round. Consider shifting DFW mix from 75/25 to 60/40 or 50/50 to activate the cargo advantage where yield is highest. Also seriously consider investing in OC — OC=1 means absorbing 80% of the Round 4 disruption penalty. Moving to OC=2 or 3 now costs money but could save $30,000-$45,000 in Round 4, which could be the difference between finishing strong or falling several spots."}, "Lo-Povo Air": {"rank": 12, "strategy": "Cost Leader", "profit": 313300, "lf": 75.0, "on_time": 92, "csat": 4.7, "md": 1, "oc": 4, "atl_f": 165, "atl_m": "75/25", "atl_n": 10, "atl_lf": 80.0, "mco_f": 90, "mco_m": "90/10", "mco_n": 5, "mco_lf": 95.0, "dfw_f": 200, "dfw_m": "60/40", "dfw_n": 15, "dfw_lf": 65.0, "p1": "Lo-Povo Air finished twelfth at $313,300, flying the most distinctive strategy of any airline in Round 1. Pricing aggressively below market on every route paired with OC=4 and MD=1 produced an MCO load factor of 95% and ATL at 80%. The result is the lowest revenue in the top half of the leaderboard but also the lowest costs in the class — a lean, high-efficiency operation that proves Cost Leader can be competitive.", "p2": "Below-market pricing fills planes reliably — passengers respond to lower fares and seats fill faster. The trade-off is margin: every ticket sold on MCO at well-below market means leaving money on the table with each passenger. DFW at 65% load factor on 15 flights is the one soft spot — DFW has lower base demand than the other routes, and without meaningful MD investment to build that market, 15 flights is more than current demand efficiently supports at any price.", "p3": "Round 2 is a strategic crossroads. The Cost Leader approach works well on MCO and adequately on ATL, but DFW at 65% with 15 flights is the weak point. Consider reallocating 3-4 DFW flights to ATL and raising DFW fare slightly toward market to tighten load factor there. On the ATL Business Rebound: MD=1 won't capture much of the bonus — even increasing to MD=2 could meaningfully improve ATL demand when the Round 2 multiplier kicks in. OC=4 is an excellent long-term hold for Round 4 disruption protection — keep it."}, "Blue Knight Airways": {"rank": 13, "strategy": "Premium Service", "profit": 305401, "lf": 79.3, "on_time": 92, "csat": 4.67, "md": 2, "oc": 4, "atl_f": 185, "atl_m": "75/25", "atl_n": 10, "atl_lf": 80.0, "mco_f": 110, "mco_m": "90/10", "mco_n": 12, "mco_lf": 95.0, "dfw_f": 265, "dfw_m": "50/50", "dfw_n": 8, "dfw_lf": 55.0, "p1": "Blue Knight Airways posted $305,401 in thirteenth place with a Premium Service strategy and the joint-highest OC investment in the class. The MCO focus — 12 flights at $110 (below market) — produced a standout 95% MCO load factor, the highest MCO performance in Round 1. ATL ran at 80% on 10 flights and DFW at 55% on 8 flights at $265 (26% above market). The high OC investment produces strong service metrics — 92% on-time, 4.67 customer satisfaction — but compresses profit margin.", "p2": "The DFW pricing of $265 is where the most ground was lost. Pricing that far above market on any route pushes too many passengers away — and DFW's 8 flights at high per-flight cost need strong revenue per flight to justify. The MCO and ATL operations are efficient and well-priced, but they can't fully compensate for the DFW drag. The Premium Service strategy also carries a cost premium on top of OC=4 investment, which means margins are being squeezed from both the revenue and cost sides on DFW.", "p3": "The most impactful single change for Round 2 is DFW pricing — bringing it to $225-235 would likely push load factor above 70% and generate meaningfully more DFW profit even at the lower per-seat margin. On MCO: at below-market with 95% load factor, there may be room to raise to $113-115 without losing much load factor — incremental revenue on 12 flights adds up. OC=4 is a major strategic asset for Round 4 and is worth keeping. Round 2's ATL bonus won't help much at MD=2, so consider whether investing in MD=3 is worth the additional cost given the ATL opportunity."}, "Emerald Coast Airways": {"rank": 14, "strategy": "Balanced Carrier", "profit": 293170, "lf": 71.1, "on_time": 82, "csat": 4.39, "md": 2, "oc": 2, "atl_f": 200, "atl_m": "75/25", "atl_n": 12, "atl_lf": 77.0, "mco_f": 110, "mco_m": "90/10", "mco_n": 10, "mco_lf": 87.4, "dfw_f": 250, "dfw_m": "40/60", "dfw_n": 8, "dfw_lf": 42.0, "p1": "Emerald Coast Airways finished fourteenth at $293,170, turning in mixed results across the three routes. ATL at 77% load factor on 12 flights was solid; MCO at 87.4% on 10 flights at below-market pricing was strong; but DFW at only 42% load factor on 8 flights at $250 was the weak link. The intention to lower fares from the practice round worked well on ATL and MCO, but DFW pricing remained significantly above market and suppressed demand sharply.", "p2": "MCO shows the lesson clearly — pricing at $110 (below market) drove 87.4% load factor and strong revenue on that route. DFW is the opposite story: $250 on DFW is nearly 20% above market, and the cargo-heavy mix on those 8 flights further reduced the available passenger seats. The result is a route running at low passenger occupancy with limited cargo filling the gap. The two routes tell a clear story about what works and what doesn't in this network.", "p3": "The Round 2 priority is clear: fix DFW. Dropping to $210-215 and switching DFW mix to 50/50 or 60/40 passenger-heavy would almost certainly push DFW load factor above 65% and generate more profit from those 8 flights. MCO is performing well and the current approach there is worth maintaining. For the ATL Business Rebound: MD=2 will get the bonus, and 12 ATL flights gives good exposure to capture that demand lift. Consider whether ATL fare could nudge up slightly while MD=2 absorbs the demand impact."}, "Pensacola Airlines": {"rank": 15, "strategy": "Balanced Carrier", "profit": 292322, "lf": 76.8, "on_time": 87, "csat": 4.55, "md": 3, "oc": 3, "atl_f": 180, "atl_m": "75/25", "atl_n": 14, "atl_lf": 78.5, "mco_f": 115, "mco_m": "90/10", "mco_n": 9, "mco_lf": 92.2, "dfw_f": 215, "dfw_m": "50/50", "dfw_n": 7, "dfw_lf": 53.5, "p1": "Pensacola Airlines earned $292,322 in fifteenth place, with the approach this round focused on learning from practice round mistakes. The strategy — 14 ATL flights, near-market pricing, MD=3 and OC=3 — produced solid ATL (78.5% LF) and MCO (92.2% LF) performance. The DFW allocation of just 7 flights at $215 produced only 53.5% DFW load factor, which was the main drag on overall profitability.", "p2": "The MCO result at 92.2% load factor is excellent and reflects good pricing discipline on the most sensitive route. ATL at 78.5% is solid but slightly below what MD=3 should theoretically support — suggesting the 14-flight volume may slightly outpace what demand can fill even with significant MD investment. DFW at 53.5% on 7 flights is the key issue: DFW has lower base demand than the other routes, and without strong demand support, 7 flights at above-market pricing is a tough combination.", "p3": "Round 2 is where MD=3 really pays off — the ATL Business Rebound multiplier will give that investment a significant boost. Consider keeping ATL at 14 flights but testing whether ATL fare can rise slightly while MD=3 absorbs the demand impact. For DFW: either add a flight or two (pulling from MCO where you could reduce slightly) or drop the DFW fare toward $210 to improve load factor. OC=3 is excellent positioning for the Round 4 disruption — consider building toward OC=4 if the budget allows."}, "Big Bird Airways": {"rank": 16, "strategy": "Cargo-Focused", "profit": 286257, "lf": 67.3, "on_time": 92, "csat": 4.62, "md": 1, "oc": 4, "atl_f": 180, "atl_m": "75/25", "atl_n": 10, "atl_lf": 77.3, "mco_f": 65, "mco_m": "75/25", "mco_n": 3, "mco_lf": 80.0, "dfw_f": 220, "dfw_m": "75/25", "dfw_n": 17, "dfw_lf": 59.1, "p1": "Big Bird Airways finished sixteenth at $286,257 with a Cargo-Focused strategy that concentrated heavily on DFW (17 flights). MCO fare was set at $65 — the lowest price of any student in Round 1, at just 57% of market — driving MCO to 80% load factor on only 3 flights. ATL ran at 77.3% and DFW at 59.1% on 17 flights. OC=4 investment provides excellent operational efficiency and disruption protection, but MD=1 kept demand low on DFW.", "p2": "The DFW concentration at 17 flights is the most aggressive route bet in the simulation. At $220 with only minimal MD investment, DFW demand came in at 59.1% load factor — meaning those 17 flights are running at roughly 60% capacity, generating high costs with below-average revenue efficiency. The Cargo-Focused cargo advantage helps, but at 75/25 mix the cargo capacity per flight is limited. MCO at $65 produces strong occupancy but at significant revenue sacrifice per passenger.", "p3": "For Round 2, the most important change is either increasing MD investment to better support 17 DFW flights, or reallocating some of those flights to ATL where the Round 2 bonus will amplify returns. MD=2 would increase DFW load factor meaningfully at current pricing. Alternatively, dropping DFW to 14-15 flights and adding to ATL could be more profitable. On MCO: $65 is leaving substantial revenue on the table — testing $90-100 would likely maintain high load factor while recovering significant per-passenger margin. OC=4 is a strong long-term hold."}, "Gulf Coast Airways": {"rank": 17, "strategy": "Balanced Carrier", "profit": 274748, "lf": 70.2, "on_time": 87, "csat": 4.47, "md": 2, "oc": 3, "atl_f": 185, "atl_m": "75/25", "atl_n": 12, "atl_lf": 78.5, "mco_f": 125, "mco_m": "90/10", "mco_n": 12, "mco_lf": 70.3, "dfw_f": 225, "dfw_m": "50/50", "dfw_n": 6, "dfw_lf": 53.5, "p1": "Gulf Coast Airways finished seventeenth at $274,748 — notably different from Gulf Coast Air (fourth place), despite the similar name. The Balanced Carrier strategy with a 12/12/6 flight split produced a concentrated ATL-MCO operation with limited DFW exposure. ATL at 78.5% and MCO at 70.3% were decent, but DFW at only 53.5% on 6 flights at $225 was a drag. The goal of balancing the operation was achieved structurally, but DFW pricing undercut that balance.", "p2": "The 12/12/6 split works if ATL and MCO are generating strong margins — but slight overpricing on both routes held load factors to the mid-70s and below rather than the high-80s. MCO is the most price-sensitive route in the network, so $125 (nearly 9% above market) costs more demand there than the same overpricing would on ATL or DFW. DFW at $225 with only 6 flights also means the route's high fixed costs are spread thin across limited revenue-generating flights.", "p3": "Round 2 creates an opportunity to differentiate from the similarly-named competitor. To climb the rankings, consider three things: drop MCO fare to $115 to recover load factor on that high-sensitivity route; shift 1-2 DFW flights to ATL to better position for the Round 2 ATL bonus; and consider increasing MD to 3 before Round 2 closes to capture the full ATL bonus. OC=3 is solid — maintain it heading toward Round 4."}, "Cargo Before Comfort Air": {"rank": 18, "strategy": "Cargo-Focused", "profit": 272222, "lf": 60.5, "on_time": 82, "csat": 4.35, "md": 2, "oc": 2, "atl_f": 195, "atl_m": "75/25", "atl_n": 9, "atl_lf": 74.4, "mco_f": 115, "mco_m": "90/10", "mco_n": 3, "mco_lf": 69.3, "dfw_f": 230, "dfw_m": "50/50", "dfw_n": 18, "dfw_lf": 52.0, "p1": "Cargo Before Comfort Air finished eighteenth at $272,222, with the round focused on testing price sensitivity on ATL and DFW with a heavy DFW concentration — 18 flights, the maximum allowed. ATL at 9 flights and MCO at just 3 flights made DFW the overwhelming focus. DFW load factor came in at 52% on those 18 flights — a significant underperformance given the concentration. The 50/50 mix produced moderate rather than aggressive cargo revenue.", "p2": "Eighteen DFW flights is a high-conviction bet that requires strong demand to pay off. DFW has the lowest base passenger demand of the three routes, and at $230 (nearly 10% above market) with moderate MD investment, roughly half of those DFW seats flew empty. That's a large number of flights covering their full operating cost while generating well below their revenue potential. MCO at just 3 flights also severely limited what could have been a productive route with better allocation.", "p3": "For Round 2, the DFW concentration needs reconsideration. Pulling 3-4 flights back to ATL would improve overall load factor efficiency and position this airline for the Round 2 ATL bonus. On DFW pricing: dropping from $230 to $215 would likely add 10+ percentage points of load factor, generating more total revenue despite the lower per-seat price. Switching DFW mix to 40/60 would also activate the Cargo-Focused advantage on the highest-yield cargo route in the network. Round 4 disruption at OC=2 means absorbing 60% of the $75,000 penalty — consider whether building OC now is worth the investment."}, "GRY Air": {"rank": 19, "strategy": "Cargo-Focused", "profit": 250788, "lf": 62.5, "on_time": 87, "csat": 4.48, "md": 2, "oc": 3, "atl_f": 185, "atl_m": "75/25", "atl_n": 8, "atl_lf": 78.5, "mco_f": 115, "mco_m": "90/10", "mco_n": 4, "mco_lf": 70.8, "dfw_f": 215, "dfw_m": "50/50", "dfw_n": 18, "dfw_lf": 53.5, "p1": "GRY Air finished nineteenth at $250,788, deploying a DFW-heavy Cargo-Focused strategy with 18 flights to DFW. The stated goal — testing whether DFW concentration maximizes cargo benefits — produced results that suggest the execution needs refinement. DFW ran at 53.5% load factor on 18 flights, a result that closely mirrors other heavy-DFW strategies this round. ATL and MCO were minimal secondary routes.", "p2": "The challenge with concentrating 18 flights on DFW is that DFW has the lowest base passenger demand of the three routes. Even with good pricing and moderate MD investment, the market can only absorb so many flights before load factors fall. When nearly half of those seats fly empty, the high per-flight cost of DFW makes the math difficult. The Cargo-Focused strategy's passenger penalty makes this worse on the passenger side, and the 50/50 mix limits how much the cargo advantage can compensate.", "p3": "GRY Air's Round 2 decision is critical. The DFW cargo thesis requires either stronger demand support (higher MD investment, lower fares, or fewer flights to tighten load factor) or a strategic rebalance. A concrete suggestion: reduce DFW to 14 flights, add 4 to ATL, drop DFW fare to $210, and increase MD to 3. The Round 2 ATL bonus would reward the ATL addition, DFW load factor would improve, and the cargo premium would still apply on DFW. Also consider shifting DFW mix to 40/60 to more aggressively capture cargo revenue where yield is highest."}, "Sunbelt Airways": {"rank": 20, "strategy": "Cost Leader", "profit": 220036, "lf": 74.3, "on_time": 92, "csat": 4.62, "md": 3, "oc": 4, "atl_f": 170, "atl_m": "60/40", "atl_n": 10, "atl_lf": 65.0, "mco_f": 105, "mco_m": "90/10", "mco_n": 12, "mco_lf": 95.0, "dfw_f": 190, "dfw_m": "50/50", "dfw_n": 8, "dfw_lf": 55.0, "p1": "Sunbelt Airways finished twentieth at $220,036 with a Cost Leader strategy and one of the more unusual route mixes in Round 1. A 60/40 passenger-cargo split on ATL — the only airline to go cargo-heavy on Atlanta — while running standard passenger-heavy on MCO and balanced on DFW. MCO at 95% load factor with below-market pricing was outstanding, but ATL at 65% on the cargo-heavy mix and DFW at 55% left significant revenue unrealized.", "p2": "The ATL 60/40 mix is where the strategy faces its biggest friction. ATL has the lowest cargo yield of the three routes, so running a cargo-heavy mix there costs passenger seats on a strong passenger market without generating proportional cargo revenue in return. Cost Leader's slight passenger demand penalty compounds this — fewer passengers want to fly, and fewer seats are available for them. The result is ATL running well below its potential despite the route's natural strength.", "p3": "For Round 2, the biggest fix is ATL mix — switching ATL from 60/40 to 75/25 or 90/10 would significantly increase ATL passenger revenue without sacrificing much. ATL is a passenger-primary route, and the Cost Leader strategy benefits from high passenger volume at efficient cost. MD=3 is well-positioned for the Round 2 ATL bonus — make sure to capture it with the right mix and pricing. The 95% MCO result is excellent and the below-market pricing there is worth maintaining. OC=4 is a major asset heading into Round 4."}, "Pelican Air": {"rank": 21, "strategy": "Cargo-Focused", "profit": 200360, "lf": 60.5, "on_time": 87, "csat": 4.46, "md": 2, "oc": 3, "atl_f": 185, "atl_m": "90/10", "atl_n": 8, "atl_lf": 81.4, "mco_f": 113, "mco_m": "90/10", "mco_n": 7, "mco_lf": 72.9, "dfw_f": 215, "dfw_m": "40/60", "dfw_n": 15, "dfw_lf": 43.5, "p1": "Pelican Air finished twenty-first at $200,360 with a Cargo-Focused strategy heavily weighted toward DFW (15 flights). The stated goal — testing whether 15 DFW flights with cargo-heavy mix and OC=3 outperforms the practice round — produced mixed results. ATL at 81.4% load factor on 8 flights was actually the strongest ATL performance relative to its allocation in the bottom half of the leaderboard. MCO at 72.9% was decent. But DFW at 43.5% on 15 flights at $215 significantly underperformed.", "p2": "The DFW concentration faces the same challenge seen across multiple airlines this round: 15 flights on the route with the lowest base demand requires strong demand support to fill. At $215 with moderate MD investment, the market simply doesn't support 15 efficient DFW flights. The 40/60 cargo-heavy mix further reduces available passenger seats, which limits how many passengers can board even when demand is reasonable. Cargo revenue helped, but not enough to offset the large number of partially-empty flights.", "p3": "Round 2 recommendation: reduce DFW flights to 11-12 and reallocate to ATL, which showed strong demand efficiency at 81.4% load factor with only 8 flights. Dropping DFW from 15 to 12 would tighten load factor significantly with the same demand. Adding to ATL and considering MD=3 before Round 2 would position this airline to capture the ATL Business Rebound bonus, which could be transformative given how much demand lift the investment generates. DFW mix at 40/60 is fine to maintain on fewer flights where the cargo advantage can actually fill available capacity."}, "GUMPS aviation": {"rank": 22, "strategy": "Cargo-Focused", "profit": 179660, "lf": 55.5, "on_time": 87, "csat": 4.37, "md": 1, "oc": 3, "atl_f": 185, "atl_m": "75/25", "atl_n": 8, "atl_lf": 73.3, "mco_f": 105, "mco_m": "40/60", "mco_n": 10, "mco_lf": 43.5, "dfw_f": 220, "dfw_m": "50/50", "dfw_n": 12, "dfw_lf": 53.5, "p1": "GUMPS aviation finished twenty-second at $179,660, testing how much cargo exposure the airline could sustain. The Cargo-Focused strategy with DFW at 12 flights and an unusual cargo-heavy MCO mix produced below-average results across all three routes. ATL at 73.3% was the strongest route; MCO at 43.5% with the cargo-heavy mix was the weakest result on any significant route allocation in the simulation. DFW at 53.5% continued the pattern of over-allocated, under-filled DFW operations seen across several airlines this round.", "p2": "The MCO cargo-heavy mix is the key issue. MCO has the lowest cargo yield of the three routes and the highest passenger price sensitivity — it is the route best suited to maximizing passenger volume, not cargo capacity. By dedicating 60% of each MCO flight to cargo, available passenger seats were sharply reduced, and those remaining passenger seats weren't all filled either. The result is a route running poorly on both the passenger and cargo sides simultaneously — the worst possible outcome for any route.", "p3": "The Round 2 fix needs to address MCO first. Switching MCO mix to 90/10 at $105-110 would almost certainly produce 85%+ MCO load factor and meaningfully increase passenger revenue on those 10 flights. DFW is a more complex question — at 12 flights, the load factor challenge is manageable with better pricing (try $210-215) and possibly a mix adjustment to 50/50. ATL at 8 flights with MD=1 is under-invested — increasing MD to 2 and adding 2-3 ATL flights ahead of the Round 2 bonus would be a significant improvement. MD=1 on 8 ATL flights is leaving the biggest single opportunity in the game on the table next round."}, "Five Flags Logistics & Transit": {"rank": 23, "strategy": "Cargo-Focused", "profit": 174613, "lf": 54.8, "on_time": 92, "csat": 4.47, "md": 2, "oc": 4, "atl_f": 195, "atl_m": "60/40", "atl_n": 8, "atl_lf": 65.0, "mco_f": 125, "mco_m": "75/25", "mco_n": 8, "mco_lf": 61.8, "dfw_f": 220, "dfw_m": "40/60", "dfw_n": 14, "dfw_lf": 45.0, "p1": "Five Flags Logistics & Transit finished twenty-third at $174,613, deploying aggressive OC=4 investment and a DFW-heavy cargo strategy (14 flights). The stated goal — aggressive OC, neutral MD, diverse route spread — produced the second-best on-time performance in the simulation (92%) and solid cargo efficiency, but load factors suffered across the board: ATL at 65%, MCO at 61.8%, DFW at 45%. With high total costs and relatively modest revenue, the margin was thin.", "p2": "The OC=4 investment is excellent for Round 4 but creates significant fixed cost pressure in the earlier rounds. With moderate MD investment and at or above-market fares, demand didn't generate the load factors needed to make those costs cost-effective this round. DFW at 14 flights and above-market pricing with a cargo-heavy mix produced only 45% passenger load factor — a difficult combination of factors each pulling load factor down. ATL at 60/40 mix also limits passenger capacity on a route better suited to passengers than cargo.", "p3": "Round 2 is a critical correction opportunity. The most impactful changes: switch ATL mix from 60/40 to 75/25 or 90/10 to capture ATL's stronger passenger revenue (cargo yield there is the lowest in the network anyway), drop DFW fare to $210-215 to recover load factor on those 14 flights, and consider whether 14 DFW flights or 10-11 would be more efficient given demand constraints. The OC=4 investment is locked in and will be enormously valuable in Round 4 — absorbing 80% of the $75,000 disruption penalty is a $60,000 advantage over unprotected airlines. Build toward that payoff by improving route efficiency in Rounds 2-3."}, "Squawk Airlines": {"rank": 24, "strategy": "Balanced Carrier", "profit": 137407, "lf": 49.5, "on_time": 87, "csat": 4.3, "md": 3, "oc": 3, "atl_f": 200, "atl_m": "50/50", "atl_n": 12, "atl_lf": 53.5, "mco_f": 115, "mco_m": "50/50", "mco_n": 6, "mco_lf": 53.5, "dfw_f": 210, "dfw_m": "40/60", "dfw_n": 12, "dfw_lf": 43.5, "p1": "Squawk Airlines finished twenty-fourth at $137,406, posting the lowest average load factor in the simulation at 49.5%. The strategy of a balanced 50/50 passenger-cargo mix across all three routes, combined with above-market fares and high MD and OC investment, produced consistently below-capacity operations. ATL, MCO, and DFW all came in at 53.5% or below. The cost structure is high, and revenue couldn't adequately cover it.", "p2": "The 50/50 mix is the central issue. By splitting every flight equally between passengers and cargo, available passenger seats per flight were cut nearly in half compared to a passenger-heavy mix. Even with strong MD investment pulling in demand, the passengers who want to fly can only fill half the seats that would otherwise be available. Meanwhile, the cargo capacity at 50/50 isn't fully filling either. It's a configuration that limits the upside on both sides simultaneously — and the above-market fares on some routes added additional demand pressure on top of the capacity constraint.", "p3": "The Round 2 overhaul should focus on mix first, pricing second. Shifting all routes to 75/25 or 90/10 would immediately increase passenger capacity and allow the MD=3 demand investment to translate into actual revenue rather than turning passengers away at the gate. Fares are mostly reasonable — the issue isn't pricing, it's that willing passengers can't board because seats aren't there. MD=3 is a great asset heading into Round 2's ATL bonus — don't waste it with constrained capacity. OC=3 is also a solid long-term hold for Round 4. Fix the mix, keep the investment levels, and this airline could move up 8-10 positions in Round 2."}, "Cornerstone Cargo": {"rank": 25, "strategy": "Cargo-Focused", "profit": 90816, "lf": 52.9, "on_time": 82, "csat": 4.21, "md": 2, "oc": 2, "atl_f": 175, "atl_m": "40/60", "atl_n": 10, "atl_lf": 42.0, "mco_f": 115, "mco_m": "90/10", "mco_n": 12, "mco_lf": 69.3, "dfw_f": 200, "dfw_m": "40/60", "dfw_n": 8, "dfw_lf": 42.0, "p1": "Cornerstone Cargo finished twenty-fifth at $90,816 — the lowest profit of Round 1 but still profitable, which is not nothing. The Cargo-Focused strategy split aggressively toward cargo on ATL and DFW with a 40/60 mix, while MCO ran passenger-heavy. ATL load factor came in at just 42% — the weakest ATL result in the simulation — and DFW similarly at 42%. MCO held at 69.3% as the relative bright spot. The combination of cargo-heavy mixes on low-cargo-yield routes and constrained passenger capacity drove the outcome.", "p2": "The core challenge is a mismatch between the mix and the actual demand patterns on each route. By dedicating 60% of each ATL and DFW flight to cargo, available passenger seats were sharply reduced — and when fewer seats are available, fewer passengers can board even when demand is there. ATL has the lowest cargo yield of the three routes, so the cargo capacity being reserved there generates less return than the same cargo capacity on DFW would. The strategy's cargo advantage was being applied to the wrong route.", "p3": "Round 2 is a reset opportunity. The most impactful change is mix: ATL at 40/60 is the wrong configuration for that route — ATL has strong passenger demand and low cargo yield. Switch ATL to 90/10 or 75/25. MCO at 90/10 is actually reasonable — keep it. DFW at 40/60 makes more sense given DFW's high cargo yield — that's where the Cargo-Focused strategy should concentrate its cargo exposure. Consider also increasing MD to 3 to capture the Round 2 ATL bonus, which could be transformative given how much demand lift that investment generates. The business model is viable — the route configurations just need to match the strategy's actual strengths."}};
 
 function showPage(id, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
   document.getElementById(id).classList.add('on');
-  if (btn) document.getElementById(btn).classList.add('on');
+  btn.classList.add('on');
   closeDetail();
-  window.scrollTo(0,0);
 }
 
-function stratBadge(s) {
-  const map = {'Cost Leader':['badge-cost','Cost Leader'],'Balanced Carrier':['badge-bal','Balanced Carrier'],'Premium Service':['badge-prem','Premium Service'],'Cargo-Focused':['badge-cargo','Cargo-Focused']};
-  const [cls,label] = map[s]||['badge-bal',s];
-  return `<span class="${cls}">${label}</span>`;
+function medal(r) {
+  if(r===1) return '🥇';
+  if(r===2) return '🥈';
+  if(r===3) return '🥉';
+  return '#'+r;
 }
 
-function medalStr(rank) {
-  if(rank===1) return '🥇 1st'; if(rank===2) return '🥈 2nd'; if(rank===3) return '🥉 3rd';
-  return `#${rank} of 26`;
+function lfColor(lf) {
+  if(lf>=85) return '#4ade80';
+  if(lf>=70) return '#fbbf24';
+  return '#f87171';
 }
 
-function showAirline(name) {
-  const d = AIRLINES[name]; if(!d) return;
-  document.getElementById('detailName').textContent = name;
-  document.getElementById('detailRank').textContent = medalStr(d.rank);
-  document.getElementById('detailBadge').innerHTML = stratBadge(d.strategy);
+function showDetail(airline) {
+  const d = AIRLINES[airline];
+  if(!d) return;
 
-  const profitFmt = d.profit >= 0
-    ? `+$${d.profit.toLocaleString('en-US',{maximumFractionDigits:0})}`
-    : `-$${Math.abs(d.profit).toLocaleString('en-US',{maximumFractionDigits:0})}`;
+  document.getElementById('dTitle').textContent = airline;
+  document.getElementById('dSub').textContent = d.strategy;
+  document.getElementById('dRank').textContent = medal(d.rank) + ' Rank ' + d.rank + ' of 25';
 
-  document.getElementById('detailStats').innerHTML = `
-    <div class="stat-box"><div class="stat-label">Net Profit</div>
-      <div class="stat-val ${d.profit>=0?'green':'red'}">${profitFmt}</div></div>
-    <div class="stat-box"><div class="stat-label">Total Revenue</div>
-      <div class="stat-val">$${d.total_rev.toLocaleString('en-US',{maximumFractionDigits:0})}</div></div>
-    <div class="stat-box"><div class="stat-label">Total Cost</div>
-      <div class="stat-val">$${d.total_cost.toLocaleString('en-US',{maximumFractionDigits:0})}</div></div>
-    <div class="stat-box"><div class="stat-label">Load Factor</div>
-      <div class="stat-val">${d.load_factor.toFixed(1)}%</div></div>
-    <div class="stat-box"><div class="stat-label">Cargo Rev %</div>
-      <div class="stat-val">${d.cargo_pct.toFixed(1)}%</div></div>
-    <div class="stat-box"><div class="stat-label">Rank</div>
-      <div class="stat-val gold">${d.rank} / 26</div></div>`;
+  document.getElementById('dMetrics').innerHTML = `
+    <div class="metric"><div class="metric-val">${(d.profit/1000).toFixed(0)}K</div><div class="metric-lbl">Round 1 Profit</div></div>
+    <div class="metric"><div class="metric-val">${d.lf}%</div><div class="metric-lbl">Avg Load Factor</div></div>
+    <div class="metric"><div class="metric-val">${d.on_time}%</div><div class="metric-lbl">On-Time</div></div>
+    <div class="metric"><div class="metric-val">${d.csat}</div><div class="metric-lbl">Cust Satisfaction</div></div>
+    <div class="metric"><div class="metric-val">MD=${d.md}</div><div class="metric-lbl">Market Dev</div></div>
+    <div class="metric"><div class="metric-val">OC=${d.oc}</div><div class="metric-lbl">Operational Cap</div></div>
+  `;
 
-  const investHtml = (d.md>0||d.oc>0)
-    ? `<div class="invest-pill">MD=${d.md}</div><div class="invest-pill">OC=${d.oc}</div>`
-    : `<div class="invest-pill" style="opacity:.5">MD=0 · OC=0</div>`;
+  function routeCard(label, fare, mix, flts, lf) {
+    return `<div class="route-card">
+      <div class="route-label">✈ ${label}</div>
+      <div class="route-stat"><strong>${flts} flights</strong> · ${mix} mix</div>
+      <div class="route-stat">Fare: <strong>$${fare}</strong></div>
+      <div class="route-stat">Load Factor: <strong style="color:${lfColor(lf)}">${lf}%</strong></div>
+      <div class="lf-bar-wrap"><div class="lf-bar" style="width:${lf}%"></div></div>
+    </div>`;
+  }
 
-  document.getElementById('detailFlights').innerHTML = `
-    <div class="fpill">✈ ATL ${d.atl_flt} flights</div>
-    <div class="fpill">✈ MCO ${d.mco_flt} flights</div>
-    <div class="fpill">✈ DFW ${d.dfw_flt} flights</div>
-    ${investHtml}`;
+  document.getElementById('dRoutes').innerHTML =
+    routeCard('PNS→ATL', d.atl_f, d.atl_m, d.atl_n, d.atl_lf) +
+    routeCard('PNS→MCO', d.mco_f, d.mco_m, d.mco_n, d.mco_lf) +
+    routeCard('PNS→DFW', d.dfw_f, d.dfw_m, d.dfw_n, d.dfw_lf);
 
-  document.getElementById('detailNarrative').innerHTML =
-    `<p>${d.p1}</p><p>${d.p2}</p>`;
-
-  document.getElementById('detailCompliance').innerHTML = d.compliance
-    ? `<div class="compliance-alert">⚠ Flight total did not equal 30 — a $5,000 compliance penalty was applied. Make sure ATL + MCO + DFW = exactly 30 in Round 1.</div>`
-    : '';
+  document.getElementById('dP1').innerHTML = '<div class="feedback-block-lbl">What Happened</div><p class="feedback-p">' + d.p1 + '</p>';
+  document.getElementById('dP2').innerHTML = '<div class="feedback-block-lbl">Why It Happened</div><p class="feedback-p">' + d.p2 + '</p>';
+  document.getElementById('dP3').innerHTML = '<div class="feedback-block-lbl">Round 2 Recommendations</div><p class="feedback-p">' + d.p3 + '</p>';
 
   const panel = document.getElementById('detailPanel');
   panel.classList.add('on');
-  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+  setTimeout(() => panel.scrollIntoView({behavior:'smooth', block:'nearest'}), 50);
 }
 
 function closeDetail() {
