@@ -3,849 +3,897 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TRA 3440 — Airline Simulation</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>TRA 3440 · Airline Simulation · Round 1 Results</title>
 <style>
-:root {
-  --navy: #0a1628;
-  --navy2: #122040;
-  --blue: #1a4a8a;
-  --sky: #2e7dd1;
-  --gold: #f0a500;
-  --gold2: #ffd166;
-  --green: #22c55e;
-  --red: #ef4444;
-  --amber: #f59e0b;
-  --white: #ffffff;
-  --gray: #94a3b8;
-  --light: #e2e8f0;
-  --surface: #0f2035;
-  --surface2: #162840;
-  --text: #f0f4f8;
-  --text2: #94a3b8;
-}
+  :root {
+    --navy: #0a1628;
+    --navy-mid: #122040;
+    --navy-light: #1c3260;
+    --gold: #c9a84c;
+    --gold-light: #e8c96b;
+    --gold-pale: #f5e9c4;
+    --white: #ffffff;
+    --off-white: #f8f6f0;
+    --text-dark: #0a1628;
+    --text-mid: #334466;
+    --text-light: #667799;
+    --green: #1a7a4a;
+    --green-bg: #e6f4ec;
+    --red: #8b1a1a;
+    --red-bg: #faeaea;
+    --amber: #7a5200;
+    --amber-bg: #fff3e0;
+    --new-bg: #e8f0fa;
+    --new-text: #1a3a6e;
+    --corrected-bg: #f0f8e8;
+    --corrected-text: #2a5a1a;
+  }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-  font-family: 'Barlow', sans-serif;
-  background: var(--navy);
-  color: var(--text);
-  min-height: 100vh;
-  background-image:
-    radial-gradient(ellipse at 20% 0%, rgba(42,100,180,0.18) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 100%, rgba(240,165,0,0.08) 0%, transparent 50%);
-}
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--off-white);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
 
-/* ── HEADER ── */
-.header {
-  background: linear-gradient(135deg, var(--navy2) 0%, #0d1f3c 100%);
-  border-bottom: 2px solid var(--gold);
-  padding: 0 2rem;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
-}
-.header-inner {
-  max-width: 1200px; margin: 0 auto;
-  display: flex; align-items: center; gap: 2rem;
-  height: 64px;
-}
-.logo {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.5rem; font-weight: 800; letter-spacing: 0.05em;
-  color: var(--white);
-  white-space: nowrap;
-}
-.logo span { color: var(--gold); }
-.nav { display: flex; gap: 0.25rem; margin-left: auto; }
-.nav-btn {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.4rem 1rem; border-radius: 4px;
-  border: none; cursor: pointer;
-  background: transparent; color: var(--gray);
-  transition: all 0.15s;
-}
-.nav-btn:hover { color: var(--white); background: rgba(255,255,255,0.08); }
-.nav-btn.on { color: var(--gold); background: rgba(240,165,0,0.12); }
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--navy-light) 100%);
+    color: var(--white);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    border: 2px solid rgba(201,168,76,0.15);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 20%;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.1);
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 32px 36px;
+    position: relative;
+    z-index: 1;
+  }
+  .course-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .header-title {
+    font-size: clamp(24px, 4vw, 38px);
+    font-weight: normal;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .header-title em {
+    color: var(--gold-light);
+    font-style: normal;
+  }
+  .header-sub {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 6px;
+  }
+  .header-meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .meta-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .meta-value {
+    font-size: 18px;
+    color: var(--white);
+    font-weight: normal;
+  }
 
-/* ── MAIN LAYOUT ── */
-.main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-.page { display: none; }
-.page.on { display: block; animation: fadeIn 0.2s ease; }
-@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+  /* ── SCENARIO BAR ── */
+  .scenario-bar {
+    background: var(--gold);
+    padding: 14px 32px;
+  }
+  .scenario-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .scenario-pill {
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .scenario-text {
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    color: var(--navy);
+    font-weight: 600;
+  }
 
-/* ── HERO ── */
-.hero {
-  text-align: center; padding: 3rem 1rem 2rem;
-  position: relative;
-}
-.round-badge {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  background: rgba(240,165,0,0.15); border: 1px solid var(--gold);
-  color: var(--gold); border-radius: 100px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em;
-  text-transform: uppercase; padding: 0.35rem 1rem;
-  margin-bottom: 1rem;
-}
-.round-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
-@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-.hero h1 {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800;
-  line-height: 1.05; letter-spacing: 0.02em;
-  color: var(--white); margin-bottom: 0.5rem;
-}
-.hero h1 span { color: var(--gold); }
-.hero p { color: var(--text2); font-size: 1rem; font-weight: 300; }
+  /* ── MAIN CONTENT ── */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+  }
 
-/* ── STATS ROW ── */
-.stats-row {
-  display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem;
-  margin: 2rem 0;
-}
-.stat-card {
-  background: var(--surface); border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 8px; padding: 1.25rem; text-align: center;
-}
-.stat-val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 2rem; font-weight: 800; color: var(--gold);
-}
-.stat-lbl { font-size: 0.75rem; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 0.25rem; }
+  /* ── NOTICE BANNERS ── */
+  .notice {
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .notice-icon { font-size: 16px; margin-top: 1px; flex-shrink: 0; }
+  .notice-new { background: var(--new-bg); color: var(--new-text); border-left: 3px solid #3a6abf; }
+  .notice-corrected { background: var(--corrected-bg); color: var(--corrected-text); border-left: 3px solid #4a8a2a; }
 
-/* ── LEADERBOARD TABLE ── */
-.lb-wrap {
-  background: var(--surface); border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px; overflow: hidden;
-}
-.lb-wrap table { width: 100%; border-collapse: collapse; }
-.lb-wrap thead tr {
-  background: var(--navy2);
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--text2);
-}
-.lb-wrap thead th { padding: 0.85rem 1rem; text-align: left; }
-.lb-row {
-  border-top: 1px solid rgba(255,255,255,0.05);
-  cursor: pointer; transition: background 0.12s;
-  font-size: 0.92rem;
-}
-.lb-row:hover { background: rgba(46,125,209,0.1); }
-.lb-row td { padding: 0.8rem 1rem; }
-.rank-cell { font-family:'Barlow Condensed',sans-serif; font-size:1.1rem; font-weight:800; }
-.name-cell .al-link { color: var(--sky); font-weight: 600; }
-.name-cell .al-link:hover { color: var(--gold2); }
-.profit-cell { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:1rem; color: var(--green); }
+  /* ── SECTION HEADING ── */
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 32px 0 16px;
+  }
+  .section-heading h2 {
+    font-size: 13px;
+    font-family: 'Arial', sans-serif;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-mid);
+  }
+  .section-heading::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #d0c9b8;
+  }
 
-/* strategy badges */
-.badge-cost,.badge-bal,.badge-prem,.badge-cargo {
-  display:inline-block; padding:0.2rem 0.6rem; border-radius:4px;
-  font-size:0.72rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;
-}
-.badge-cost { background:rgba(34,197,94,0.15); color:#4ade80; border:1px solid rgba(34,197,94,0.3); }
-.badge-bal  { background:rgba(46,125,209,0.15); color:#7dd3fc; border:1px solid rgba(46,125,209,0.3); }
-.badge-prem { background:rgba(240,165,0,0.15);  color:#fbbf24; border:1px solid rgba(240,165,0,0.3); }
-.badge-cargo{ background:rgba(249,115,22,0.15); color:#fb923c; border:1px solid rgba(249,115,22,0.3); }
+  /* ── LEADERBOARD TABLE ── */
+  .leaderboard-wrap {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(10,22,40,0.08);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+  }
+  thead {
+    background: var(--navy);
+    color: var(--white);
+  }
+  thead th {
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  thead th.right { text-align: right; }
 
-/* band cells */
-.band-elite { color:#fbbf24; font-weight:700; }
-.band-strong { color:#86efac; font-weight:600; }
-.band-dev   { color:#7dd3fc; }
-.band-str   { color:#f87171; }
+  tbody tr {
+    border-bottom: 1px solid #eee8da;
+    transition: background 0.15s;
+  }
+  tbody tr:hover { background: #faf7f0; }
+  tbody tr:last-child { border-bottom: none; }
 
-/* ── DETAIL PANEL ── */
-.detail-panel {
-  display: none;
-  background: var(--surface2); border: 1px solid rgba(46,125,209,0.3);
-  border-radius: 12px; margin-top: 1.5rem;
-  overflow: hidden;
-  animation: slideDown 0.2s ease;
-}
-@keyframes slideDown { from{opacity:0;transform:translateY(-8px);} to{opacity:1;transform:translateY(0);} }
-.detail-panel.on { display: block; }
+  td {
+    padding: 12px 14px;
+    vertical-align: middle;
+  }
+  td.right { text-align: right; font-variant-numeric: tabular-nums; }
 
-.detail-header {
-  background: linear-gradient(135deg, var(--blue) 0%, #1a3a6a 100%);
-  padding: 1.5rem 2rem;
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 1rem; flex-wrap: wrap;
-}
-.detail-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.8rem; font-weight: 800; color: var(--white);
-}
-.detail-rank {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.1rem; font-weight: 700; color: var(--gold);
-  background: rgba(240,165,0,0.15); border: 1px solid var(--gold);
-  padding: 0.3rem 0.9rem; border-radius: 6px;
-}
-.close-btn {
-  background: rgba(255,255,255,0.1); border: none; color: var(--white);
-  font-size: 1.2rem; width: 32px; height: 32px; border-radius: 6px;
-  cursor: pointer; display:flex; align-items:center; justify-content:center;
-  transition: background 0.12s; flex-shrink:0;
-}
-.close-btn:hover { background: rgba(255,255,255,0.2); }
+  /* rank badge */
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .rank-1 { background: #c9a84c; color: #fff; }
+  .rank-2 { background: #9aa8b8; color: #fff; }
+  .rank-3 { background: #b87333; color: #fff; }
+  .rank-other { background: #e8e2d8; color: #445; }
 
-.detail-body { padding: 1.5rem 2rem; }
+  /* airline name */
+  .airline-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-family: 'Georgia', serif;
+  }
+  .airline-badges {
+    display: flex;
+    gap: 5px;
+    margin-top: 3px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .badge-corrected { background: var(--corrected-bg); color: var(--corrected-text); }
+  .badge-new { background: var(--new-bg); color: var(--new-text); }
 
-.metrics-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
-  gap: 0.75rem; margin-bottom: 1.5rem;
-}
-.metric {
-  background: var(--surface); border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 8px; padding: 1rem; text-align: center;
-}
-.metric-val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.5rem; font-weight: 800; color: var(--gold);
-}
-.metric-lbl { font-size: 0.7rem; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 0.2rem; }
+  /* strategy pill */
+  .strat-pill {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .strat-cost     { background: #e8f4e8; color: #1a5a1a; }
+  .strat-balanced { background: #e8eef8; color: #1a3a6e; }
+  .strat-premium  { background: #f8eaf8; color: #5a1a6e; }
+  .strat-cargo    { background: #fef3e2; color: #7a4200; }
 
-.routes-grid {
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-.route-card {
-  background: var(--surface); border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 8px; padding: 1rem;
-}
-.route-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--sky); margin-bottom: 0.6rem;
-}
-.route-stat { font-size: 0.85rem; color: var(--text2); margin: 0.2rem 0; }
-.route-stat strong { color: var(--text); }
-.lf-bar-wrap { margin-top: 0.6rem; background: rgba(255,255,255,0.08); border-radius:100px; height:6px; overflow:hidden; }
-.lf-bar { height:100%; border-radius:100px; background: linear-gradient(90deg, var(--sky), var(--gold)); transition: width 0.5s; }
+  /* investment dots */
+  .invest-dots { display: flex; gap: 3px; align-items: center; }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .dot-filled { background: var(--navy); }
+  .dot-empty { background: #ddd; }
+  .invest-label { font-size: 10px; color: var(--text-light); margin-left: 4px; }
 
-.feedback-section { margin-top: 0.5rem; }
-.feedback-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--gold);
-  margin-bottom: 0.5rem; padding-bottom: 0.4rem;
-  border-bottom: 1px solid rgba(240,165,0,0.2);
-}
-.feedback-p { font-size: 0.92rem; line-height: 1.65; color: var(--text2); margin-bottom: 1rem; }
-.feedback-p:last-child { margin-bottom: 0; }
+  /* profit cell */
+  .profit-positive { color: var(--green); font-weight: 700; }
+  .profit-negative { color: var(--red); font-weight: 700; }
+  .profit-bar-wrap { margin-top: 4px; }
+  .profit-bar-track { background: #eee; border-radius: 2px; height: 4px; width: 100px; }
+  .profit-bar-fill { background: var(--gold); border-radius: 2px; height: 4px; }
+  .profit-bar-fill.negative { background: #c0392b; }
 
-.feedback-block {
-  background: var(--surface); border-left: 3px solid var(--sky);
-  border-radius: 0 8px 8px 0; padding: 1rem 1.25rem;
-  margin-bottom: 0.75rem;
-}
-.feedback-block.r2 { border-left-color: var(--gold); }
-.feedback-block-lbl {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--sky); margin-bottom: 0.4rem;
-}
-.feedback-block.r2 .feedback-block-lbl { color: var(--gold); }
+  /* expand row */
+  tr.expand-row { background: #fafaf5; }
+  tr.expand-row td { padding: 0; }
+  .expand-inner { padding: 16px 20px 20px; display: none; }
+  .expand-inner.open { display: block; }
 
-/* ── INFO PAGES ── */
-.info-section { margin-bottom: 2rem; }
-.section-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.4rem; font-weight: 800; color: var(--gold);
-  letter-spacing: 0.05em; text-transform: uppercase;
-  margin-bottom: 1rem; padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(240,165,0,0.2);
-}
-.info-card {
-  background: var(--surface); border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 8px; padding: 1.25rem; margin-bottom: 0.75rem;
-}
-.info-card p { font-size:0.9rem; line-height:1.65; color:var(--text2); }
-.info-card h3 { font-family:'Barlow Condensed',sans-serif; font-weight:700; color:var(--white); margin-bottom:0.5rem; }
+  .route-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .route-card {
+    background: var(--white);
+    border: 1px solid #e0d8c8;
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .route-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .route-airport {
+    display: inline-block;
+    background: var(--navy);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+  }
+  .route-stat { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .route-stat-label { font-size: 11px; color: var(--text-light); }
+  .route-stat-value { font-size: 11px; font-weight: 600; color: var(--text-dark); }
 
-.rounds-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:0.75rem; }
-.round-card {
-  background: var(--surface); border:1px solid rgba(255,255,255,0.08);
-  border-radius:8px; padding:1.1rem;
-}
-.round-card.active { border-color:var(--gold); background:rgba(240,165,0,0.06); }
-.round-num {
-  font-family:'Barlow Condensed',sans-serif; font-weight:800;
-  font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em;
-  color:var(--text2); margin-bottom:0.3rem;
-}
-.round-card.active .round-num { color:var(--gold); }
-.round-name { font-weight:600; font-size:0.9rem; color:var(--white); margin-bottom:0.4rem; }
-.round-desc { font-size:0.8rem; color:var(--text2); line-height:1.5; }
-.round-status {
-  display:inline-block; margin-top:0.5rem;
-  font-size:0.68rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
-  padding:0.2rem 0.6rem; border-radius:4px;
-}
-.status-done { background:rgba(34,197,94,0.15); color:#4ade80; }
-.status-next { background:rgba(240,165,0,0.15); color:var(--gold); }
-.status-future { background:rgba(255,255,255,0.06); color:var(--text2); }
+  .feedback-section { margin-top: 16px; }
+  .feedback-heading {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    border-bottom: 1px solid #e0d8c8;
+    padding-bottom: 6px;
+  }
+  .feedback-block { margin-bottom: 10px; }
+  .feedback-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 3px;
+  }
+  .feedback-text { font-size: 13px; line-height: 1.6; color: var(--text-mid); font-family: 'Georgia', serif; }
 
-.param-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
-.param-table th {
-  background:var(--navy2); color:var(--text2);
-  font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700;
-  letter-spacing:0.08em; text-transform:uppercase; padding:0.65rem 0.9rem; text-align:left;
-}
-.param-table td { padding:0.6rem 0.9rem; border-top:1px solid rgba(255,255,255,0.05); color:var(--text2); }
-.param-table td:first-child { color:var(--text); font-weight:500; }
+  .toggle-btn {
+    background: none;
+    border: 1px solid #c8c0b0;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-family: 'Arial', sans-serif;
+    color: var(--text-mid);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .toggle-btn:hover { background: #f0ece0; }
 
-/* ── FOOTER ── */
-.footer {
-  text-align:center; padding:2rem; margin-top:3rem;
-  color:var(--text2); font-size:0.78rem;
-  border-top:1px solid rgba(255,255,255,0.06);
-}
+  /* ── STRATEGY SUMMARY ── */
+  .strategy-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .strat-card {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 18px;
+    box-shadow: 0 1px 6px rgba(10,22,40,0.06);
+    border-top: 3px solid var(--navy);
+  }
+  .strat-card-title {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 10px;
+  }
+  .strat-card-stat {
+    font-size: 22px;
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+  .strat-card-sub {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    color: var(--text-light);
+  }
+  .strat-card-airlines {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    color: var(--text-mid);
+    line-height: 1.7;
+  }
 
-@media (max-width:700px) {
-  .stats-row { grid-template-columns:repeat(2,1fr); }
-  .routes-grid { grid-template-columns:1fr; }
-  .detail-header { flex-direction:column; align-items:flex-start; }
-  .lb-wrap thead th:nth-child(5),
-  .lb-wrap thead th:nth-child(6),
-  .lb-row td:nth-child(5),
-  .lb-row td:nth-child(6) { display:none; }
-}
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 24px;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+  }
+  footer span { color: var(--gold); }
+
+  @media (max-width: 700px) {
+    .route-grid { grid-template-columns: 1fr; }
+    .strategy-summary { grid-template-columns: 1fr 1fr; }
+    .header-meta { gap: 20px; }
+    td, th { padding: 10px 8px; }
+  }
 </style>
 </head>
 <body>
 
-<div class="header">
+<header>
   <div class="header-inner">
-    <div class="logo">TRA <span>3440</span> · Airline Simulation</div>
-    <nav class="nav">
-      <button class="nav-btn on" onclick="showPage('pg-lb',this)">Leaderboard</button>
-      <button class="nav-btn" onclick="showPage('pg-rounds',this)">Rounds</button>
-      <button class="nav-btn" onclick="showPage('pg-params',this)">Parameters</button>
-      <button class="nav-btn" onclick="showPage('pg-about',this)">About</button>
-    </nav>
+    <div class="course-label">TRA 3440 · Introduction to Air Transportation · University of West Florida</div>
+    <h1 class="header-title">Airline Strategy Simulation<br><em>Round 1 — Baseline Launch</em></h1>
+    <div class="header-sub">Summer 2026 · Results updated to include late submissions</div>
+    <div class="header-meta">
+      <div class="meta-item">
+        <div class="meta-label">Airlines Ranked</div>
+        <div class="meta-value">29</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Top Net Profit</div>
+        <div class="meta-value">$253,365</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Scenario</div>
+        <div class="meta-value">Baseline Launch</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Hub</div>
+        <div class="meta-value">PNS</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="scenario-bar">
+  <div class="scenario-inner">
+    <span class="scenario-pill">Round 1 Scenario</span>
+    <span class="scenario-text">No external shocks — establish your baseline strategy across ATL, MCO, and DFW routes from Pensacola.</span>
   </div>
 </div>
 
-<div class="main">
+<main>
 
-<!-- ══ LEADERBOARD PAGE ══ -->
-<div id="pg-lb" class="page on">
-  <div class="hero">
-    <div class="round-badge">Round 1 Results — Baseline Launch</div>
-    <h1>The <span>Board</span> Is Set</h1>
-    <p>25 airlines competed. Click any row to see full results and Round 2 guidance.</p>
+  <div class="notice notice-new">
+    <span class="notice-icon">🆕</span>
+    <div><strong>Late Submissions Added:</strong> Four airlines — Worldwide Airways, Global Haul Aviation, Jetset Airlines, and Apex Airways — submitted after the original deadline and have been added to the Round 1 results. Their scores are official and count toward the semester standings.</div>
   </div>
 
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-val">25</div>
-      <div class="stat-lbl">Airlines Flying</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val">$506K</div>
-      <div class="stat-lbl">Top Profit</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val">$295K</div>
-      <div class="stat-lbl">Avg Profit</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val">$91K</div>
-      <div class="stat-lbl">Lowest Profit</div>
-    </div>
+  <div class="notice notice-corrected">
+    <span class="notice-icon">✓</span>
+    <div><strong>Strategy Corrections Applied:</strong> Four airlines (Five Flags Logistics &amp; Transit Co., 起飞, Latitude Airlines, Fairline) were re-scored under their registered strategies after the original submission. These corrections carry forward and are marked below.</div>
   </div>
 
-  <div class="lb-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Airline</th>
-          <th>Strategy</th>
-          <th>Round 1 Profit</th>
-          <th>Avg LF</th>
-          <th>On-Time</th>
-          <th>Band</th>
-        </tr>
-      </thead>
-      <tbody>
-    <tr class="lb-row" onclick="showDetail('Capital Airlines')">
-      <td class="rank-cell">🥇</td>
-      <td class="name-cell"><span class="al-link">Capital Airlines</span></td>
-      <td><span class="badge-bal">Balanced Carrier</span></td>
-      <td class="profit-cell">$506,996</td>
-      <td>85.1%</td>
-      <td>82%</td>
-      <td class="band-elite">⭐⭐⭐ Elite</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('East Coast Air')">
-      <td class="rank-cell">🥈</td>
-      <td class="name-cell"><span class="al-link">East Coast Air</span></td>
-      <td><span class="badge-bal">Balanced Carrier</span></td>
-      <td class="profit-cell">$394,542</td>
-      <td>85.2%</td>
-      <td>82%</td>
-      <td class="band-elite">⭐⭐⭐ Elite</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Fairline')">
-      <td class="rank-cell">🥉</td>
-      <td class="name-cell"><span class="al-link">Fairline</span> <span class="badge-corrected">✓ Corrected</span></td>
-      <td><span class="badge-cost">Cost Leader</span></td>
-      <td class="profit-cell">$361,065</td>
-      <td>90.7%</td>
-      <td>78%</td>
-      <td class="band-elite">⭐⭐⭐ Elite</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Gulf Coast Air')">
-      <td class="rank-cell">#4</td>
-      <td class="name-cell"><span class="al-link">Gulf Coast Air</span></td>
-      <td><span class="badge-bal">Balanced Carrier</span></td>
-      <td class="profit-cell">$346,394</td>
-      <td>75.6%</td>
-      <td>82%</td>
-      <td class="band-strong">⭐⭐ Strong</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Fareline Air')">
-      <td class="rank-cell">#5</td>
-      <td class="name-cell"><span class="al-link">Fareline Air</span></td>
-      <td><span class="badge-bal">Balanced Carrier</span></td>
-      <td class="profit-cell">$343,378</td>
-      <td>71.0%</td>
-      <td>82%</td>
-      <td class="band-strong">⭐⭐ Strong</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Jet Lag Logistics')">
-      <td class="rank-cell">#6</td>
-      <td class="name-cell"><span class="al-link">Jet Lag Logistics</span></td>
-      <td><span class="badge-cargo">Cargo-Focused</span></td>
-      <td class="profit-cell">$340,298</td>
-      <td>72.5%</td>
-      <td>82%</td>
-      <td class="band-strong">⭐⭐ Strong</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Skyhigh Airways')">
-      <td class="rank-cell">#7</td>
-      <td class="name-cell"><span class="al-link">Skyhigh Airways</span></td>
-      <td><span class="badge-bal">Balanced Carrier</span></td>
-      <td class="profit-cell">$338,436</td>
-      <td>76.1%</td>
-      <td>82%</td>
-      <td class="band-strong">⭐⭐ Strong</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Latitude Airlines')">
-      <td class="rank-cell">#8</td>
-      <td class="name-cell"><span class="al-link">Latitude Airlines</span> <span class="badge-corrected">✓ Corrected</span></td>
-      <td><span class="badge-cost">Cost Leader</span></td>
-      <td class="profit-cell">$329,175</td>
-      <td>68.7%</td>
-      <td>92%</td>
-      <td class="band-strong">⭐⭐ Strong</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('ADAPT Airlines')">
-      <td class="rank-cell">#9</td>
-      <td class="name-cell"><span class="al-link">ADAPT Airlines</span></td>
-      <td><span class="badge-bal">Balanced Carrier</span></td>
-      <td class="profit-cell">$327,028</td>
-      <td>71.6%</td>
-      <td>87%</td>
-      <td class="band-dev">⭐ Developing</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Emerald Argo Airlines')">
-      <td class="rank-cell">#10</td>
-      <td class="name-cell"><span class="al-link">Emerald Argo Airlines</span></td>
-      <td><span class="badge-cargo">Cargo-Focused</span></td>
-      <td class="profit-cell">$322,658</td>
-      <td>78.4%</td>
-      <td>78%</td>
-      <td class="band-dev">⭐ Developing</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('起飞')">
-      <td class="rank-cell">#11</td>
-      <td class="name-cell"><span class="al-link">起飞</span> <span class="badge-corrected">✓ Corrected</span></td>
-      <td><span class="badge-cargo">Cargo-Focused</span></td>
-      <td class="profit-cell">$319,409</td>
-      <td>65.6%</td>
-      <td>82%</td>
-      <td class="band-dev">⭐ Developing</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Lo-Povo Air')">
-      <td class="rank-cell">#12</td>
-      <td class="name-cell"><span class="al-link">Lo-Povo Air</span></td>
-      <td><span class="badge-cost">Cost Leader</span></td>
-      <td class="profit-cell">$313,300</td>
-      <td>75.0%</td>
-      <td>92%</td>
-      <td class="band-dev">⭐ Developing</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Blue Knight Airways')">
-      <td class="rank-cell">#13</td>
-      <td class="name-cell"><span class="al-link">Blue Knight Airways</span></td>
-      <td><span class="badge-prem">Premium Service</span></td>
-      <td class="profit-cell">$305,401</td>
-      <td>79.3%</td>
-      <td>92%</td>
-      <td class="band-dev">⭐ Developing</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Emerald Coast Airways')">
-      <td class="rank-cell">#14</td>
-      <td class="name-cell"><span class="al-link">Emerald Coast Airways</span></td>
-      <td><span class="badge-bal">Balanced Carrier</span></td>
-      <td class="profit-cell">$293,170</td>
-      <td>71.1%</td>
-      <td>82%</td>
-      <td class="band-dev">⭐ Developing</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Pensacola Airlines')">
-      <td class="rank-cell">#15</td>
-      <td class="name-cell"><span class="al-link">Pensacola Airlines</span></td>
-      <td><span class="badge-bal">Balanced Carrier</span></td>
-      <td class="profit-cell">$292,322</td>
-      <td>76.8%</td>
-      <td>87%</td>
-      <td class="band-dev">⭐ Developing</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Big Bird Airways')">
-      <td class="rank-cell">#16</td>
-      <td class="name-cell"><span class="al-link">Big Bird Airways</span></td>
-      <td><span class="badge-cargo">Cargo-Focused</span></td>
-      <td class="profit-cell">$286,257</td>
-      <td>67.3%</td>
-      <td>92%</td>
-      <td class="band-str">📉 Struggling</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Gulf Coast Airways')">
-      <td class="rank-cell">#17</td>
-      <td class="name-cell"><span class="al-link">Gulf Coast Airways</span></td>
-      <td><span class="badge-bal">Balanced Carrier</span></td>
-      <td class="profit-cell">$274,748</td>
-      <td>70.2%</td>
-      <td>87%</td>
-      <td class="band-str">📉 Struggling</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Cargo Before Comfort Air')">
-      <td class="rank-cell">#18</td>
-      <td class="name-cell"><span class="al-link">Cargo Before Comfort Air</span></td>
-      <td><span class="badge-cargo">Cargo-Focused</span></td>
-      <td class="profit-cell">$272,222</td>
-      <td>60.5%</td>
-      <td>82%</td>
-      <td class="band-str">📉 Struggling</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('GRY Air')">
-      <td class="rank-cell">#19</td>
-      <td class="name-cell"><span class="al-link">GRY Air</span></td>
-      <td><span class="badge-cargo">Cargo-Focused</span></td>
-      <td class="profit-cell">$250,788</td>
-      <td>62.5%</td>
-      <td>87%</td>
-      <td class="band-str">📉 Struggling</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Sunbelt Airways')">
-      <td class="rank-cell">#20</td>
-      <td class="name-cell"><span class="al-link">Sunbelt Airways</span></td>
-      <td><span class="badge-cost">Cost Leader</span></td>
-      <td class="profit-cell">$220,036</td>
-      <td>74.3%</td>
-      <td>92%</td>
-      <td class="band-str">📉 Struggling</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Pelican Air')">
-      <td class="rank-cell">#21</td>
-      <td class="name-cell"><span class="al-link">Pelican Air</span></td>
-      <td><span class="badge-cargo">Cargo-Focused</span></td>
-      <td class="profit-cell">$200,360</td>
-      <td>60.5%</td>
-      <td>87%</td>
-      <td class="band-str">📉 Struggling</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Five Flags Logistics & Transit')">
-      <td class="rank-cell">#22</td>
-      <td class="name-cell"><span class="al-link">Five Flags Logistics & Transit</span> <span class="badge-corrected">✓ Corrected</span></td>
-      <td><span class="badge-bal">Balanced Carrier</span></td>
-      <td class="profit-cell">$200,279</td>
-      <td>57.5%</td>
-      <td>92%</td>
-      <td class="band-str">📉 Struggling</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('GUMPS aviation')">
-      <td class="rank-cell">#23</td>
-      <td class="name-cell"><span class="al-link">GUMPS aviation</span></td>
-      <td><span class="badge-cargo">Cargo-Focused</span></td>
-      <td class="profit-cell">$179,660</td>
-      <td>55.5%</td>
-      <td>87%</td>
-      <td class="band-str">📉 Struggling</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Squawk Airlines')">
-      <td class="rank-cell">#24</td>
-      <td class="name-cell"><span class="al-link">Squawk Airlines</span></td>
-      <td><span class="badge-bal">Balanced Carrier</span></td>
-      <td class="profit-cell">$137,406</td>
-      <td>49.5%</td>
-      <td>87%</td>
-      <td class="band-str">📉 Struggling</td>
-    </tr>
-    <tr class="lb-row" onclick="showDetail('Cornerstone Cargo')">
-      <td class="rank-cell">#25</td>
-      <td class="name-cell"><span class="al-link">Cornerstone Cargo</span></td>
-      <td><span class="badge-cargo">Cargo-Focused</span></td>
-      <td class="profit-cell">$90,816</td>
-      <td>52.9%</td>
-      <td>82%</td>
-      <td class="band-str">📉 Struggling</td>
-    </tr></tbody>
-    </table>
+  <div class="section-heading"><h2>Full Leaderboard</h2></div>
+
+  <div class="leaderboard-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th style="width:44px">Rank</th>
+        <th>Airline</th>
+        <th>Strategy</th>
+        <th class="right">MD</th>
+        <th class="right">OC</th>
+        <th class="right">Revenue</th>
+        <th class="right">Net Profit</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="leaderboard-body"></tbody>
+  </table>
   </div>
 
-  <!-- Detail panel -->
-  <div class="detail-panel" id="detailPanel">
-    <div class="detail-header">
-      <div>
-        <div class="detail-title" id="dTitle"></div>
-        <div style="color:var(--text2);font-size:0.85rem;margin-top:0.2rem;" id="dSub"></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:0.75rem;">
-        <div class="detail-rank" id="dRank"></div>
-        <button class="close-btn" onclick="closeDetail()">✕</button>
-      </div>
-    </div>
-    <div class="detail-body">
-      <div class="metrics-grid" id="dMetrics"></div>
-      <div class="routes-grid" id="dRoutes"></div>
-      <div class="feedback-section">
-        <div class="feedback-label">Round 1 Analysis &amp; Round 2 Guidance</div>
-        <div class="feedback-block" id="dP1"></div>
-        <div class="feedback-block" id="dP2"></div>
-        <div class="feedback-block r2" id="dP3"></div>
-      </div>
-    </div>
-  </div>
-</div>
+  <div class="section-heading" style="margin-top:40px"><h2>Strategy Overview</h2></div>
+  <div class="strategy-summary" id="strat-summary"></div>
 
-<!-- ══ ROUNDS PAGE ══ -->
-<div id="pg-rounds" class="page">
-  <div class="hero" style="padding-bottom:1rem;">
-    <h1>Simulation <span>Rounds</span></h1>
-    <p>Five rounds, five different market conditions. Each round rewards different strategies.</p>
-  </div>
+</main>
 
-  <div class="info-section">
-    <div class="rounds-grid">
-      <div class="round-card active">
-        <div class="round-num">Round 1</div>
-        <div class="round-name">Baseline Launch</div>
-        <div class="round-desc">Standard market conditions. Establish your route network and pricing strategy. No scenario bonuses active.</div>
-        <span class="round-status status-done">✓ Complete</span>
-      </div>
-      <div class="round-card">
-        <div class="round-num">Round 2</div>
-        <div class="round-name">ATL Business Rebound</div>
-        <div class="round-desc">Business travel surges on ATL. Market Development investment earns a 15% bonus multiplier on all ATL demand.</div>
-        <span class="round-status status-next">↑ Next Round</span>
-      </div>
-      <div class="round-card">
-        <div class="round-num">Round 3</div>
-        <div class="round-name">DFW Cargo Surge</div>
-        <div class="round-desc">Freight demand spikes on DFW. Operational Capability earns a 20% cargo efficiency bonus on DFW routes.</div>
-        <span class="round-status status-future">Upcoming</span>
-      </div>
-      <div class="round-card">
-        <div class="round-num">Round 4</div>
-        <div class="round-name">Disruption Round</div>
-        <div class="round-desc">Fuel spike + weather event hits all airlines. A $75,000 base penalty applies — OC level determines how much you absorb.</div>
-        <span class="round-status status-future">Upcoming</span>
-      </div>
-      <div class="round-card">
-        <div class="round-num">Round 5</div>
-        <div class="round-name">Spirit Collapse</div>
-        <div class="round-desc">A major competitor exits the MCO market. MCO fares rise, demand surges. MD investment earns a 25% bonus multiplier.</div>
-        <span class="round-status status-future">Upcoming</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="info-section">
-    <div class="section-title">Round 4 Disruption — OC Protection Table</div>
-    <div class="info-card">
-      <p style="margin-bottom:1rem;">The Round 4 disruption applies a <strong style="color:var(--white)">$75,000 base penalty</strong> to every airline. Your Operational Capability (OC) level determines how much of that penalty you absorb. Airlines that invested in OC early are protected.</p>
-      <table class="param-table">
-        <thead><tr><th>OC Level</th><th>Protection</th><th>Penalty Absorbed</th><th>Net Penalty</th></tr></thead>
-        <tbody>
-          <tr><td>OC = 0</td><td>0%</td><td>$0</td><td>$75,000</td></tr>
-          <tr><td>OC = 1</td><td>20%</td><td>$15,000</td><td>$60,000</td></tr>
-          <tr><td>OC = 2</td><td>40%</td><td>$30,000</td><td>$45,000</td></tr>
-          <tr><td>OC = 3</td><td>60%</td><td>$45,000</td><td>$30,000</td></tr>
-          <tr><td>OC = 4</td><td>80%</td><td>$60,000</td><td>$15,000</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- ══ PARAMETERS PAGE ══ -->
-<div id="pg-params" class="page">
-  <div class="hero" style="padding-bottom:1rem;">
-    <h1>Simulation <span>Parameters</span></h1>
-    <p>The numbers behind the engine. Study these carefully.</p>
-  </div>
-
-  <div class="info-section">
-    <div class="section-title">Market Parameters</div>
-    <div class="info-card">
-      <table class="param-table">
-        <thead><tr><th>Route</th><th>Market Fare</th><th>Price Sensitivity</th><th>Cost/Flight</th><th>Cargo Yield/Unit</th></tr></thead>
-        <tbody>
-          <tr><td>PNS → ATL</td><td>$185</td><td>1.3</td><td>$8,000</td><td>$90</td></tr>
-          <tr><td>PNS → MCO</td><td>$115</td><td>1.8 (highest)</td><td>$7,200</td><td>$80</td></tr>
-          <tr><td>PNS → DFW</td><td>$210</td><td>1.1 (lowest)</td><td>$9,200</td><td>$120 (highest)</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="info-section">
-    <div class="section-title">Strategy Multipliers</div>
-    <div class="info-card">
-      <table class="param-table">
-        <thead><tr><th>Strategy</th><th>Pax Demand</th><th>Cargo Demand</th><th>Cost</th></tr></thead>
-        <tbody>
-          <tr><td>Cost Leader</td><td>×0.95</td><td>×0.90</td><td>×0.90</td></tr>
-          <tr><td>Balanced Carrier</td><td>×1.00</td><td>×1.00</td><td>×1.00</td></tr>
-          <tr><td>Premium Service</td><td>×1.10</td><td>×0.85</td><td>×1.10</td></tr>
-          <tr><td>Cargo-Focused</td><td>×0.85</td><td>×1.30</td><td>×1.05</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="info-section">
-    <div class="section-title">MD &amp; OC Investment Levels</div>
-    <div class="info-card">
-      <table class="param-table">
-        <thead><tr><th>Level</th><th>MD Cost</th><th>MD Demand Lift</th><th>OC Cost</th><th>OC Cargo Eff.</th><th>OC Cost Reduction</th><th>OC LF Bonus</th></tr></thead>
-        <tbody>
-          <tr><td>0</td><td>$0</td><td>×1.00</td><td>$0</td><td>×1.00</td><td>—</td><td>+0%</td></tr>
-          <tr><td>1</td><td>$6,000</td><td>×1.12</td><td>$6,000</td><td>×1.10</td><td>−3%</td><td>+1%</td></tr>
-          <tr><td>2</td><td>$14,000</td><td>×1.25</td><td>$14,000</td><td>×1.20</td><td>−6%</td><td>+2%</td></tr>
-          <tr><td>3</td><td>$26,000</td><td>×1.40</td><td>$26,000</td><td>×1.32</td><td>−10%</td><td>+3.5%</td></tr>
-          <tr><td>4</td><td>$42,000</td><td>×1.58</td><td>$42,000</td><td>×1.45</td><td>−15%</td><td>+5%</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- ══ ABOUT PAGE ══ -->
-<div id="pg-about" class="page">
-  <div class="hero" style="padding-bottom:1rem;">
-    <h1>About the <span>Simulation</span></h1>
-  </div>
-  <div class="info-section">
-    <div class="info-card">
-      <h3>TRA 3440 — Introduction to Air Transportation</h3>
-      <p style="margin-top:0.5rem;">University of West Florida · Summer 2026 · Dr. Kenny O'Connor</p>
-      <p style="margin-top:1rem;">This simulation places you as the CEO of a regional airline operating out of Pensacola (PNS) with routes to Atlanta (ATL), Orlando (MCO), and Dallas-Fort Worth (DFW). Each round you set fares, allocate 30 flights across the three routes, choose a passenger-cargo mix, and invest in Market Development and Operational Capability.</p>
-      <p style="margin-top:0.75rem;">The simulation runs for 5 rounds, each with a different market scenario. Your cumulative profit across all rounds determines your final ranking.</p>
-    </div>
-  </div>
-  <div class="info-section">
-    <div class="section-title">Grading</div>
-    <div class="info-card">
-      <table class="param-table">
-        <thead><tr><th>Assignment</th><th>Due</th><th>Points</th></tr></thead>
-        <tbody>
-          <tr><td>Airline Registration</td><td>May 31</td><td>20</td></tr>
-          <tr><td>Practice Round</td><td>May 31</td><td>20</td></tr>
-          <tr><td>Round 1 — Baseline Launch</td><td>June 7</td><td>50</td></tr>
-          <tr><td>Round 2 — ATL Business Rebound</td><td>June 28</td><td>50</td></tr>
-          <tr><td>Round 3 — DFW Cargo Surge</td><td>July 12</td><td>50</td></tr>
-          <tr><td>Round 4 — Disruption Round</td><td>July 19</td><td>50</td></tr>
-          <tr><td>Round 5 — Spirit Collapse</td><td>July 26</td><td>50</td></tr>
-          <tr><td><strong>Total</strong></td><td></td><td><strong>290</strong></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-</div><!-- /main -->
-
-<div class="footer">
-  TRA 3440 · Introduction to Air Transportation · University of West Florida · Summer 2026 · Dr. Kenny O'Connor · koconnor1@uwf.edu
-</div>
+<footer>
+  <span>TRA 3440 Airline Strategy Simulation</span> · University of West Florida · Summer 2026 · Results are final for Round 1
+</footer>
 
 <script>
-const AIRLINES = {"Capital Airlines": {"rank": 1, "strategy": "Balanced Carrier", "profit": 506995.5614571094, "lf": 85.1, "on_time": 82, "csat": 4.54, "md": 3, "oc": 2, "atl_f": 203, "atl_m": "90/10", "atl_n": 15, "atl_lf": 91.7, "mco_f": 120, "mco_m": "90/10", "mco_n": 3, "mco_lf": 83.7, "dfw_f": 230, "dfw_m": "90/10", "dfw_n": 12, "dfw_lf": 77.2, "p1": "Capital Airlines delivered the strongest performance in Round 1, posting a $506,996 profit — nearly $112,000 ahead of second place. The heavy ATL allocation of 15 flights, combined with strong Market Development investment, generated enormous passenger demand on that route, with a 91.7% load factor. Near-market pricing across all three routes kept planes full without leaving revenue on the table.", "p2": "The winning formula here was volume plus investment. ATL is the most lucrative route in the network when demand is strong, and concentrating flights there while investing in MD created a high-volume, high-margin outcome. Pricing stayed close to market on every route, which is exactly the right approach when you want planes full — the MD investment does the demand-building work, so there's no need to discount.", "p3": "Round 2 is the ATL Business Rebound — MD investment gets a bonus multiplier on top of its normal lift, and this airline is already positioned to benefit more than almost anyone else. The main question to consider: could reallocating even 1-2 flights from ATL to DFW unlock more profit there, where DFW ran at 77.2% — still strong but not maxed out? Also watch MCO — only 3 flights there limits upside if the market shifts.", "corrected": false}, "East Coast Air": {"rank": 2, "strategy": "Balanced Carrier", "profit": 394542.4217391305, "lf": 85.2, "on_time": 82, "csat": 4.55, "md": 3, "oc": 2, "atl_f": 189, "atl_m": "90/10", "atl_n": 11, "atl_lf": 92.0, "mco_f": 119, "mco_m": "90/10", "mco_n": 10, "mco_lf": 85.1, "dfw_f": 215, "dfw_m": "75/25", "dfw_n": 9, "dfw_lf": 77.0, "p1": "East Coast Air finished second with $394,542, turning in one of the most balanced performances of the round. All three routes ran above 77% load factor, with ATL hitting 92% — a strong signal that pricing was well-calibrated. The even flight distribution and moderate MD investment produced consistently strong demand without over-concentrating risk on any single route.", "p2": "The Balanced Carrier strategy at near-market fares is exactly what this simulation rewards at baseline. No extreme overpricing to crater demand, no extreme underpricing to sacrifice margin, and enough MD investment to lift demand meaningfully. Every route contributed without any one route dragging down the overall result — that kind of consistency is harder to achieve than it looks.", "p3": "Round 2's ATL bonus is a direct gift to East Coast Air's setup. Consider pushing ATL fare slightly higher — say $192-195 — and see if the MD demand cushion can absorb the price increase without significant load factor loss. DFW at $215 is also slightly above market; if you want to experiment, dropping to $210 and adding a flight there could test whether volume beats margin on that route. The main risk to manage is complacency — being well-positioned now means Round 2 is about maximizing the bonus, not just maintaining.", "corrected": false}, "Fairline": {"rank": 3, "strategy": "Cost Leader", "profit": 361064.978, "lf": 90.7, "on_time": 78, "csat": 4.51, "md": 3, "oc": 1, "atl_f": 169, "atl_m": "90/10", "atl_n": 13, "atl_lf": 91.0, "mco_f": 99, "mco_m": "90/10", "mco_n": 11, "mco_lf": 91.0, "dfw_f": 189, "dfw_m": "90/10", "dfw_n": 6, "dfw_lf": 89.6, "p1": "Fairline moved up to third place after a strategy correction — the airline registered as Cost Leader, which fits perfectly with the below-market pricing strategy deployed. Flying at or below market on every route ($169 ATL, $99 MCO, $189 DFW), the Cost Leader's 10% cost reduction amplified the already-efficient operation. Average load factor hit 90.7% — the highest in the simulation — and the corrected cost structure pushed profit to $361,065.", "p2": "The Cost Leader strategy is a natural match for this approach. Lower operating costs per flight mean the below-market fares generate strong margins even at prices that would barely break even for higher-cost strategies. At 90.7% average load factor with the cost reduction applied, this airline is running a highly efficient operation. The below-market MCO fare at $99 leaves revenue on the table, but the volume compensates.", "p3": "Round 2 is where Fairline can make a major move. MD=3 is strong and the ATL Business Rebound bonus will amplify it — but if ATL fares stay at $169 (below market), the demand bonus generates volume at discounted prices rather than better margins. Consider raising ATL toward $180-185 while MD=3 still fills the seats. MCO at $99 is the biggest margin opportunity — testing $105-110 would likely hold load factor near 90% while recovering significant per-passenger revenue.", "corrected": true}, "Gulf Coast Air": {"rank": 4, "strategy": "Balanced Carrier", "profit": 346393.77639751555, "lf": 75.6, "on_time": 82, "csat": 4.46, "md": 2, "oc": 2, "atl_f": 189, "atl_m": "75/25", "atl_n": 11, "atl_lf": 77.0, "mco_f": 119, "mco_m": "90/10", "mco_n": 9, "mco_lf": 76.2, "dfw_f": 219, "dfw_m": "75/25", "dfw_n": 10, "dfw_lf": 73.5, "p1": "Gulf Coast Air earned $346,394 and fourth place with a textbook Balanced Carrier approach — near-market fares on all three routes, even flight distribution, and moderate MD and OC investment. Load factors were solid across the board: 77% on ATL, 76.2% on MCO, and 73.5% on DFW. No single route was exceptional, but none was a drag either — consistent, efficient operations throughout.", "p2": "The slight overpricing on MCO and DFW cost some load factor points but not catastrophically. MCO is the most price-sensitive route in the network, so even a few dollars above market has a noticeable demand effect — but not a devastating one at the levels used here. The even 10/10/10 flight split is elegant but may slightly under-allocate to ATL, which is the highest-margin route when demand is strong.", "p3": "Round 2 is where Gulf Coast Air can make a real move. The ATL Business Rebound boosts MD returns — consider bumping to MD=3 and allocating 12-13 flights to ATL while pulling back slightly on MCO or DFW. Also worth testing: dropping MCO fare back to $115 (market) to see if the load factor gain outweighs the small per-passenger revenue drop. Gulf Coast Air has the financial cushion and strategic positioning to experiment aggressively in Round 2.", "corrected": false}, "Fareline Air": {"rank": 5, "strategy": "Balanced Carrier", "profit": 343378.04347826086, "lf": 71.0, "on_time": 82, "csat": 4.26, "md": 3, "oc": 2, "atl_f": 195, "atl_m": "75/25", "atl_n": 11, "atl_lf": 77.0, "mco_f": 135, "mco_m": "90/10", "mco_n": 10, "mco_lf": 62.9, "dfw_f": 240, "dfw_m": "75/25", "dfw_n": 9, "dfw_lf": 72.8, "p1": "Fareline Air posted $343,378 in fifth place, a solid result but one that hints at missed opportunity. The MD=3 investment is one of the highest in the class, yet the average load factor of 71% is lower than several airlines with less MD investment. The culprit is MCO pricing — at $135, this airline charged nearly 17% above market on the most price-sensitive route in the network, which significantly suppressed MCO demand.", "p2": "MCO is the route where passengers are most responsive to price changes — it takes the least overpricing to lose the most passengers there. A 17% premium on MCO means a substantial portion of potential passengers chose not to fly, which largely offset the demand lift from MD=3 investment. The ATL and DFW fares were more tolerable given those routes' lower price sensitivity, but MCO was the weak link that dragged down the overall result.", "p3": "Round 2 recommendation is straightforward: bring MCO fare down to $115-120 and let the MD=3 investment actually work on that route. The ATL Business Rebound also means MD=3 is about to become significantly more valuable — make sure ATL has enough flights (currently 11) to fully capture that bonus. Consider whether moving to 12-13 ATL flights is worth pulling from DFW, which at 9 flights and $240 fare is the most aggressively priced route in the portfolio.", "corrected": false}, "Jet Lag Logistics": {"rank": 6, "strategy": "Cargo-Focused", "profit": 340297.54464285716, "lf": 72.5, "on_time": 82, "csat": 4.41, "md": 2, "oc": 2, "atl_f": 185, "atl_m": "90/10", "atl_n": 15, "atl_lf": 79.9, "mco_f": 115, "mco_m": "90/10", "mco_n": 3, "mco_lf": 69.3, "dfw_f": 215, "dfw_m": "75/25", "dfw_n": 12, "dfw_lf": 64.1, "p1": "Jet Lag Logistics finished seventh at $340,298, separated from sixth place by less than $100 — essentially a statistical tie with Fairline. The Cargo-Focused strategy with a heavy ATL allocation (15 flights) and passenger-heavy mix produced strong passenger revenue on ATL, while DFW at 12 flights gave reasonable cargo exposure. The MCO allocation of just 3 flights was a deliberate sacrifice that mostly worked given the focus elsewhere.", "p2": "The Cargo-Focused strategy carries a slight passenger demand penalty in exchange for a significant cargo boost — but that cargo advantage only activates when cargo capacity is actually being used. With a passenger-heavy mix on both ATL and MCO, cargo capacity is minimal on those routes, meaning the cargo strategy's real benefit was concentrated entirely on DFW. The result is a hybrid that isn't fully exploiting either the passenger or cargo side of the strategy.", "p3": "For Round 2, the most impactful change would be increasing cargo mix on DFW — moving from 75/25 to 60/40 or 50/50 on that route would let the Cargo-Focused strategy generate more cargo revenue where yield is highest. ATL is the right call to keep passenger-heavy given its strong passenger market. The ATL Business Rebound also creates an opportunity: this airline is well-positioned with 15 ATL flights, but the 90/10 mix there means the cargo multiplier has nothing to work with. Think through whether the ATL cargo tradeoff is worth it before Round 2.", "corrected": false}, "Skyhigh Airways": {"rank": 7, "strategy": "Balanced Carrier", "profit": 338436.269409938, "lf": 76.1, "on_time": 82, "csat": 4.46, "md": 2, "oc": 2, "atl_f": 189, "atl_m": "75/25", "atl_n": 11, "atl_lf": 77.0, "mco_f": 119, "mco_m": "75/25", "mco_n": 10, "mco_lf": 76.2, "dfw_f": 215, "dfw_m": "75/25", "dfw_n": 9, "dfw_lf": 75.0, "p1": "Skyhigh Airways posted $338,436 in eighth place, turning in a steady and reliable performance. The consistent 75/25 mix across all three routes, combined with slight overpricing, produced load factors in the 75-76% range across the board. The stated goal of testing whether above-market fares with moderate MD and OC investment could sustain strong load factors — the answer from Round 1 is: mostly yes, but there's a ceiling.", "p2": "Slight overpricing on each route is within the tolerance range where demand doesn't drop sharply, but it does mean load factors settle in the mid-70s rather than pushing into the 85%+ range. The strategy is internally consistent and costs are well-controlled — one of the lower cost structures in the class — which is why the profit is respectable despite the modest load factors. The MD and OC investments are doing real work even if the load factor numbers don't look dramatic.", "p3": "Skyhigh Airways is well-positioned for Round 2 but needs a differentiating move to climb the leaderboard. The ATL Business Rebound is a natural opportunity — consider bumping MD to 3 and testing whether the bonus multiplier justifies the additional investment. On pricing: ATL at $189 could potentially go to $192-193 with MD=3 cushioning the demand impact. MCO at $119 is worth watching — it's the most price-sensitive route, so even a few dollars above market costs load factor. Consider bringing MCO back to $115 and recapturing those passengers.", "corrected": false}, "Latitude Airlines": {"rank": 8, "strategy": "Cost Leader", "profit": 329174.53260869556, "lf": 68.7, "on_time": 92, "csat": 4.56, "md": 3, "oc": 4, "atl_f": 200, "atl_m": "75/25", "atl_n": 11, "atl_lf": 80.0, "mco_f": 125, "mco_m": "90/10", "mco_n": 11, "mco_lf": 76.0, "dfw_f": 310, "dfw_m": "75/25", "dfw_n": 8, "dfw_lf": 43.0, "p1": "Latitude Airlines finished eighth after a strategy correction — the airline registered as Cost Leader, not Premium Service as previously applied. With Cost Leader's lower cost structure, the $310 DFW fare still suppressed demand sharply at 43% load factor, but the reduced operating costs improved the overall margin. ATL at 80% and MCO at 76% continued to perform well, and OC=4 keeps this airline exceptionally well-protected heading into Round 4.", "p2": "The Cost Leader strategy reduces operating costs by 10% and brings a slight passenger demand reduction — a different profile than Premium Service. The DFW overpricing remains the central issue regardless of strategy: at $310 (48% above the $210 market), those 8 DFW flights ran half-empty at any strategy setting. The ATL and MCO routes benefit from the Cost Leader's efficient cost structure, which is why those routes are performing well.", "p3": "The Round 2 priority remains the same: bring DFW fare down substantially — $235-245 would push load factor above 65% and generate more DFW revenue even at the lower price. OC=4 is the strongest disruption shield in the simulation — only $15,000 in Round 4 versus $75,000 for unprotected airlines. That long-term positioning is excellent. Focus Round 2 on fixing DFW pricing and letting the Cost Leader cost structure work in your favor.", "corrected": true}, "ADAPT Airlines": {"rank": 9, "strategy": "Balanced Carrier", "profit": 327027.55434782605, "lf": 71.6, "on_time": 87, "csat": 4.47, "md": 2, "oc": 3, "atl_f": 195, "atl_m": "75/25", "atl_n": 15, "atl_lf": 78.5, "mco_f": 125, "mco_m": "90/10", "mco_n": 10, "mco_lf": 70.3, "dfw_f": 260, "dfw_m": "50/50", "dfw_n": 5, "dfw_lf": 53.5, "p1": "ADAPT Airlines earned $327,028 in tenth place with a high-ATL strategy — 15 of 30 flights to Atlanta — that generated strong volume but ran into challenges elsewhere. ATL load factor hit 78.5% and MCO at 70.3% were decent, but DFW at only 53.5% on just 5 flights at $260 significantly underperformed. The OC=3 investment kept on-time performance strong at 87% and costs reasonable, but DFW was a consistent drag.", "p2": "The DFW problem here is a combination of too few flights at too high a price. With only 5 DFW flights, the route's fixed operating costs need to be covered by a small number of flights — and at $260 (24% above market), demand was suppressed enough to leave those planes running half-empty. It's a double squeeze: high per-flight cost and low revenue efficiency. Meanwhile, the high ATL concentration was the right instinct, but pricing just slightly above market limited how much of the potential ATL demand the MD investment could capture.", "p3": "For Round 2, the DFW situation needs attention. Either drop the fare to $215-220 and let load factor recover, or reallocate those 5 flights to ATL or MCO where they'll be more productive. Round 2's ATL bonus makes adding to ATL attractive — but ATL is already at 15 flights, the maximum allowed. That means the real opportunity is fixing DFW pricing and potentially shifting 1-2 flights from DFW to MCO while bringing MCO price back to market. OC=3 is solid and worth maintaining through Round 4.", "corrected": false}, "Emerald Argo Airlines": {"rank": 10, "strategy": "Cargo-Focused", "profit": 322658.446583851, "lf": 78.4, "on_time": 78, "csat": 4.36, "md": 4, "oc": 1, "atl_f": 185, "atl_m": "90/10", "atl_n": 12, "atl_lf": 91.0, "mco_f": 125, "mco_m": "90/10", "mco_n": 12, "mco_lf": 72.7, "dfw_f": 250, "dfw_m": "75/25", "dfw_n": 6, "dfw_lf": 64.7, "p1": "Emerald Argo Airlines finished eleventh at $322,658, deploying the highest Market Development investment in Round 1 — MD=4. That investment drove ATL load factor to a remarkable 91%, filling those 12 flights to near capacity. MCO and DFW were more mixed: MCO at 72.7% on 12 flights was decent, but DFW at 64.7% on just 6 flights at $250 left room on the table. The OC=1 investment kept operational costs lower, but on-time performance was the weakest in the simulation at 78%.", "p2": "MD=4 is the most powerful demand tool in the simulation and the ATL results prove it — 91% load factor at market pricing shows the investment working exactly as intended. However, DFW at $250 (19% above market) created a drag: overpricing on any route pushes passengers away, and only 6 DFW flights meant the route's high fixed costs needed to be spread thin. The Cargo-Focused strategy's cargo advantage is also not being fully exploited — passenger-heavy mixes on ATL and MCO leave the cargo multiplier with little to work with on those routes.", "p3": "Round 2 is a pivotal moment. MD=4 becomes even more powerful with the Round 2 ATL bonus multiplier — this ATL operation is likely to be one of the strongest in the simulation next round. Consider shifting DFW mix from 75/25 to 60/40 or 50/50 to activate the cargo advantage where yield is highest. Also seriously consider investing in OC — OC=1 means absorbing 80% of the Round 4 disruption penalty. Moving to OC=2 or 3 now costs money but could save $30,000-$45,000 in Round 4, which could be the difference between finishing strong or falling several spots.", "corrected": false}, "起飞": {"rank": 11, "strategy": "Cargo-Focused", "profit": 319409.49444980687, "lf": 65.6, "on_time": 82, "csat": 4.38, "md": 2, "oc": 2, "atl_f": 193, "atl_m": "75/25", "atl_n": 10, "atl_lf": 75.5, "mco_f": 115, "mco_m": "90/10", "mco_n": 3, "mco_lf": 69.3, "dfw_f": 230, "dfw_m": "60/40", "dfw_n": 17, "dfw_lf": 59.1, "p1": "起飞 (Take Off) finished eleventh after a strategy correction — the airline registered as Cargo-Focused, which was applied this round. With 17 of 30 flights concentrated on DFW, the Cargo-Focused strategy's passenger demand penalty held DFW load factor to 59.1%, while ATL at 75.5% and MCO at 69.3% performed reasonably. The DFW concentration is a bold bet that needs stronger demand support to fully pay off.", "p2": "The Cargo-Focused strategy's 0.85 passenger multiplier means demand is softer than a Balanced Carrier would see at the same fares — and with 17 DFW flights on the lowest-base-demand route in the network, that combination produced significant empty seats. The 60/40 cargo-heavy DFW mix is the right call for a Cargo-Focused airline, but the cargo advantage needs more flights running efficiently to generate strong returns.", "p3": "Round 2 is a strategic pivot point. The ATL Business Rebound rewards MD investment — and with MD=2 and only 10 ATL flights, there's a real opportunity to shift 2-3 flights from DFW to ATL and capture the bonus. DFW pricing at $230 (10% above market) is suppressing demand on an already challenging route — dropping to $215-220 would recover meaningful load factor. The Cargo-Focused strategy will shine in Round 3's DFW Cargo Surge, so building toward that payoff with better Round 2 positioning is the priority.", "corrected": true}, "Lo-Povo Air": {"rank": 12, "strategy": "Cost Leader", "profit": 313300.0, "lf": 75.0, "on_time": 92, "csat": 4.7, "md": 1, "oc": 4, "atl_f": 165, "atl_m": "75/25", "atl_n": 10, "atl_lf": 80.0, "mco_f": 90, "mco_m": "90/10", "mco_n": 5, "mco_lf": 95.0, "dfw_f": 200, "dfw_m": "60/40", "dfw_n": 15, "dfw_lf": 65.0, "p1": "Lo-Povo Air finished twelfth at $313,300, flying the most distinctive strategy of any airline in Round 1. Pricing aggressively below market on every route paired with OC=4 and MD=1 produced an MCO load factor of 95% and ATL at 80%. The result is the lowest revenue in the top half of the leaderboard but also the lowest costs in the class — a lean, high-efficiency operation that proves Cost Leader can be competitive.", "p2": "Below-market pricing fills planes reliably — passengers respond to lower fares and seats fill faster. The trade-off is margin: every ticket sold on MCO at well-below market means leaving money on the table with each passenger. DFW at 65% load factor on 15 flights is the one soft spot — DFW has lower base demand than the other routes, and without meaningful MD investment to build that market, 15 flights is more than current demand efficiently supports at any price.", "p3": "Round 2 is a strategic crossroads. The Cost Leader approach works well on MCO and adequately on ATL, but DFW at 65% with 15 flights is the weak point. Consider reallocating 3-4 DFW flights to ATL and raising DFW fare slightly toward market to tighten load factor there. On the ATL Business Rebound: MD=1 won't capture much of the bonus — even increasing to MD=2 could meaningfully improve ATL demand when the Round 2 multiplier kicks in. OC=4 is an excellent long-term hold for Round 4 disruption protection — keep it.", "corrected": false}, "Blue Knight Airways": {"rank": 13, "strategy": "Premium Service", "profit": 305401.0, "lf": 79.3, "on_time": 92, "csat": 4.67, "md": 2, "oc": 4, "atl_f": 185, "atl_m": "75/25", "atl_n": 10, "atl_lf": 80.0, "mco_f": 110, "mco_m": "90/10", "mco_n": 12, "mco_lf": 95.0, "dfw_f": 265, "dfw_m": "50/50", "dfw_n": 8, "dfw_lf": 55.0, "p1": "Blue Knight Airways posted $305,401 in thirteenth place with a Premium Service strategy and the joint-highest OC investment in the class. The MCO focus — 12 flights at $110 (below market) — produced a standout 95% MCO load factor, the highest MCO performance in Round 1. ATL ran at 80% on 10 flights and DFW at 55% on 8 flights at $265 (26% above market). The high OC investment produces strong service metrics — 92% on-time, 4.67 customer satisfaction — but compresses profit margin.", "p2": "The DFW pricing of $265 is where the most ground was lost. Pricing that far above market on any route pushes too many passengers away — and DFW's 8 flights at high per-flight cost need strong revenue per flight to justify. The MCO and ATL operations are efficient and well-priced, but they can't fully compensate for the DFW drag. The Premium Service strategy also carries a cost premium on top of OC=4 investment, which means margins are being squeezed from both the revenue and cost sides on DFW.", "p3": "The most impactful single change for Round 2 is DFW pricing — bringing it to $225-235 would likely push load factor above 70% and generate meaningfully more DFW profit even at the lower per-seat margin. On MCO: at below-market with 95% load factor, there may be room to raise to $113-115 without losing much load factor — incremental revenue on 12 flights adds up. OC=4 is a major strategic asset for Round 4 and is worth keeping. Round 2's ATL bonus won't help much at MD=2, so consider whether investing in MD=3 is worth the additional cost given the ATL opportunity.", "corrected": false}, "Emerald Coast Airways": {"rank": 14, "strategy": "Balanced Carrier", "profit": 293169.82608695654, "lf": 71.1, "on_time": 82, "csat": 4.39, "md": 2, "oc": 2, "atl_f": 200, "atl_m": "75/25", "atl_n": 12, "atl_lf": 77.0, "mco_f": 110, "mco_m": "90/10", "mco_n": 10, "mco_lf": 87.4, "dfw_f": 250, "dfw_m": "40/60", "dfw_n": 8, "dfw_lf": 42.0, "p1": "Emerald Coast Airways finished fourteenth at $293,170, turning in mixed results across the three routes. ATL at 77% load factor on 12 flights was solid; MCO at 87.4% on 10 flights at below-market pricing was strong; but DFW at only 42% load factor on 8 flights at $250 was the weak link. The intention to lower fares from the practice round worked well on ATL and MCO, but DFW pricing remained significantly above market and suppressed demand sharply.", "p2": "MCO shows the lesson clearly — pricing at $110 (below market) drove 87.4% load factor and strong revenue on that route. DFW is the opposite story: $250 on DFW is nearly 20% above market, and the cargo-heavy mix on those 8 flights further reduced the available passenger seats. The result is a route running at low passenger occupancy with limited cargo filling the gap. The two routes tell a clear story about what works and what doesn't in this network.", "p3": "The Round 2 priority is clear: fix DFW. Dropping to $210-215 and switching DFW mix to 50/50 or 60/40 passenger-heavy would almost certainly push DFW load factor above 65% and generate more profit from those 8 flights. MCO is performing well and the current approach there is worth maintaining. For the ATL Business Rebound: MD=2 will get the bonus, and 12 ATL flights gives good exposure to capture that demand lift. Consider whether ATL fare could nudge up slightly while MD=2 absorbs the demand impact.", "corrected": false}, "Pensacola Airlines": {"rank": 15, "strategy": "Balanced Carrier", "profit": 292322.0, "lf": 76.8, "on_time": 87, "csat": 4.55, "md": 3, "oc": 3, "atl_f": 180, "atl_m": "75/25", "atl_n": 14, "atl_lf": 78.5, "mco_f": 115, "mco_m": "90/10", "mco_n": 9, "mco_lf": 92.2, "dfw_f": 215, "dfw_m": "50/50", "dfw_n": 7, "dfw_lf": 53.5, "p1": "Pensacola Airlines earned $292,322 in fifteenth place, with the approach this round focused on learning from practice round mistakes. The strategy — 14 ATL flights, near-market pricing, MD=3 and OC=3 — produced solid ATL (78.5% LF) and MCO (92.2% LF) performance. The DFW allocation of just 7 flights at $215 produced only 53.5% DFW load factor, which was the main drag on overall profitability.", "p2": "The MCO result at 92.2% load factor is excellent and reflects good pricing discipline on the most sensitive route. ATL at 78.5% is solid but slightly below what MD=3 should theoretically support — suggesting the 14-flight volume may slightly outpace what demand can fill even with significant MD investment. DFW at 53.5% on 7 flights is the key issue: DFW has lower base demand than the other routes, and without strong demand support, 7 flights at above-market pricing is a tough combination.", "p3": "Round 2 is where MD=3 really pays off — the ATL Business Rebound multiplier will give that investment a significant boost. Consider keeping ATL at 14 flights but testing whether ATL fare can rise slightly while MD=3 absorbs the demand impact. For DFW: either add a flight or two (pulling from MCO where you could reduce slightly) or drop the DFW fare toward $210 to improve load factor. OC=3 is excellent positioning for the Round 4 disruption — consider building toward OC=4 if the budget allows.", "corrected": false}, "Big Bird Airways": {"rank": 16, "strategy": "Cargo-Focused", "profit": 286256.9124324324, "lf": 67.3, "on_time": 92, "csat": 4.62, "md": 1, "oc": 4, "atl_f": 180, "atl_m": "75/25", "atl_n": 10, "atl_lf": 77.3, "mco_f": 65, "mco_m": "75/25", "mco_n": 3, "mco_lf": 80.0, "dfw_f": 220, "dfw_m": "75/25", "dfw_n": 17, "dfw_lf": 59.1, "p1": "Big Bird Airways finished sixteenth at $286,257 with a Cargo-Focused strategy that concentrated heavily on DFW (17 flights). MCO fare was set at $65 — the lowest price of any student in Round 1, at just 57% of market — driving MCO to 80% load factor on only 3 flights. ATL ran at 77.3% and DFW at 59.1% on 17 flights. OC=4 investment provides excellent operational efficiency and disruption protection, but MD=1 kept demand low on DFW.", "p2": "The DFW concentration at 17 flights is the most aggressive route bet in the simulation. At $220 with only minimal MD investment, DFW demand came in at 59.1% load factor — meaning those 17 flights are running at roughly 60% capacity, generating high costs with below-average revenue efficiency. The Cargo-Focused cargo advantage helps, but at 75/25 mix the cargo capacity per flight is limited. MCO at $65 produces strong occupancy but at significant revenue sacrifice per passenger.", "p3": "For Round 2, the most important change is either increasing MD investment to better support 17 DFW flights, or reallocating some of those flights to ATL where the Round 2 bonus will amplify returns. MD=2 would increase DFW load factor meaningfully at current pricing. Alternatively, dropping DFW to 14-15 flights and adding to ATL could be more profitable. On MCO: $65 is leaving substantial revenue on the table — testing $90-100 would likely maintain high load factor while recovering significant per-passenger margin. OC=4 is a strong long-term hold.", "corrected": false}, "Gulf Coast Airways": {"rank": 17, "strategy": "Balanced Carrier", "profit": 274748.06521739135, "lf": 70.2, "on_time": 87, "csat": 4.47, "md": 2, "oc": 3, "atl_f": 185, "atl_m": "75/25", "atl_n": 12, "atl_lf": 78.5, "mco_f": 125, "mco_m": "90/10", "mco_n": 12, "mco_lf": 70.3, "dfw_f": 225, "dfw_m": "50/50", "dfw_n": 6, "dfw_lf": 53.5, "p1": "Gulf Coast Airways finished seventeenth at $274,748 — notably different from Gulf Coast Air (fourth place), despite the similar name. The Balanced Carrier strategy with a 12/12/6 flight split produced a concentrated ATL-MCO operation with limited DFW exposure. ATL at 78.5% and MCO at 70.3% were decent, but DFW at only 53.5% on 6 flights at $225 was a drag. The goal of balancing the operation was achieved structurally, but DFW pricing undercut that balance.", "p2": "The 12/12/6 split works if ATL and MCO are generating strong margins — but slight overpricing on both routes held load factors to the mid-70s and below rather than the high-80s. MCO is the most price-sensitive route in the network, so $125 (nearly 9% above market) costs more demand there than the same overpricing would on ATL or DFW. DFW at $225 with only 6 flights also means the route's high fixed costs are spread thin across limited revenue-generating flights.", "p3": "Round 2 creates an opportunity to differentiate from the similarly-named competitor. To climb the rankings, consider three things: drop MCO fare to $115 to recover load factor on that high-sensitivity route; shift 1-2 DFW flights to ATL to better position for the Round 2 ATL bonus; and consider increasing MD to 3 before Round 2 closes to capture the full ATL bonus. OC=3 is solid — maintain it heading toward Round 4.", "corrected": false}, "Cargo Before Comfort Air": {"rank": 18, "strategy": "Cargo-Focused", "profit": 272221.6320945947, "lf": 60.5, "on_time": 82, "csat": 4.35, "md": 2, "oc": 2, "atl_f": 195, "atl_m": "75/25", "atl_n": 9, "atl_lf": 74.4, "mco_f": 115, "mco_m": "90/10", "mco_n": 3, "mco_lf": 69.3, "dfw_f": 230, "dfw_m": "50/50", "dfw_n": 18, "dfw_lf": 52.0, "p1": "Cargo Before Comfort Air finished eighteenth at $272,222, with the round focused on testing price sensitivity on ATL and DFW with a heavy DFW concentration — 18 flights, the maximum allowed. ATL at 9 flights and MCO at just 3 flights made DFW the overwhelming focus. DFW load factor came in at 52% on those 18 flights — a significant underperformance given the concentration. The 50/50 mix produced moderate rather than aggressive cargo revenue.", "p2": "Eighteen DFW flights is a high-conviction bet that requires strong demand to pay off. DFW has the lowest base passenger demand of the three routes, and at $230 (nearly 10% above market) with moderate MD investment, roughly half of those DFW seats flew empty. That's a large number of flights covering their full operating cost while generating well below their revenue potential. MCO at just 3 flights also severely limited what could have been a productive route with better allocation.", "p3": "For Round 2, the DFW concentration needs reconsideration. Pulling 3-4 flights back to ATL would improve overall load factor efficiency and position this airline for the Round 2 ATL bonus. On DFW pricing: dropping from $230 to $215 would likely add 10+ percentage points of load factor, generating more total revenue despite the lower per-seat price. Switching DFW mix to 40/60 would also activate the Cargo-Focused advantage on the highest-yield cargo route in the network. Round 4 disruption at OC=2 means absorbing 60% of the $75,000 penalty — consider whether building OC now is worth the investment.", "corrected": false}, "GRY Air": {"rank": 19, "strategy": "Cargo-Focused", "profit": 250787.75, "lf": 62.5, "on_time": 87, "csat": 4.48, "md": 2, "oc": 3, "atl_f": 185, "atl_m": "75/25", "atl_n": 8, "atl_lf": 78.5, "mco_f": 115, "mco_m": "90/10", "mco_n": 4, "mco_lf": 70.8, "dfw_f": 215, "dfw_m": "50/50", "dfw_n": 18, "dfw_lf": 53.5, "p1": "GRY Air finished nineteenth at $250,788, deploying a DFW-heavy Cargo-Focused strategy with 18 flights to DFW. The stated goal — testing whether DFW concentration maximizes cargo benefits — produced results that suggest the execution needs refinement. DFW ran at 53.5% load factor on 18 flights, a result that closely mirrors other heavy-DFW strategies this round. ATL and MCO were minimal secondary routes.", "p2": "The challenge with concentrating 18 flights on DFW is that DFW has the lowest base passenger demand of the three routes. Even with good pricing and moderate MD investment, the market can only absorb so many flights before load factors fall. When nearly half of those seats fly empty, the high per-flight cost of DFW makes the math difficult. The Cargo-Focused strategy's passenger penalty makes this worse on the passenger side, and the 50/50 mix limits how much the cargo advantage can compensate.", "p3": "GRY Air's Round 2 decision is critical. The DFW cargo thesis requires either stronger demand support (higher MD investment, lower fares, or fewer flights to tighten load factor) or a strategic rebalance. A concrete suggestion: reduce DFW to 14 flights, add 4 to ATL, drop DFW fare to $210, and increase MD to 3. The Round 2 ATL bonus would reward the ATL addition, DFW load factor would improve, and the cargo premium would still apply on DFW. Also consider shifting DFW mix to 40/60 to more aggressively capture cargo revenue where yield is highest.", "corrected": false}, "Sunbelt Airways": {"rank": 20, "strategy": "Cost Leader", "profit": 220036.0, "lf": 74.3, "on_time": 92, "csat": 4.62, "md": 3, "oc": 4, "atl_f": 170, "atl_m": "60/40", "atl_n": 10, "atl_lf": 65.0, "mco_f": 105, "mco_m": "90/10", "mco_n": 12, "mco_lf": 95.0, "dfw_f": 190, "dfw_m": "50/50", "dfw_n": 8, "dfw_lf": 55.0, "p1": "Sunbelt Airways finished twentieth at $220,036 with a Cost Leader strategy and one of the more unusual route mixes in Round 1. A 60/40 passenger-cargo split on ATL — the only airline to go cargo-heavy on Atlanta — while running standard passenger-heavy on MCO and balanced on DFW. MCO at 95% load factor with below-market pricing was outstanding, but ATL at 65% on the cargo-heavy mix and DFW at 55% left significant revenue unrealized.", "p2": "The ATL 60/40 mix is where the strategy faces its biggest friction. ATL has the lowest cargo yield of the three routes, so running a cargo-heavy mix there costs passenger seats on a strong passenger market without generating proportional cargo revenue in return. Cost Leader's slight passenger demand penalty compounds this — fewer passengers want to fly, and fewer seats are available for them. The result is ATL running well below its potential despite the route's natural strength.", "p3": "For Round 2, the biggest fix is ATL mix — switching ATL from 60/40 to 75/25 or 90/10 would significantly increase ATL passenger revenue without sacrificing much. ATL is a passenger-primary route, and the Cost Leader strategy benefits from high passenger volume at efficient cost. MD=3 is well-positioned for the Round 2 ATL bonus — make sure to capture it with the right mix and pricing. The 95% MCO result is excellent and the below-market pricing there is worth maintaining. OC=4 is a major asset heading into Round 4.", "corrected": false}, "Pelican Air": {"rank": 21, "strategy": "Cargo-Focused", "profit": 200359.95054347825, "lf": 60.5, "on_time": 87, "csat": 4.46, "md": 2, "oc": 3, "atl_f": 185, "atl_m": "90/10", "atl_n": 8, "atl_lf": 81.4, "mco_f": 113, "mco_m": "90/10", "mco_n": 7, "mco_lf": 72.9, "dfw_f": 215, "dfw_m": "40/60", "dfw_n": 15, "dfw_lf": 43.5, "p1": "Pelican Air finished twenty-first at $200,360 with a Cargo-Focused strategy heavily weighted toward DFW (15 flights). The stated goal — testing whether 15 DFW flights with cargo-heavy mix and OC=3 outperforms the practice round — produced mixed results. ATL at 81.4% load factor on 8 flights was actually the strongest ATL performance relative to its allocation in the bottom half of the leaderboard. MCO at 72.9% was decent. But DFW at 43.5% on 15 flights at $215 significantly underperformed.", "p2": "The DFW concentration faces the same challenge seen across multiple airlines this round: 15 flights on the route with the lowest base demand requires strong demand support to fill. At $215 with moderate MD investment, the market simply doesn't support 15 efficient DFW flights. The 40/60 cargo-heavy mix further reduces available passenger seats, which limits how many passengers can board even when demand is reasonable. Cargo revenue helped, but not enough to offset the large number of partially-empty flights.", "p3": "Round 2 recommendation: reduce DFW flights to 11-12 and reallocate to ATL, which showed strong demand efficiency at 81.4% load factor with only 8 flights. Dropping DFW from 15 to 12 would tighten load factor significantly with the same demand. Adding to ATL and considering MD=3 before Round 2 would position this airline to capture the ATL Business Rebound bonus, which could be transformative given how much demand lift the investment generates. DFW mix at 40/60 is fine to maintain on fewer flights where the cargo advantage can actually fill available capacity.", "corrected": false}, "Five Flags Logistics & Transit": {"rank": 22, "strategy": "Balanced Carrier", "profit": 200279.04347826086, "lf": 57.5, "on_time": 92, "csat": 4.51, "md": 2, "oc": 4, "atl_f": 195, "atl_m": "60/40", "atl_n": 8, "atl_lf": 65.0, "mco_f": 125, "mco_m": "75/25", "mco_n": 8, "mco_lf": 71.8, "dfw_f": 220, "dfw_m": "40/60", "dfw_n": 14, "dfw_lf": 45.0, "p1": "Five Flags Logistics & Transit finished twenty-second after a strategy correction — the airline registered as Balanced Carrier, not Cargo-Focused as previously applied. The corrected Balanced Carrier multipliers improved profit to $200,279, a gain of about $25,600 from the error. Load factors remain soft: ATL at 65%, MCO at 71.8%, and DFW at 45% on 14 flights at $220.", "p2": "With Balanced Carrier applied, the cargo-heavy mixes on ATL (60/40) and DFW (40/60) work against the strategy — Balanced Carrier's 1.0 cargo multiplier doesn't generate the same cargo revenue boost that Cargo-Focused would, but the cargo-heavy mix still limits passenger capacity. The result is an airline whose mix decisions aren't well-aligned with its strategy: Balanced Carrier performs best with passenger-heavy mixes on ATL and MCO where passenger demand is strong.", "p3": "Round 2 is a meaningful reset opportunity. Switching ATL from 60/40 to 75/25 would immediately improve passenger revenue on that route without sacrificing much. DFW at 40/60 is acceptable for a Balanced Carrier since DFW has the highest cargo yield, but the fare at $220 (5% above market) is suppressing demand on a route where 14 flights need to run efficiently. Drop DFW to $210 and the load factor should recover meaningfully. OC=4 is excellent long-term positioning for Round 4.", "corrected": true}, "GUMPS aviation": {"rank": 23, "strategy": "Cargo-Focused", "profit": 179660.10000000003, "lf": 55.5, "on_time": 87, "csat": 4.37, "md": 1, "oc": 3, "atl_f": 185, "atl_m": "75/25", "atl_n": 8, "atl_lf": 73.3, "mco_f": 105, "mco_m": "40/60", "mco_n": 10, "mco_lf": 43.5, "dfw_f": 220, "dfw_m": "50/50", "dfw_n": 12, "dfw_lf": 53.5, "p1": "GUMPS aviation finished twenty-second at $179,660, testing how much cargo exposure the airline could sustain. The Cargo-Focused strategy with DFW at 12 flights and an unusual cargo-heavy MCO mix produced below-average results across all three routes. ATL at 73.3% was the strongest route; MCO at 43.5% with the cargo-heavy mix was the weakest result on any significant route allocation in the simulation. DFW at 53.5% continued the pattern of over-allocated, under-filled DFW operations seen across several airlines this round.", "p2": "The MCO cargo-heavy mix is the key issue. MCO has the lowest cargo yield of the three routes and the highest passenger price sensitivity — it is the route best suited to maximizing passenger volume, not cargo capacity. By dedicating 60% of each MCO flight to cargo, available passenger seats were sharply reduced, and those remaining passenger seats weren't all filled either. The result is a route running poorly on both the passenger and cargo sides simultaneously — the worst possible outcome for any route.", "p3": "The Round 2 fix needs to address MCO first. Switching MCO mix to 90/10 at $105-110 would almost certainly produce 85%+ MCO load factor and meaningfully increase passenger revenue on those 10 flights. DFW is a more complex question — at 12 flights, the load factor challenge is manageable with better pricing (try $210-215) and possibly a mix adjustment to 50/50. ATL at 8 flights with MD=1 is under-invested — increasing MD to 2 and adding 2-3 ATL flights ahead of the Round 2 bonus would be a significant improvement. MD=1 on 8 ATL flights is leaving the biggest single opportunity in the game on the table next round.", "corrected": false}, "Squawk Airlines": {"rank": 24, "strategy": "Balanced Carrier", "profit": 137406.5, "lf": 49.5, "on_time": 87, "csat": 4.3, "md": 3, "oc": 3, "atl_f": 200, "atl_m": "50/50", "atl_n": 12, "atl_lf": 53.5, "mco_f": 115, "mco_m": "50/50", "mco_n": 6, "mco_lf": 53.5, "dfw_f": 210, "dfw_m": "40/60", "dfw_n": 12, "dfw_lf": 43.5, "p1": "Squawk Airlines finished twenty-fourth at $137,406, posting the lowest average load factor in the simulation at 49.5%. The strategy of a balanced 50/50 passenger-cargo mix across all three routes, combined with above-market fares and high MD and OC investment, produced consistently below-capacity operations. ATL, MCO, and DFW all came in at 53.5% or below. The cost structure is high, and revenue couldn't adequately cover it.", "p2": "The 50/50 mix is the central issue. By splitting every flight equally between passengers and cargo, available passenger seats per flight were cut nearly in half compared to a passenger-heavy mix. Even with strong MD investment pulling in demand, the passengers who want to fly can only fill half the seats that would otherwise be available. Meanwhile, the cargo capacity at 50/50 isn't fully filling either. It's a configuration that limits the upside on both sides simultaneously — and the above-market fares on some routes added additional demand pressure on top of the capacity constraint.", "p3": "The Round 2 overhaul should focus on mix first, pricing second. Shifting all routes to 75/25 or 90/10 would immediately increase passenger capacity and allow the MD=3 demand investment to translate into actual revenue rather than turning passengers away at the gate. Fares are mostly reasonable — the issue isn't pricing, it's that willing passengers can't board because seats aren't there. MD=3 is a great asset heading into Round 2's ATL bonus — don't waste it with constrained capacity. OC=3 is also a solid long-term hold for Round 4. Fix the mix, keep the investment levels, and this airline could move up 8-10 positions in Round 2.", "corrected": false}, "Cornerstone Cargo": {"rank": 25, "strategy": "Cargo-Focused", "profit": 90815.75000000006, "lf": 52.9, "on_time": 82, "csat": 4.21, "md": 2, "oc": 2, "atl_f": 175, "atl_m": "40/60", "atl_n": 10, "atl_lf": 42.0, "mco_f": 115, "mco_m": "90/10", "mco_n": 12, "mco_lf": 69.3, "dfw_f": 200, "dfw_m": "40/60", "dfw_n": 8, "dfw_lf": 42.0, "p1": "Cornerstone Cargo finished twenty-fifth at $90,816 — the lowest profit of Round 1 but still profitable, which is not nothing. The Cargo-Focused strategy split aggressively toward cargo on ATL and DFW with a 40/60 mix, while MCO ran passenger-heavy. ATL load factor came in at just 42% — the weakest ATL result in the simulation — and DFW similarly at 42%. MCO held at 69.3% as the relative bright spot. The combination of cargo-heavy mixes on low-cargo-yield routes and constrained passenger capacity drove the outcome.", "p2": "The core challenge is a mismatch between the mix and the actual demand patterns on each route. By dedicating 60% of each ATL and DFW flight to cargo, available passenger seats were sharply reduced — and when fewer seats are available, fewer passengers can board even when demand is there. ATL has the lowest cargo yield of the three routes, so the cargo capacity being reserved there generates less return than the same cargo capacity on DFW would. The strategy's cargo advantage was being applied to the wrong route.", "p3": "Round 2 is a reset opportunity. The most impactful change is mix: ATL at 40/60 is the wrong configuration for that route — ATL has strong passenger demand and low cargo yield. Switch ATL to 90/10 or 75/25. MCO at 90/10 is actually reasonable — keep it. DFW at 40/60 makes more sense given DFW's high cargo yield — that's where the Cargo-Focused strategy should concentrate its cargo exposure. Consider also increasing MD to 3 to capture the Round 2 ATL bonus, which could be transformative given how much demand lift that investment generates. The business model is viable — the route configurations just need to match the strategy's actual strengths.", "corrected": false}};
+const DATA = [
+  {rank:1,  airline:"Big Bird Airways",                   strategy:"Cargo-Focused",    md:1, oc:4, revenue:733605,  op_cost:395240,  invest:85000,  profit:253365,  corrected:false, isNew:false,
+   atl:{fare:180, paxPct:25, flights:10, lf:25,  paxRev:54000,   cargoRev:168750, opCost:114800},
+   mco:{fare:65,  paxPct:25, flights:3,  lf:25,  paxRev:5850,    cargoRev:39375,  opCost:29520},
+   dfw:{fare:220, paxPct:10, flights:17, lf:10,  paxRev:44880,   cargoRev:420750, opCost:250920},
+   feedback:{what:"Big Bird Airways went all-in on cargo from the start — especially on DFW, where 17 weekly flights with just 10% passenger capacity generated over $420,000 in cargo revenue alone. With OC at level 4, operating costs were suppressed enough to turn that heavy DFW footprint into a profit engine. ATL and MCO were treated as supplementary routes.",
+     why:"The Cargo-Focused strategy provides a 25% cargo yield bonus, and DFW already has the highest base cargo yield at $22,000 per flight. Stacking 17 DFW flights with 90% cargo allocation created enormous revenue despite almost no passengers. The OC 4 investment cut per-flight costs by 18%, which is what kept this high-frequency DFW operation profitable.",
+     rec:"Round 2 brings an ATL business travel rebound. Big Bird's ATL setup is currently very cargo-heavy — consider whether it's worth capturing some of that passenger surge with a mix adjustment on ATL, or whether staying cargo-focused there is the better long-term call."}},
 
-function showPage(id, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
-  document.getElementById(id).classList.add('on');
-  btn.classList.add('on');
-  closeDetail();
+  {rank:2,  airline:"GUMPS Aviation",                    strategy:"Cargo-Focused",    md:1, oc:3, revenue:655980,  op_cost:394240,  invest:60000,  profit:201740,  corrected:false, isNew:false,
+   atl:{fare:185, paxPct:75, flights:8,  lf:75,  paxRev:133200,  cargoRev:45000,  opCost:98560},
+   mco:{fare:105, paxPct:40, flights:10, lf:40,  paxRev:50400,   cargoRev:105000, opCost:105600},
+   dfw:{fare:220, paxPct:50, flights:12, lf:50,  paxRev:157380,  cargoRev:165000, opCost:190080},
+   feedback:{what:"GUMPS Aviation found a smart middle ground — cargo-focused on paper, but with enough passenger capacity to generate strong revenue across all three routes. The DFW corridor especially paid off, splitting capacity evenly between passengers and cargo at a competitive fare.",
+     why:"Unlike some cargo-heavy operators, GUMPS kept load factors reasonable on all three routes by not over-allocating flights. The OC 3 investment lowered costs by 12% without requiring the large OC 4 price tag. Low MD investment kept fixed costs down in a round with no demand shocks.",
+     rec:"The balanced cargo-passenger approach is working well. In Round 2, watch the ATL corridor specifically — a business travel rebound will reward airlines that can flex toward passenger capacity. Consider whether your ATL mix might shift slightly toward passengers next round."}},
+
+  {rank:3,  airline:"Pelican Air",                       strategy:"Cargo-Focused",    md:2, oc:3, revenue:677818,  op_cost:410080,  invest:80000,  profit:187738,  corrected:false, isNew:false,
+   atl:{fare:185, paxPct:90, flights:8,  lf:90,  paxRev:159840,  cargoRev:18000,  opCost:98560},
+   mco:{fare:113, paxPct:90, flights:7,  lf:90,  paxRev:85428,   cargoRev:12250,  opCost:73920},
+   dfw:{fare:215, paxPct:40, flights:15, lf:40,  paxRev:154800,  cargoRev:247500, opCost:237600},
+   feedback:{what:"Pelican Air ran a hybrid model: passenger-heavy on the shorter ATL and MCO corridors where passenger yields are strongest, then pivoted to a cargo-weighted DFW operation where the cargo yield advantage is highest. Both ATL and MCO hit near-90% load factors. DFW cargo revenue exceeded $247,000.",
+     why:"The combination of high passenger load factors on shorter routes and heavy cargo concentration on DFW — the highest-yield cargo corridor — made excellent use of the Cargo-Focused bonus. OC 3 provided meaningful cost relief across a fairly large total flight schedule.",
+     rec:"This is an efficient, well-structured operation. In Round 2, the ATL business rebound will likely push your already-near-capacity ATL route to full. That's good news, but it also means you may be leaving money on the table if passengers can't all get seats. Consider whether adding an ATL flight is worth it."}},
+
+  {rank:4,  airline:"Apex Airways",                      strategy:"Cargo-Focused",    md:3, oc:4, revenue:679380,  op_cost:370640,  invest:130000, profit:178740,  corrected:false, isNew:true,
+   atl:{fare:190, paxPct:50, flights:10, lf:50,  paxRev:114000,  cargoRev:112500, opCost:114800},
+   mco:{fare:115, paxPct:40, flights:8,  lf:40,  paxRev:44160,   cargoRev:84000,  opCost:78720},
+   dfw:{fare:220, paxPct:40, flights:12, lf:40,  paxRev:126720,  cargoRev:198000, opCost:177120},
+   feedback:{what:"As one of the late submissions, Apex Airways still turned in a strong debut performance — landing fourth overall. A balanced cargo-passenger split across all three routes, combined with maximum OC investment and significant MD spend, produced $679,380 in total revenue with comparatively lean operating costs.",
+     why:"OC 4 reduced per-flight operating costs by 18%, which matters enormously when you're running 30 flights. MD 3 boosted demand by 13%, helping fill available seats even at moderate fare levels. The Cargo-Focused bonus on all three routes added meaningful cargo income on top of solid passenger revenue.",
+     rec:"The heavy upfront investment in MD and OC paid off this round, but Round 2 will test whether that base is sustainable as scenarios grow more complex. The ATL business rebound should reward Apex's ATL capacity — watch whether your 50/50 mix on ATL is the right call or whether tilting toward passengers makes sense."}},
+
+  {rank:5,  airline:"Cargo Before Comfort Air",          strategy:"Cargo-Focused",    md:2, oc:2, revenue:657716,  op_cost:451980,  invest:60000,  profit:145736,  corrected:false, isNew:false,
+   atl:{fare:195, paxPct:75, flights:9,  lf:75,  paxRev:157950,  cargoRev:50625,  opCost:117180},
+   mco:{fare:115, paxPct:90, flights:3,  lf:90,  paxRev:37260,   cargoRev:5250,   opCost:33480},
+   dfw:{fare:230, paxPct:50, flights:18, lf:32,  paxRev:159132,  cargoRev:247500, opCost:301320},
+   feedback:{what:"Cargo Before Comfort Air bet big on DFW — 18 weekly flights with an even cargo-passenger split generated over $406,000 from that corridor alone. ATL was solid and MCO was treated as a minimal presence route. Total revenue crossed $657,000, good for fifth overall.",
+     why:"Concentrating nearly 60% of all flights on DFW amplified the high cargo yield on that route. The name says it all — this airline leaned into the cargo premium aggressively. MCO was essentially a token presence, which kept costs there minimal.",
+     rec:"DFW is currently your engine, but 18 flights there is extremely concentrated. If Round 4's fuel spike scenario hits DFW hard, this concentration becomes a vulnerability. For Round 2, the ATL business rebound is worth considering — your ATL setup is reasonable but a small flight reallocation toward ATL might capture more upside."}},
+
+  {rank:6,  airline:"GRY Air",                           strategy:"Cargo-Focused",    md:2, oc:3, revenue:648083,  op_cost:425920,  invest:80000,  profit:142163,  corrected:false, isNew:false,
+   atl:{fare:185, paxPct:75, flights:8,  lf:75,  paxRev:133200,  cargoRev:45000,  opCost:98560},
+   mco:{fare:115, paxPct:90, flights:4,  lf:90,  paxRev:49680,   cargoRev:7000,   opCost:42240},
+   dfw:{fare:215, paxPct:50, flights:18, lf:43,  paxRev:165703,  cargoRev:247500, opCost:285120},
+   feedback:{what:"GRY Air followed a similar DFW-heavy playbook, stacking 18 flights on the most lucrative cargo corridor. ATL was balanced well, and MCO served as a supplementary route with strong load factors on the limited flights there. Net profit of $142,163 placed GRY solidly in the top six.",
+     why:"The Cargo-Focused strategy's DFW advantage was maximized by heavy flight concentration. OC 3 helped manage costs on what is an expensive set of DFW operations. ATL's passenger-leaning mix kept revenue diversified.",
+     rec:"Like Cargo Before Comfort Air, the DFW concentration is a future risk to watch. Round 2 presents an opportunity on the ATL corridor — consider whether a small shift from DFW to ATL captures some business travel upside without sacrificing too much cargo revenue."}},
+
+  {rank:7,  airline:"Five Flags Logistics & Transit Co.", strategy:"Balanced Carrier", md:2, oc:4, revenue:620560,  op_cost:377200,  invest:105000, profit:138360,  corrected:true,  isNew:false,
+   atl:{fare:195, paxPct:60, flights:8,  lf:60,  paxRev:112320,  cargoRev:57600,  opCost:91840},
+   mco:{fare:125, paxPct:75, flights:8,  lf:75,  paxRev:90000,   cargoRev:28000,  opCost:78720},
+   dfw:{fare:220, paxPct:40, flights:14, lf:40,  paxRev:147840,  cargoRev:184800, opCost:206640},
+   feedback:{what:"Five Flags Logistics landed seventh overall — an excellent result for a Balanced Carrier, especially given the high OC 4 investment cost. Revenue was well-distributed across all three routes, with DFW cargo contributing substantially. Load factors were steady across the board.",
+     why:"OC 4's 18% cost reduction was particularly effective given Five Flags' larger DFW footprint. The Balanced Carrier strategy doesn't receive cargo bonuses, but the mix on DFW was cargo-leaning enough to generate strong cargo income anyway. MD 2 provided a modest demand boost.",
+     rec:"As a Balanced Carrier, Round 2's ATL business rebound plays to your strengths — you have passenger infrastructure ready and fares set competitively. Consider whether raising ATL fares slightly to capture the premium business travel demand makes sense, or whether volume at current fares is the better approach."}},
+
+  {rank:8,  airline:"Global Haul Aviation",              strategy:"Cargo-Focused",    md:3, oc:3, revenue:625140,  op_cost:387200,  invest:105000, profit:132940,  corrected:false, isNew:true,
+   atl:{fare:195, paxPct:90, flights:10, lf:74,  paxRev:173180,  cargoRev:22500,  opCost:123200},
+   mco:{fare:118, paxPct:60, flights:10, lf:60,  paxRev:84960,   cargoRev:70000,  opCost:105600},
+   dfw:{fare:225, paxPct:10, flights:10, lf:10,  paxRev:27000,   cargoRev:247500, opCost:158400},
+   feedback:{what:"Global Haul Aviation, another late entrant, debuted at eighth place with a strong cargo play on DFW — 10 flights with only 10% passenger capacity put nearly all of DFW's capacity toward cargo, generating $247,500 from that route alone. ATL was passenger-leaning and ran at a solid 74% load factor.",
+     why:"The DFW cargo concentration was the key driver. Even with 10 flights rather than 17 or 18, the 90% cargo allocation on DFW created revenue comparable to some operators running heavier DFW schedules. MD 3 boosted demand meaningfully across all routes.",
+     rec:"The ATL setup is producing well, and MCO is nicely balanced. The main question for Round 2 is whether the DFW cargo-only approach holds up as scenarios evolve. The ATL business rebound is worth watching closely given your strong ATL passenger setup."}},
+
+  {rank:9,  airline:"Skyhigh Airways",                   strategy:"Balanced Carrier", md:2, oc:2, revenue:587886,  op_cost:405480,  invest:60000,  profit:122406,  corrected:false, isNew:false,
+   atl:{fare:189, paxPct:75, flights:11, lf:71,  paxRev:177527,  cargoRev:49500,  opCost:143220},
+   mco:{fare:119, paxPct:75, flights:10, lf:72,  paxRev:102210,  cargoRev:35000,  opCost:111600},
+   dfw:{fare:215, paxPct:75, flights:9,  lf:75,  paxRev:174150,  cargoRev:49500,  opCost:150660},
+   feedback:{what:"Skyhigh Airways ran a genuinely balanced operation — all three routes with similar passenger/cargo splits, moderate fares, and solid load factors. The low investment cost of just $60,000 meant most revenue flowed through to profit. Ninth place overall in a competitive field is a strong result for the Balanced strategy.",
+     why:"Near-uniform 75/25 passenger/cargo splits across all routes produced reliable revenue across the board. No single route carried too much risk. The relatively low MD and OC investment kept fixed costs down and let the inherent demand carry the operation.",
+     rec:"Skyhigh is in a good position heading into Round 2. The ATL business rebound should lift your ATL revenue without any changes needed. The main question is whether you want to invest more in MD or OC to stay competitive, or keep costs lean and rely on the scenario tailwind."}},
+
+  {rank:10, airline:"Squawk Airlines",                   strategy:"Balanced Carrier", md:3, oc:3, revenue:614760,  op_cost:401280,  invest:105000, profit:108480,  corrected:false, isNew:false,
+   atl:{fare:200, paxPct:50, flights:12, lf:50,  paxRev:144000,  cargoRev:108000, opCost:147840},
+   mco:{fare:115, paxPct:50, flights:6,  lf:50,  paxRev:41400,   cargoRev:42000,  opCost:63360},
+   dfw:{fare:210, paxPct:40, flights:12, lf:40,  paxRev:120960,  cargoRev:158400, opCost:190080},
+   feedback:{what:"Squawk Airlines chose an unusual 50/50 passenger-cargo split across all routes, which meant neither business benefited from scale. Despite that, the combination of strong MD and OC investment produced revenue over $614,000. ATL cargo alone generated $108,000 — among the highest cargo revenues on that route.",
+     why:"The 50/50 mix is a true middle-ground approach that spread risk evenly. Neither passenger nor cargo demand was maximized, but the investments in MD 3 and OC 3 boosted demand and cut costs enough to make it work. DFW cargo was particularly strong given the 12-flight frequency.",
+     rec:"The 50/50 approach is interesting but may underperform in scenarios that reward specialization. Round 2's ATL rebound specifically rewards passenger capacity — consider whether tilting your ATL mix toward passengers captures more upside from that scenario without too much disruption to your current model."}},
+
+  {rank:11, airline:"起飞",                               strategy:"Cargo-Focused",    md:2, oc:2, revenue:611436,  op_cost:448260,  invest:60000,  profit:103176,  corrected:true,  isNew:false,
+   atl:{fare:193, paxPct:75, flights:10, lf:72,  paxRev:166545,  cargoRev:56250,  opCost:130200},
+   mco:{fare:115, paxPct:90, flights:3,  lf:90,  paxRev:37260,   cargoRev:5250,   opCost:33480},
+   dfw:{fare:230, paxPct:60, flights:17, lf:34,  paxRev:159132,  cargoRev:187000, opCost:284580},
+   feedback:{what:"起飞 bet heavily on DFW — 17 flights with a 60/40 passenger-cargo split. While DFW cargo revenue was strong at $187,000, the high operating cost of running 17 DFW flights at reduced cost-savings levels (OC 2 only provides 7% cost reduction) compressed the margin. Still, 11th overall is a solid result.",
+     why:"The DFW concentration worked but would have been more profitable with higher OC investment to manage the large flight footprint. MCO is very lightly served, which is a different strategic choice. The Cargo-Focused bonus helped across all routes.",
+     rec:"The operating cost burden of 17 DFW flights at OC 2 is noticeable. For Round 2, consider whether raising OC investment makes sense given the heavy DFW schedule, or whether shifting some DFW flights to ATL to capture the business travel rebound is the better trade."}},
+
+  {rank:12, airline:"Worldwide Airways",                 strategy:"Balanced Carrier", md:2, oc:4, revenue:564756,  op_cost:359160,  invest:105000, profit:100596,  corrected:false, isNew:true,
+   atl:{fare:200, paxPct:75, flights:12, lf:60,  paxRev:171602,  cargoRev:54000,  opCost:137760},
+   mco:{fare:150, paxPct:90, flights:9,  lf:55,  paxRev:88954,   cargoRev:12600,  opCost:88560},
+   dfw:{fare:275, paxPct:40, flights:9,  lf:40,  paxRev:118800,  cargoRev:118800, opCost:132840},
+   feedback:{what:"Worldwide Airways joined late but debuted at 12th place. The MCO fare of $150 is one of the highest set on that route — well above the reference fare — which suppressed demand noticeably. OC 4 provided excellent cost control, and DFW was a reliable earner with solid cargo income.",
+     why:"Fares above the reference fare reduce demand through the price elasticity effect, which is why the MCO load factor came in around 55% despite 9 flights. The ATL fare of $200 is also above reference, similarly dampening passengers there. OC 4 kept costs low enough to stay profitable anyway.",
+     rec:"MCO at $150 is quite expensive for that route — the reference fare is $115. Round 2 is a good time to experiment with whether a fare reduction on MCO brings enough additional passengers to more than compensate for the lower per-seat revenue. DFW is performing well and the ATL rebound should provide a natural lift."}},
+
+  {rank:13, airline:"Gulf Coast Air",                    strategy:"Balanced Carrier", md:2, oc:2, revenue:569342,  op_cost:411060,  invest:60000,  profit:98282,   corrected:false, isNew:false,
+   atl:{fare:189, paxPct:75, flights:11, lf:71,  paxRev:177527,  cargoRev:49500,  opCost:143220},
+   mco:{fare:119, paxPct:90, flights:9,  lf:80,  paxRev:102210,  cargoRev:12600,  opCost:100440},
+   dfw:{fare:219, paxPct:75, flights:10, lf:66,  paxRev:172505,  cargoRev:55000,  opCost:167400},
+   feedback:{what:"Gulf Coast Air ran a consistent 30-flight operation across all three routes with near-reference fares. Load factors were solid across the board — nothing exceptional, but nothing that underperformed either. The result is a healthy $98,282 profit on low investment.",
+     why:"Fares close to the reference levels kept demand strong and load factors near equilibrium. The 90/10 MCO split is passenger-heavy, which works well on a shorter route where passenger yields dominate. Low investment costs helped profit margins.",
+     rec:"Gulf Coast Air is in a clean, predictable position. The ATL rebound plays directly to your existing setup. For Round 2, consider whether your DFW allocation and fare are optimized — $219 on DFW is close to reference and flights are balanced, which is fine, but there may be some upside in cargo there."}},
+
+  {rank:14, airline:"Emerald Coast Airways",             strategy:"Balanced Carrier", md:2, oc:2, revenue:548350,  op_cost:401760,  invest:60000,  profit:86590,   corrected:false, isNew:false,
+   atl:{fare:200, paxPct:75, flights:12, lf:60,  paxRev:171602,  cargoRev:54000,  opCost:156240},
+   mco:{fare:110, paxPct:90, flights:10, lf:81,  paxRev:107148,  cargoRev:14000,  opCost:111600},
+   dfw:{fare:250, paxPct:40, flights:8,  lf:40,  paxRev:96000,   cargoRev:105600, opCost:133920},
+   feedback:{what:"Emerald Coast Airways ran strong on MCO — 10 flights with a below-reference fare produced over 81% load factors and $107,000 in passenger revenue. DFW was cargo-leaning with 8 flights, and ATL was solid if slightly demand-constrained by the $200 fare.",
+     why:"The MCO approach worked well: a slightly discounted fare brought in strong passenger volume. DFW at $250 suppressed passengers there, but the heavy cargo weighting (60%) still produced good DFW revenue. ATL at $200 is above reference, reducing load factors somewhat.",
+     rec:"MCO is your strength — consider protecting that position in Round 2. ATL is the focus of the Round 2 scenario (business travel rebound), and your current ATL setup with 12 flights and a $200 fare may leave some demand on the table. A modest fare reduction on ATL could yield significantly more passengers given how demand responds to pricing."}},
+
+  {rank:15, airline:"Latitude Airlines",                 strategy:"Cost Leader",      md:3, oc:4, revenue:565457,  op_cost:352600,  invest:130000, profit:82857,   corrected:true,  isNew:false,
+   atl:{fare:200, paxPct:75, flights:11, lf:75,  paxRev:197502,  cargoRev:42075,  opCost:126280},
+   mco:{fare:125, paxPct:90, flights:11, lf:69,  paxRev:114214,  cargoRev:13090,  opCost:108240},
+   dfw:{fare:310, paxPct:75, flights:8,  lf:54,  paxRev:161176,  cargoRev:37400,  opCost:118080},
+   feedback:{what:"Latitude Airlines ran as a corrected Cost Leader after a registration discrepancy was resolved. The results are mixed: strong revenue on ATL and MCO, but DFW at $310 is dramatically above the reference fare of $210, which significantly suppressed demand there — load factors on DFW came in around 54%.",
+     why:"Cost Leaders benefit from a demand boost that makes lower fares very effective, but Latitude priced DFW at a 48% premium over reference — the opposite of what the strategy is designed for. ATL and MCO were better aligned with the strategy. High MD and OC investment provided demand and cost benefits but at a steep $130,000 investment cost.",
+     rec:"The DFW fare needs serious attention. At $310, you're pricing like a Premium carrier on a route where you're supposed to be the cost leader. For Round 2, a significant DFW fare reduction should be a priority — it will pull in far more passengers and likely improve profit despite the lower per-seat revenue."}},
+
+  {rank:16, airline:"Lo-Povo Air",                       strategy:"Cost Leader",      md:1, oc:4, revenue:546454,  op_cost:385400,  invest:85000,  profit:76054,   corrected:false, isNew:false,
+   atl:{fare:165, paxPct:75, flights:10, lf:75,  paxRev:148500,  cargoRev:38250,  opCost:114800},
+   mco:{fare:90,  paxPct:90, flights:5,  lf:90,  paxRev:48600,   cargoRev:5950,   opCost:49200},
+   dfw:{fare:200, paxPct:60, flights:15, lf:54,  paxRev:192954,  cargoRev:112200, opCost:221400},
+   feedback:{what:"Lo-Povo Air embraced the Cost Leader model more authentically than most — fares below reference on all routes, with a heavy DFW presence. ATL at $165 and MCO at $90 drove strong load factors (75% and 90% respectively). DFW ran 15 flights but at only 54% load, partly due to the mixed passenger/cargo split.",
+     why:"Low fares created strong demand, but DFW's 15-flight commitment at OC 4 produced high revenue paired with high operating costs. The MCO operation was very lean and efficient. OC 4 was the right choice given the large flight total, providing an 18% cost reduction.",
+     rec:"This is a genuine Cost Leader strategy — low fares, high volumes. The DFW setup is trying to do both passengers and cargo with a 60/40 split, which is harder to optimize than focusing on one or the other. In Round 2, the ATL rebound is an opportunity since you already have a competitive ATL fare."}},
+
+  {rank:17, airline:"Fareline Air",                      strategy:"Balanced Carrier", md:3, oc:2, revenue:565284,  op_cost:405480,  invest:85000,  profit:74804,   corrected:false, isNew:false,
+   atl:{fare:195, paxPct:75, flights:11, lf:71,  paxRev:182295,  cargoRev:49500,  opCost:143220},
+   mco:{fare:135, paxPct:90, flights:10, lf:61,  paxRev:99146,   cargoRev:14000,  opCost:111600},
+   dfw:{fare:240, paxPct:75, flights:9,  lf:66,  paxRev:170843,  cargoRev:49500,  opCost:150660},
+   feedback:{what:"Fareline Air ran elevated fares across the board — MCO at $135 (vs $115 reference) and DFW at $240 (vs $210 reference). This suppressed demand somewhat, resulting in load factors in the 60-70% range rather than full planes. Revenue was still solid at $565,000, and the MD 3 investment helped offset some of the demand reduction.",
+     why:"Above-reference fares reduce passenger demand through price elasticity, which is why load factors didn't reach the 80-90% range. MD 3 boosted demand by 13%, which helped counteract some of that fare drag. The Balanced Carrier strategy provides no special bonuses but also no penalties.",
+     rec:"MCO at $135 is one of the higher fares on that route across the class. Consider whether dropping toward the reference fare ($115) or below captures significantly more passengers — the demand response to a $20 fare cut can be substantial given the elasticity built into the simulation. ATL is well-positioned for Round 2."}},
+
+  {rank:18, airline:"Cornerstone Cargo",                 strategy:"Cargo-Focused",    md:2, oc:2, revenue:528032,  op_cost:398040,  invest:60000,  profit:69992,   corrected:false, isNew:false,
+   atl:{fare:175, paxPct:90, flights:10, lf:84,  paxRev:176621,  cargoRev:22500,  opCost:130200},
+   mco:{fare:115, paxPct:90, flights:12, lf:60,  paxRev:99112,   cargoRev:21000,  opCost:133920},
+   dfw:{fare:200, paxPct:40, flights:8,  lf:40,  paxRev:76800,   cargoRev:132000, opCost:133920},
+   feedback:{what:"Cornerstone Cargo is named for cargo but ran 90% passenger capacity on both ATL and MCO — an interesting hybrid that generated strong ATL passenger revenue (84% load factor) while leaning on DFW for cargo income. The Cargo-Focused strategy bonus helped DFW cargo even though ATL and MCO were essentially passenger operations.",
+     why:"The name and strategy are cargo-focused, but the mix decisions were almost purely passenger on the shorter routes. That's not necessarily wrong — ATL and MCO passenger yields are strong — but the Cargo-Focused bonus wasn't being leveraged on those routes. DFW cargo was solid at $132,000.",
+     rec:"For Round 2, consider whether leaning more into cargo on at least one of the shorter routes would let you capture more of your strategy bonus. The ATL business rebound could also be an opportunity to adjust your ATL mix toward passengers even further given the strong ATL passenger revenue you already generate."}},
+
+  {rank:19, airline:"Jetset Airlines",                   strategy:"Balanced Carrier", md:2, oc:2, revenue:523988,  op_cost:398040,  invest:60000,  profit:65948,   corrected:false, isNew:true,
+   atl:{fare:185, paxPct:75, flights:10, lf:75,  paxRev:166500,  cargoRev:45000,  opCost:130200},
+   mco:{fare:115, paxPct:90, flights:12, lf:63,  paxRev:104328,  cargoRev:16800,  opCost:133920},
+   dfw:{fare:210, paxPct:60, flights:8,  lf:60,  paxRev:120960,  cargoRev:70400,  opCost:133920},
+   feedback:{what:"Jetset Airlines arrived late but debuted at 19th in a 29-airline field — a respectable start. Reference-level fares on ATL and DFW kept demand strong. MCO was over-served relative to demand at 12 flights with 90% passenger capacity, which drove up operating costs on that route without a proportional revenue benefit.",
+     why:"ATL performed well at reference fare with a solid 75% load factor. MCO's high flight count (12) created more capacity than needed given the passenger-heavy mix and reference fare — operating costs there came in at $133,920 against $104,328 in passenger revenue plus $16,800 cargo. DFW was balanced and reasonable.",
+     rec:"MCO is the area to revisit. Twelve flights at 90% passenger with a reference fare isn't producing enough revenue to justify the operating cost. For Round 2, consider shifting 2-3 MCO flights to ATL to capture the business travel rebound, or adjusting your MCO mix toward cargo to improve that route's profitability."}},
+
+  {rank:20, airline:"Blue Knight Airways",               strategy:"Premium Service",   md:2, oc:4, revenue:520291,  op_cost:350960,  invest:105000, profit:64331,   corrected:false, isNew:false,
+   atl:{fare:185, paxPct:75, flights:10, lf:73,  paxRev:161838,  cargoRev:40500,  opCost:114800},
+   mco:{fare:110, paxPct:90, flights:12, lf:61,  paxRev:96433,   cargoRev:15120,  opCost:118080},
+   dfw:{fare:265, paxPct:50, flights:8,  lf:50,  paxRev:127200,  cargoRev:79200,  opCost:118080},
+   feedback:{what:"Blue Knight Airways is one of only two Premium Service carriers, and landed 20th. The strategy's 12% fare premium and demand penalty (10% reduction) made it harder to fill planes — load factors landed in the 50-73% range. OC 4 helped control costs on what is an investment-heavy operation.",
+     why:"Premium Service is the hardest strategy to optimize in a baseline round — the fare premium needs to be matched with genuinely high fares to generate the premium revenue, and demand is penalized. Blue Knight's fares at ATL ($185) and MCO ($110) are actually at or below reference, which means the Premium bonus isn't being captured.",
+     rec:"Premium Service requires genuinely premium fares to work — at $185 on ATL and $110 on MCO, you're charging near-reference prices with a demand penalty. For Round 2, try raising fares significantly on at least one route (ATL is the natural choice given the business travel rebound) to see if the premium revenue more than offsets the lower volume."}},
+
+  {rank:21, airline:"East Coast Air",                    strategy:"Balanced Carrier", md:3, oc:2, revenue:550137,  op_cost:405480,  invest:85000,  profit:59657,   corrected:false, isNew:false,
+   atl:{fare:189, paxPct:90, flights:11, lf:74,  paxRev:185746,  cargoRev:19800,  opCost:143220},
+   mco:{fare:119, paxPct:90, flights:10, lf:75,  paxRev:106942,  cargoRev:14000,  opCost:111600},
+   dfw:{fare:215, paxPct:75, flights:9,  lf:75,  paxRev:174150,  cargoRev:49500,  opCost:150660},
+   feedback:{what:"East Coast Air ran heavily passenger-focused — 90% passenger on ATL and MCO, 75% on DFW. Passenger revenue was strong across all three routes, but cargo income was minimal, especially on ATL and MCO where cargo allocation was only 10%. Total revenue hit $550,000 but operating costs were high given the 30-flight schedule at OC 2.",
+     why:"Going 90% passenger on all routes sacrifices cargo revenue — ATL cargo at 10% generated only $19,800, compared to $45,000 or more for carriers with 25% cargo there. The Balanced Carrier strategy provides no cargo bonus, so the cargo miss is uncompensated. MD 3 boosted demand meaningfully, which helped fill the available seats.",
+     rec:"Consider whether the all-passenger approach is leaving too much cargo revenue unrealized. Even shifting ATL to 75/25 passenger/cargo would more than double ATL cargo income. The Round 2 ATL rebound favors your passenger capacity, but after Round 2, diversifying toward cargo may be worth exploring."}},
+
+  {rank:22, airline:"Gulf Coast Airways",                strategy:"Balanced Carrier", md:2, oc:3, revenue:496857,  op_cost:369600,  invest:80000,  profit:47257,   corrected:false, isNew:false,
+   atl:{fare:185, paxPct:75, flights:12, lf:68,  paxRev:179820,  cargoRev:54000,  opCost:147840},
+   mco:{fare:125, paxPct:90, flights:12, lf:55,  paxRev:99237,   cargoRev:16800,  opCost:126720},
+   dfw:{fare:225, paxPct:50, flights:6,  lf:50,  paxRev:81000,   cargoRev:66000,  opCost:95040},
+   feedback:{what:"Gulf Coast Airways spread flights somewhat unevenly — 12 each on ATL and MCO but only 6 on DFW. MCO at 12 flights with a $125 fare (above reference) and 90% passenger weighting came in at only 55% load factor, which hurt the MCO contribution. DFW was lightly served but reasonably efficient.",
+     why:"MCO's 55% load factor reflects the above-reference fare combined with 12 flights of mostly-passenger capacity — more capacity than demand needed at that price. DFW with only 6 flights limited total DFW revenue even though the per-flight economics were reasonable.",
+     rec:"MCO needs attention — either lower the fare toward $115 or reduce the flight count. Adding 2-3 of those MCO flights to DFW would likely improve overall profitability, since DFW has strong cargo potential that's currently underserved with just 6 flights."}},
+
+  {rank:23, airline:"ADAPT Airlines",                    strategy:"Balanced Carrier", md:2, oc:3, revenue:487966,  op_cost:369600,  invest:80000,  profit:38366,   corrected:false, isNew:false,
+   atl:{fare:195, paxPct:75, flights:15, lf:50,  paxRev:174229,  cargoRev:67500,  opCost:184800},
+   mco:{fare:125, paxPct:90, flights:10, lf:66,  paxRev:99237,   cargoRev:14000,  opCost:105600},
+   dfw:{fare:260, paxPct:50, flights:5,  lf:50,  paxRev:78000,   cargoRev:55000,  opCost:79200},
+   feedback:{what:"ADAPT Airlines put 15 flights on ATL — the most of any carrier on that route — but with a $195 fare and 75% passenger capacity, demand couldn't fill all that capacity. The result was a 50% ATL load factor despite the heavy investment, which made ATL cost-inefficient. DFW at only 5 flights was lightly served.",
+     why:"Too many flights relative to demand is a classic over-capacity problem — the operating cost of 15 ATL flights ($184,800) was not matched by ATL revenue ($241,729). Reducing ATL to 10-11 flights while maintaining similar fares would have improved overall profit. DFW at $260 also suppressed demand on that route.",
+     rec:"ATL over-capacity is the priority fix. For Round 2, consider dropping to 10-11 ATL flights — you'll cut $52,000-$66,000 in ATL operating costs while losing relatively little revenue since the additional flights aren't filling. Reallocating those flights to DFW could improve overall performance significantly."}},
+
+  {rank:24, airline:"Fairline",                          strategy:"Cost Leader",      md:3, oc:1, revenue:502786,  op_cost:409340,  invest:70000,  profit:23446,   corrected:true,  isNew:false,
+   atl:{fare:169, paxPct:90, flights:13, lf:83,  paxRev:218503,  cargoRev:19890,  opCost:176540},
+   mco:{fare:99,  paxPct:90, flights:11, lf:90,  paxRev:117612,  cargoRev:13090,  opCost:128040},
+   dfw:{fare:189, paxPct:90, flights:6,  lf:90,  paxRev:122472,  cargoRev:11220,  opCost:104760},
+   feedback:{what:"Fairline, corrected to Cost Leader, showed a genuine low-fare strategy — $169 on ATL, $99 on MCO, $189 on DFW — and it worked for demand: ATL hit 83% load factors, MCO and DFW hit 90%. But with 30 flights and only OC 1 cost savings (3% reduction), operating costs came in at $409,340 — the fourth-highest in the class.",
+     why:"Low fares plus high flight counts generate a lot of passengers, which is the Cost Leader model, but it only works profitably when operating costs are controlled. OC 1 barely moves the needle on cost reduction. With MD 3 pushing demand further, there were more than enough passengers — the constraint was cost, not demand.",
+     rec:"The strategy is right but OC needs to go up. OC 3 or 4 would cut per-flight costs meaningfully and likely move you from near-breakeven to strong profitability. For Round 2, look at raising OC — the demand you generate at low fares needs better cost control to convert into profit."}},
+
+  {rank:25, airline:"Pensacola Airlines",                strategy:"Premium Service",   md:3, oc:3, revenue:498019,  op_cost:378400,  invest:105000, profit:14619,   corrected:false, isNew:false,
+   atl:{fare:180, paxPct:75, flights:14, lf:57,  paxRev:172137,  cargoRev:56700,  opCost:172480},
+   mco:{fare:115, paxPct:90, flights:9,  lf:79,  paxRev:98242,   cargoRev:11340,  opCost:95040},
+   dfw:{fare:215, paxPct:50, flights:7,  lf:50,  paxRev:90300,   cargoRev:69300,  opCost:110880},
+   feedback:{what:"Pensacola Airlines, the hometown carrier, ran as a Premium Service operator but priced at or below reference on all routes — $180 on ATL ($185 reference), $115 on MCO (exact reference), $215 on DFW (exact reference). The Premium strategy imposes a 10% demand penalty, which combined with near-reference fares meant load factors below 60% on ATL and DFW.",
+     why:"Premium Service should charge premium prices — that's the point. But here the fares don't reflect a premium, so the strategy's demand penalty just reduces passengers without the compensating higher revenue per seat. The 14 ATL flights with 57% load is expensive overcapacity.",
+     rec:"For Round 2, either raise fares substantially (Premium Service needs $220+ on ATL, $135+ on MCO, $250+ on DFW to capture the strategy's intent) or reconsider whether Premium Service is the right fit. The ATL business rebound in Round 2 is an opportunity — business travelers are less price-sensitive, which aligns with Premium Service if you commit to the premium fares."}},
+
+  {rank:26, airline:"Sunbelt Airways",                   strategy:"Cost Leader",      md:3, oc:4, revenue:490690,  op_cost:350960,  invest:130000, profit:9730,    corrected:false, isNew:false,
+   atl:{fare:170, paxPct:60, flights:10, lf:60,  paxRev:122400,  cargoRev:61200,  opCost:114800},
+   mco:{fare:105, paxPct:90, flights:12, lf:84,  paxRev:126810,  cargoRev:14280,  opCost:118080},
+   dfw:{fare:190, paxPct:50, flights:8,  lf:50,  paxRev:91200,   cargoRev:74800,  opCost:118080},
+   feedback:{what:"Sunbelt Airways combined maximum MD and OC investment ($130,000 total) with Cost Leader fares, but the investment cost itself nearly wiped out the profit. The operation generated strong demand — MCO at 84% load — and OC 4 kept costs as low as possible, but $130,000 in fixed investment left almost nothing on the table.",
+     why:"MD 3 and OC 4 together cost $130,000. That's the highest investment total in the class. Those investments pay dividends in demand and cost reduction, but only if the revenue base is large enough to absorb the fixed cost. At Sunbelt's revenue level, the math is tight.",
+     rec:"The investment is the problem. For Round 2, consider whether you need both MD 3 and OC 4, or whether reducing one frees up capital that goes directly to profit. MD 2 + OC 4 saves $60,000 in investment while keeping strong cost reduction. The Cost Leader model works best when investments don't consume the margin."}},
+
+  {rank:27, airline:"Jet Lag Logistics",                 strategy:"Cargo-Focused",    md:2, oc:2, revenue:495292,  op_cost:429660,  invest:60000,  profit:5632,    corrected:false, isNew:false,
+   atl:{fare:185, paxPct:90, flights:15, lf:51,  paxRev:170829,  cargoRev:33750,  opCost:195300},
+   mco:{fare:115, paxPct:90, flights:3,  lf:90,  paxRev:37260,   cargoRev:5250,   opCost:33480},
+   dfw:{fare:215, paxPct:75, flights:12, lf:54,  paxRev:165703,  cargoRev:82500,  opCost:200880},
+   feedback:{what:"Jet Lag Logistics runs as Cargo-Focused but with 90% passenger on both ATL and MCO — a similar disconnect as Cornerstone Cargo. ATL at 15 flights with 90% passenger capacity generated only 51% load factors at a reference fare, meaning roughly half the seats were flying empty. High operating costs across 30 flights with only OC 2 cost savings compressed the margin to near-zero.",
+     why:"Fifteen ATL flights at 90% passenger capacity creates 1,620 available seats per week against demand of roughly 920 passengers. That's massive overcapacity. The Cargo-Focused strategy bonus isn't being used on ATL given the 90% passenger split. OC 2 only provides 7% cost reduction, insufficient to offset 15 ATL flights.",
+     rec:"ATL needs a serious rethink — either cut flights from 15 to 10 or adjust the mix toward cargo to align with your declared strategy. Freeing up 5 ATL flights and reallocating them to DFW cargo would likely double your profit. OC 3 or 4 would also help given the large total flight schedule."}},
+
+  {rank:28, airline:"Emerald Argo Airlines",             strategy:"Balanced Carrier", md:4, oc:1, revenue:511296,  op_cost:407400,  invest:100000, profit:3896,    corrected:false, isNew:false,
+   atl:{fare:185, paxPct:90, flights:12, lf:74,  paxRev:196470,  cargoRev:21600,  opCost:162960},
+   mco:{fare:125, paxPct:90, flights:12, lf:60,  paxRev:108426,  cargoRev:16800,  opCost:139680},
+   dfw:{fare:250, paxPct:75, flights:6,  lf:75,  paxRev:135000,  cargoRev:33000,  opCost:104760},
+   feedback:{what:"Emerald Argo Airlines invested $90,000 in MD 4 — the maximum market development level — but only $10,000 in OC 1, providing almost no cost reduction. With 30 flights and OC 1, operating costs came in high at $407,400. The MD 4 investment boosted demand by 18%, which helped fill seats, but the cost base consumed most of the revenue.",
+     why:"OC 1 provides only a 3% cost reduction — essentially nothing at Emerald Argo's scale. MD 4 at $90,000 is the single most expensive individual investment, and while it generates demand, that demand needs cost-efficient operations to convert to profit. The combination of maximum demand investment with minimum cost investment created a high-revenue, high-cost operation with thin margins.",
+     rec:"The investment mix is the issue: OC 1 with MD 4 is an unusual combination that prioritizes demand over cost efficiency. For Round 2, consider raising OC to at least level 2 or 3 — the cost savings will directly improve profit. You can likely reduce MD to level 2 or 3 while still getting a meaningful demand boost at a lower price."}},
+
+  {rank:29, airline:"Capital Airlines",                  strategy:"Balanced Carrier", md:3, oc:2, revenue:449692,  op_cost:429660,  invest:85000,  profit:-64968,  corrected:false, isNew:false,
+   atl:{fare:203, paxPct:90, flights:15, lf:49,  paxRev:177950,  cargoRev:27000,  opCost:195300},
+   mco:{fare:120, paxPct:90, flights:3,  lf:90,  paxRev:38880,   cargoRev:4200,   opCost:33480},
+   dfw:{fare:230, paxPct:90, flights:12, lf:53,  paxRev:175262,  cargoRev:26400,  opCost:200880},
+   feedback:{what:"Capital Airlines is the only airline to post a loss this round — a net negative of $64,968. The core problem is structural: 15 ATL flights and 12 DFW flights, both with 90% passenger capacity, created 3,240 available passenger seats weekly on just those two routes, against combined passenger demand well under that figure. Operating costs topped $429,000 while revenue came in at only $449,000.",
+     why:"Over-capacity on ATL (15 flights) and DFW (12 flights) with almost no cargo revenue is a difficult combination. At 90% passenger on both routes, cargo income was minimal. DFW at $230 (above reference) further suppressed demand there. With only OC 2 cost reduction and a 30-flight total schedule, the cost base was too high for the revenue it generated.",
+     rec:"This round is a learning opportunity. For Round 2: drop ATL to 10 flights, shift some of those to DFW cargo (reduce DFW passenger mix from 90% to 50-60%), and lower DFW fares toward reference. These three changes together should move Capital Airlines from a loss to a solid profit."}},
+];
+
+function dollarK(val) {
+  if (val < 0) return '-$' + Math.abs(Math.round(val/1000)) + 'K';
+  return '$' + Math.round(val/1000) + 'K';
+}
+function dollar(val) {
+  if (val < 0) return '-$' + Math.abs(val).toLocaleString();
+  return '$' + val.toLocaleString();
 }
 
-function medal(r) {
-  if(r===1) return '🥇';
-  if(r===2) return '🥈';
-  if(r===3) return '🥉';
-  return '#'+r;
+function stratPill(s) {
+  const cls = s.includes('Cost') ? 'strat-cost' : s.includes('Premium') ? 'strat-premium' : s.includes('Cargo') ? 'strat-cargo' : 'strat-balanced';
+  const label = s.replace('Balanced Carrier','Balanced').replace('Cargo-Focused','Cargo-Focused').replace('Premium Service','Premium').replace('Cost Leader','Cost Leader');
+  return `<span class="strat-pill ${cls}">${label}</span>`;
 }
 
-function lfColor(lf) {
-  if(lf>=85) return '#4ade80';
-  if(lf>=70) return '#fbbf24';
-  return '#f87171';
+function dots(n, label) {
+  let html = `<div class="invest-dots">`;
+  for (let i=0;i<4;i++) html += `<div class="dot ${i<n ? 'dot-filled':'dot-empty'}"></div>`;
+  html += `<span class="invest-label">${label}</span></div>`;
+  return html;
 }
 
-function showDetail(airline) {
-  const d = AIRLINES[airline];
-  if(!d) return;
+const maxProfit = Math.max(...DATA.map(d => d.profit));
 
-  document.getElementById('dTitle').textContent = airline;
-  document.getElementById('dSub').textContent = d.strategy;
-  document.getElementById('dRank').textContent = medal(d.rank) + ' Rank ' + d.rank + ' of 25';
+function routeCard(code, r) {
+  return `<div class="route-card">
+    <div class="route-label"><span class="route-airport">${code}</span></div>
+    <div class="route-stat"><span class="route-stat-label">Fare</span><span class="route-stat-value">${dollar(r.fare)}</span></div>
+    <div class="route-stat"><span class="route-stat-label">Mix (Pax/Cargo)</span><span class="route-stat-value">${r.paxPct}/${100-r.paxPct}</span></div>
+    <div class="route-stat"><span class="route-stat-label">Flights</span><span class="route-stat-value">${r.flights}</span></div>
+    <div class="route-stat"><span class="route-stat-label">Load Factor</span><span class="route-stat-value">${r.lf}%</span></div>
+    <div class="route-stat"><span class="route-stat-label">Pax Revenue</span><span class="route-stat-value">${dollar(Math.round(r.paxRev))}</span></div>
+    <div class="route-stat"><span class="route-stat-label">Cargo Revenue</span><span class="route-stat-value">${dollar(Math.round(r.cargoRev))}</span></div>
+    <div class="route-stat"><span class="route-stat-label">Op Cost</span><span class="route-stat-value">${dollar(Math.round(r.opCost))}</span></div>
+  </div>`;
+}
 
-  document.getElementById('dMetrics').innerHTML = `
-    <div class="metric"><div class="metric-val">${(d.profit/1000).toFixed(0)}K</div><div class="metric-lbl">Round 1 Profit</div></div>
-    <div class="metric"><div class="metric-val">${d.lf}%</div><div class="metric-lbl">Avg Load Factor</div></div>
-    <div class="metric"><div class="metric-val">${d.on_time}%</div><div class="metric-lbl">On-Time</div></div>
-    <div class="metric"><div class="metric-val">${d.csat}</div><div class="metric-lbl">Cust Satisfaction</div></div>
-    <div class="metric"><div class="metric-val">MD=${d.md}</div><div class="metric-lbl">Market Dev</div></div>
-    <div class="metric"><div class="metric-val">OC=${d.oc}</div><div class="metric-lbl">Operational Cap</div></div>
+const tbody = document.getElementById('leaderboard-body');
+DATA.forEach(d => {
+  const profitCls = d.profit >= 0 ? 'profit-positive' : 'profit-negative';
+  const rankCls = d.rank === 1 ? 'rank-1' : d.rank === 2 ? 'rank-2' : d.rank === 3 ? 'rank-3' : 'rank-other';
+  const barWidth = Math.max(0, Math.round((d.profit / maxProfit) * 100));
+
+  let badges = '';
+  if (d.corrected) badges += `<span class="badge badge-corrected">✓ Corrected</span>`;
+  if (d.isNew) badges += `<span class="badge badge-new">★ Late Add</span>`;
+
+  const mainRow = document.createElement('tr');
+  mainRow.innerHTML = `
+    <td><span class="rank-badge ${rankCls}">${d.rank}</span></td>
+    <td>
+      <div class="airline-name">${d.airline}</div>
+      ${badges ? `<div class="airline-badges">${badges}</div>` : ''}
+    </td>
+    <td>${stratPill(d.strategy)}</td>
+    <td class="right">${dots(d.md, 'MD')}</td>
+    <td class="right">${dots(d.oc, 'OC')}</td>
+    <td class="right">${dollar(d.revenue)}</td>
+    <td class="right">
+      <span class="${profitCls}">${dollar(d.profit)}</span>
+      <div class="profit-bar-wrap">
+        <div class="profit-bar-track">
+          <div class="profit-bar-fill ${d.profit<0?'negative':''}" style="width:${barWidth}%"></div>
+        </div>
+      </div>
+    </td>
+    <td><button class="toggle-btn" onclick="toggle(${d.rank})">Details ▾</button></td>
   `;
+  tbody.appendChild(mainRow);
 
-  function routeCard(label, fare, mix, flts, lf) {
-    return `<div class="route-card">
-      <div class="route-label">✈ ${label}</div>
-      <div class="route-stat"><strong>${flts} flights</strong> · ${mix} mix</div>
-      <div class="route-stat">Fare: <strong>$${fare}</strong></div>
-      <div class="route-stat">Load Factor: <strong style="color:${lfColor(lf)}">${lf}%</strong></div>
-      <div class="lf-bar-wrap"><div class="lf-bar" style="width:${lf}%"></div></div>
-    </div>`;
-  }
+  const expandRow = document.createElement('tr');
+  expandRow.className = 'expand-row';
+  expandRow.innerHTML = `<td colspan="8">
+    <div class="expand-inner" id="expand-${d.rank}">
+      <div class="route-grid">
+        ${routeCard('ATL', d.atl)}
+        ${routeCard('MCO', d.mco)}
+        ${routeCard('DFW', d.dfw)}
+      </div>
+      <div class="feedback-section">
+        <div class="feedback-heading">Instructor Feedback</div>
+        <div class="feedback-block">
+          <div class="feedback-label">What Happened</div>
+          <div class="feedback-text">${d.feedback.what}</div>
+        </div>
+        <div class="feedback-block">
+          <div class="feedback-label">Why It Happened</div>
+          <div class="feedback-text">${d.feedback.why}</div>
+        </div>
+        <div class="feedback-block">
+          <div class="feedback-label">Round 2 Recommendations</div>
+          <div class="feedback-text">${d.feedback.rec}</div>
+        </div>
+      </div>
+    </div>
+  </td>`;
+  tbody.appendChild(expandRow);
+});
 
-  document.getElementById('dRoutes').innerHTML =
-    routeCard('PNS→ATL', d.atl_f, d.atl_m, d.atl_n, d.atl_lf) +
-    routeCard('PNS→MCO', d.mco_f, d.mco_m, d.mco_n, d.mco_lf) +
-    routeCard('PNS→DFW', d.dfw_f, d.dfw_m, d.dfw_n, d.dfw_lf);
-
-  document.getElementById('dP1').innerHTML = '<div class="feedback-block-lbl">What Happened</div><p class="feedback-p">' + d.p1 + '</p>';
-  document.getElementById('dP2').innerHTML = '<div class="feedback-block-lbl">Why It Happened</div><p class="feedback-p">' + d.p2 + '</p>';
-  document.getElementById('dP3').innerHTML = '<div class="feedback-block-lbl">Round 2 Recommendations</div><p class="feedback-p">' + d.p3 + '</p>';
-
-  const panel = document.getElementById('detailPanel');
-  panel.classList.add('on');
-  setTimeout(() => panel.scrollIntoView({behavior:'smooth', block:'nearest'}), 50);
+function toggle(rank) {
+  const el = document.getElementById('expand-' + rank);
+  el.classList.toggle('open');
 }
 
-function closeDetail() {
-  document.getElementById('detailPanel').classList.remove('on');
-}
+// Strategy summary
+const stratGroups = {};
+DATA.forEach(d => {
+  const s = d.strategy;
+  if (!stratGroups[s]) stratGroups[s] = [];
+  stratGroups[s].push(d);
+});
+
+const stratOrder = ['Cargo-Focused','Balanced Carrier','Cost Leader','Premium Service'];
+const stratColors = {'Cargo-Focused':'#7a4200','Balanced Carrier':'#1a3a6e','Cost Leader':'#1a5a1a','Premium Service':'#5a1a6e'};
+const summaryEl = document.getElementById('strat-summary');
+
+stratOrder.forEach(s => {
+  const group = stratGroups[s] || [];
+  if (!group.length) return;
+  const avgProfit = Math.round(group.reduce((a,b) => a+b.profit, 0) / group.length);
+  const best = group[0];
+  const airlineList = group.map(d => d.airline).join(', ');
+  const card = document.createElement('div');
+  card.className = 'strat-card';
+  card.style.borderTopColor = stratColors[s];
+  card.innerHTML = `
+    <div class="strat-card-title">${s}</div>
+    <div class="strat-card-stat">${dollar(avgProfit)}</div>
+    <div class="strat-card-sub">avg net profit · ${group.length} airline${group.length>1?'s':''}</div>
+    <div class="strat-card-sub" style="margin-top:4px">Top: ${best.airline} (${dollar(best.profit)})</div>
+    <div class="strat-card-airlines">${airlineList}</div>
+  `;
+  summaryEl.appendChild(card);
+});
 </script>
+
 </body>
 </html>
