@@ -251,6 +251,8 @@
   .rank-2 { background: #9aa8b8; color: #fff; }
   .rank-3 { background: #b87333; color: #fff; }
   .rank-other { background: #e8e2d8; color: #445; }
+  .rank-late  { background: #f0e8d8; color: #7a4a00; }
+  .profit-late { color: var(--text-light); font-style: italic; }
 
   /* airline name */
   .airline-name {
@@ -274,7 +276,7 @@
     border-radius: 3px;
   }
   .badge-corrected { background: var(--corrected-bg); color: var(--corrected-text); }
-  .badge-new { background: var(--new-bg); color: var(--new-text); }
+  .badge-late { background: #f0e8d8; color: #7a4a00; }
 
   /* strategy pill */
   .strat-pill {
@@ -454,11 +456,11 @@
   <div class="header-inner">
     <div class="course-label">TRA 3440 · Introduction to Air Transportation · University of West Florida</div>
     <h1 class="header-title">Airline Strategy Simulation<br><em>Round 1 — Baseline Launch</em></h1>
-    <div class="header-sub">Summer 2026 · Results updated to include late submissions</div>
+    <div class="header-sub">Summer 2026 · 25 airlines ranked · 4 late submissions listed separately</div>
     <div class="header-meta">
       <div class="meta-item">
         <div class="meta-label">Airlines Ranked</div>
-        <div class="meta-value">29</div>
+        <div class="meta-value">25 + 4</div>
       </div>
       <div class="meta-item">
         <div class="meta-label">Top Net Profit</div>
@@ -486,8 +488,8 @@
 <main>
 
   <div class="notice notice-new">
-    <span class="notice-icon">🆕</span>
-    <div><strong>Late Submissions Added:</strong> Four airlines — Worldwide Airways, Global Haul Aviation, Jetset Airlines, and Apex Airways — submitted after the original deadline and have been added to the Round 1 results. Their scores are official and count toward the semester standings.</div>
+    <span class="notice-icon">📋</span>
+    <div><strong>Late Submission Notice:</strong> Four airlines submitted after the Round 1 deadline — Apex Airways, Jetset Airlines, Global Haul Aviation, and Worldwide Airways. Their decisions have been scored and recorded in the gradebook, but they are listed at positions 26–29 regardless of performance. Competitive leaderboard ranking begins for all 29 airlines in Round 2.</div>
   </div>
 
   <div class="notice notice-corrected">
@@ -550,7 +552,7 @@ const DATA = [
      why:"The combination of high passenger load factors on shorter routes and heavy cargo concentration on DFW — the highest-yield cargo corridor — made excellent use of the Cargo-Focused bonus. OC 3 provided meaningful cost relief across a fairly large total flight schedule.",
      rec:"This is an efficient, well-structured operation. In Round 2, the ATL business rebound will likely push your already-near-capacity ATL route to full. That's good news, but it also means you may be leaving money on the table if passengers can't all get seats. Consider whether adding an ATL flight is worth it."}},
 
-  {rank:4,  airline:"Apex Airways",                      strategy:"Cargo-Focused",    md:3, oc:4, revenue:679380,  op_cost:370640,  invest:130000, profit:178740,  corrected:false, isNew:true,
+  {rank:26, airline:"Apex Airways",                      strategy:"Cargo-Focused",    md:3, oc:4, revenue:679380,  op_cost:370640,  invest:130000, profit:178740,  corrected:false, isNew:false, isLate:true,
    atl:{fare:190, paxPct:50, flights:10, lf:50,  paxRev:114000,  cargoRev:112500, opCost:114800},
    mco:{fare:115, paxPct:40, flights:8,  lf:40,  paxRev:44160,   cargoRev:84000,  opCost:78720},
    dfw:{fare:220, paxPct:40, flights:12, lf:40,  paxRev:126720,  cargoRev:198000, opCost:177120},
@@ -582,7 +584,7 @@ const DATA = [
      why:"OC 4's 18% cost reduction was particularly effective given Five Flags' larger DFW footprint. The Balanced Carrier strategy doesn't receive cargo bonuses, but the mix on DFW was cargo-leaning enough to generate strong cargo income anyway. MD 2 provided a modest demand boost.",
      rec:"As a Balanced Carrier, Round 2's ATL business rebound plays to your strengths — you have passenger infrastructure ready and fares set competitively. Consider whether raising ATL fares slightly to capture the premium business travel demand makes sense, or whether volume at current fares is the better approach."}},
 
-  {rank:8,  airline:"Global Haul Aviation",              strategy:"Cargo-Focused",    md:3, oc:3, revenue:625140,  op_cost:387200,  invest:105000, profit:132940,  corrected:false, isNew:true,
+  {rank:28, airline:"Global Haul Aviation",              strategy:"Cargo-Focused",    md:3, oc:3, revenue:625140,  op_cost:387200,  invest:105000, profit:132940,  corrected:false, isNew:false, isLate:true,
    atl:{fare:195, paxPct:90, flights:10, lf:74,  paxRev:173180,  cargoRev:22500,  opCost:123200},
    mco:{fare:118, paxPct:60, flights:10, lf:60,  paxRev:84960,   cargoRev:70000,  opCost:105600},
    dfw:{fare:225, paxPct:10, flights:10, lf:10,  paxRev:27000,   cargoRev:247500, opCost:158400},
@@ -614,7 +616,7 @@ const DATA = [
      why:"The DFW concentration worked but would have been more profitable with higher OC investment to manage the large flight footprint. MCO is very lightly served, which is a different strategic choice. The Cargo-Focused bonus helped across all routes.",
      rec:"The operating cost burden of 17 DFW flights at OC 2 is noticeable. For Round 2, consider whether raising OC investment makes sense given the heavy DFW schedule, or whether shifting some DFW flights to ATL to capture the business travel rebound is the better trade."}},
 
-  {rank:12, airline:"Worldwide Airways",                 strategy:"Balanced Carrier", md:2, oc:4, revenue:564756,  op_cost:359160,  invest:105000, profit:100596,  corrected:false, isNew:true,
+  {rank:29, airline:"Worldwide Airways",                 strategy:"Balanced Carrier", md:2, oc:4, revenue:564756,  op_cost:359160,  invest:105000, profit:100596,  corrected:false, isNew:false, isLate:true,
    atl:{fare:200, paxPct:75, flights:12, lf:60,  paxRev:171602,  cargoRev:54000,  opCost:137760},
    mco:{fare:150, paxPct:90, flights:9,  lf:55,  paxRev:88954,   cargoRev:12600,  opCost:88560},
    dfw:{fare:275, paxPct:40, flights:9,  lf:40,  paxRev:118800,  cargoRev:118800, opCost:132840},
@@ -670,7 +672,7 @@ const DATA = [
      why:"The name and strategy are cargo-focused, but the mix decisions were almost purely passenger on the shorter routes. That's not necessarily wrong — ATL and MCO passenger yields are strong — but the Cargo-Focused bonus wasn't being leveraged on those routes. DFW cargo was solid at $132,000.",
      rec:"For Round 2, consider whether leaning more into cargo on at least one of the shorter routes would let you capture more of your strategy bonus. The ATL business rebound could also be an opportunity to adjust your ATL mix toward passengers even further given the strong ATL passenger revenue you already generate."}},
 
-  {rank:19, airline:"Jetset Airlines",                   strategy:"Balanced Carrier", md:2, oc:2, revenue:523988,  op_cost:398040,  invest:60000,  profit:65948,   corrected:false, isNew:true,
+  {rank:27, airline:"Jetset Airlines",                   strategy:"Balanced Carrier", md:2, oc:2, revenue:523988,  op_cost:398040,  invest:60000,  profit:65948,   corrected:false, isNew:false, isLate:true,
    atl:{fare:185, paxPct:75, flights:10, lf:75,  paxRev:166500,  cargoRev:45000,  opCost:130200},
    mco:{fare:115, paxPct:90, flights:12, lf:63,  paxRev:104328,  cargoRev:16800,  opCost:133920},
    dfw:{fare:210, paxPct:60, flights:8,  lf:60,  paxRev:120960,  cargoRev:70400,  opCost:133920},
@@ -796,19 +798,21 @@ function routeCard(code, r) {
   </div>`;
 }
 
+DATA.sort((a,b) => { if (a.isLate && !b.isLate) return 1; if (!a.isLate && b.isLate) return -1; return a.rank - b.rank; });
 const tbody = document.getElementById('leaderboard-body');
 DATA.forEach(d => {
   const profitCls = d.profit >= 0 ? 'profit-positive' : 'profit-negative';
-  const rankCls = d.rank === 1 ? 'rank-1' : d.rank === 2 ? 'rank-2' : d.rank === 3 ? 'rank-3' : 'rank-other';
-  const barWidth = Math.max(0, Math.round((d.profit / maxProfit) * 100));
+  const rankCls = d.isLate ? 'rank-late' : d.rank === 1 ? 'rank-1' : d.rank === 2 ? 'rank-2' : d.rank === 3 ? 'rank-3' : 'rank-other';
+  const rankDisplay = d.isLate ? '—' : d.rank;
+  const barWidth = d.isLate ? 0 : Math.max(0, Math.round((d.profit / maxProfit) * 100));
 
   let badges = '';
   if (d.corrected) badges += `<span class="badge badge-corrected">✓ Corrected</span>`;
-  if (d.isNew) badges += `<span class="badge badge-new">★ Late Add</span>`;
+  if (d.isNew) badges += `<span class="badge badge-late">⏱ Late — Unranked</span>`;
 
   const mainRow = document.createElement('tr');
   mainRow.innerHTML = `
-    <td><span class="rank-badge ${rankCls}">${d.rank}</span></td>
+    <td><span class="rank-badge ${rankCls}">${rankDisplay}</span></td>
     <td>
       <div class="airline-name">${d.airline}</div>
       ${badges ? `<div class="airline-badges">${badges}</div>` : ''}
@@ -818,7 +822,7 @@ DATA.forEach(d => {
     <td class="right">${dots(d.oc, 'OC')}</td>
     <td class="right">${dollar(d.revenue)}</td>
     <td class="right">
-      <span class="${profitCls}">${dollar(d.profit)}</span>
+      <span class="${d.isLate ? 'profit-late' : profitCls}">${d.isLate ? '—' : dollar(d.profit)}</span>
       <div class="profit-bar-wrap">
         <div class="profit-bar-track">
           <div class="profit-bar-fill ${d.profit<0?'negative':''}" style="width:${barWidth}%"></div>
@@ -827,6 +831,12 @@ DATA.forEach(d => {
     </td>
     <td><button class="toggle-btn" onclick="toggle(${d.rank})">Details ▾</button></td>
   `;
+  // Insert divider before late section
+  if (d.rank === 26) {
+    const divRow = document.createElement('tr');
+    divRow.innerHTML = `<td colspan="8" style="padding:0"><div style="background:#f5efe0;border-top:2px solid #c8b87a;border-bottom:1px solid #e0d4b0;padding:10px 18px;font-family:Arial,sans-serif;font-size:12px;color:#7a5a00;font-weight:600;letter-spacing:1px;text-transform:uppercase;">⏱ Late Submissions — Gradebook Only · Ranked from Round 2</div></td>`;
+    tbody.appendChild(divRow);
+  }
   tbody.appendChild(mainRow);
 
   const expandRow = document.createElement('tr');
@@ -866,6 +876,7 @@ function toggle(rank) {
 // Strategy summary
 const stratGroups = {};
 DATA.forEach(d => {
+  if (d.isLate) return; // exclude late students from strategy summary
   const s = d.strategy;
   if (!stratGroups[s]) stratGroups[s] = [];
   stratGroups[s].push(d);
