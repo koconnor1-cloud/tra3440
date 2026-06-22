@@ -552,7 +552,7 @@ const DATA = [
      why:"The combination of high passenger load factors on shorter routes and heavy cargo concentration on DFW — the highest-yield cargo corridor — made excellent use of the Cargo-Focused bonus. OC 3 provided meaningful cost relief across a fairly large total flight schedule.",
      rec:"This is an efficient, well-structured operation. In Round 2, the ATL business rebound will likely push your already-near-capacity ATL route to full. That's good news, but it also means you may be leaving money on the table if passengers can't all get seats. Consider whether adding an ATL flight is worth it."}},
 
-  {rank:26, airline:"Apex Airways",                      strategy:"Cargo-Focused",    md:3, oc:4, revenue:679380,  op_cost:370640,  invest:130000, profit:178740,  corrected:false, isNew:false, isLate:true,
+  {rank:30, airline:"Apex Airways",                      strategy:"Cargo-Focused",    md:3, oc:4, revenue:679380,  op_cost:370640,  invest:130000, profit:178740,  corrected:false, isNew:false, isLate:true,
    atl:{fare:190, paxPct:50, flights:10, lf:50,  paxRev:114000,  cargoRev:112500, opCost:114800},
    mco:{fare:115, paxPct:40, flights:8,  lf:40,  paxRev:44160,   cargoRev:84000,  opCost:78720},
    dfw:{fare:220, paxPct:40, flights:12, lf:40,  paxRev:126720,  cargoRev:198000, opCost:177120},
@@ -584,7 +584,7 @@ const DATA = [
      why:"OC 4's 18% cost reduction was particularly effective given Five Flags' larger DFW footprint. The Balanced Carrier strategy doesn't receive cargo bonuses, but the mix on DFW was cargo-leaning enough to generate strong cargo income anyway. MD 2 provided a modest demand boost.",
      rec:"As a Balanced Carrier, Round 2's ATL business rebound plays to your strengths — you have passenger infrastructure ready and fares set competitively. Consider whether raising ATL fares slightly to capture the premium business travel demand makes sense, or whether volume at current fares is the better approach."}},
 
-  {rank:28, airline:"Global Haul Aviation",              strategy:"Cargo-Focused",    md:3, oc:3, revenue:625140,  op_cost:387200,  invest:105000, profit:132940,  corrected:false, isNew:false, isLate:true,
+  {rank:31, airline:"Global Haul Aviation",              strategy:"Cargo-Focused",    md:3, oc:3, revenue:625140,  op_cost:387200,  invest:105000, profit:132940,  corrected:false, isNew:false, isLate:true,
    atl:{fare:195, paxPct:90, flights:10, lf:74,  paxRev:173180,  cargoRev:22500,  opCost:123200},
    mco:{fare:118, paxPct:60, flights:10, lf:60,  paxRev:84960,   cargoRev:70000,  opCost:105600},
    dfw:{fare:225, paxPct:10, flights:10, lf:10,  paxRev:27000,   cargoRev:247500, opCost:158400},
@@ -616,7 +616,7 @@ const DATA = [
      why:"The DFW concentration worked but would have been more profitable with higher OC investment to manage the large flight footprint. MCO is very lightly served, which is a different strategic choice. The Cargo-Focused bonus helped across all routes.",
      rec:"The operating cost burden of 17 DFW flights at OC 2 is noticeable. For Round 2, consider whether raising OC investment makes sense given the heavy DFW schedule, or whether shifting some DFW flights to ATL to capture the business travel rebound is the better trade."}},
 
-  {rank:29, airline:"Worldwide Airways",                 strategy:"Balanced Carrier", md:2, oc:4, revenue:564756,  op_cost:359160,  invest:105000, profit:100596,  corrected:false, isNew:false, isLate:true,
+  {rank:33, airline:"Worldwide Airways",                 strategy:"Balanced Carrier", md:2, oc:4, revenue:564756,  op_cost:359160,  invest:105000, profit:100596,  corrected:false, isNew:false, isLate:true,
    atl:{fare:200, paxPct:75, flights:12, lf:60,  paxRev:171602,  cargoRev:54000,  opCost:137760},
    mco:{fare:150, paxPct:90, flights:9,  lf:55,  paxRev:88954,   cargoRev:12600,  opCost:88560},
    dfw:{fare:275, paxPct:40, flights:9,  lf:40,  paxRev:118800,  cargoRev:118800, opCost:132840},
@@ -672,7 +672,7 @@ const DATA = [
      why:"The name and strategy are cargo-focused, but the mix decisions were almost purely passenger on the shorter routes. That's not necessarily wrong — ATL and MCO passenger yields are strong — but the Cargo-Focused bonus wasn't being leveraged on those routes. DFW cargo was solid at $132,000.",
      rec:"For Round 2, consider whether leaning more into cargo on at least one of the shorter routes would let you capture more of your strategy bonus. The ATL business rebound could also be an opportunity to adjust your ATL mix toward passengers even further given the strong ATL passenger revenue you already generate."}},
 
-  {rank:27, airline:"Jetset Airlines",                   strategy:"Balanced Carrier", md:2, oc:2, revenue:523988,  op_cost:398040,  invest:60000,  profit:65948,   corrected:false, isNew:false, isLate:true,
+  {rank:32, airline:"Jetset Airlines",                   strategy:"Balanced Carrier", md:2, oc:2, revenue:523988,  op_cost:398040,  invest:60000,  profit:65948,   corrected:false, isNew:false, isLate:true,
    atl:{fare:185, paxPct:75, flights:10, lf:75,  paxRev:166500,  cargoRev:45000,  opCost:130200},
    mco:{fare:115, paxPct:90, flights:12, lf:63,  paxRev:104328,  cargoRev:16800,  opCost:133920},
    dfw:{fare:210, paxPct:60, flights:8,  lf:60,  paxRev:120960,  cargoRev:70400,  opCost:133920},
@@ -832,7 +832,7 @@ DATA.forEach(d => {
     <td><button class="toggle-btn" onclick="toggle(${d.rank})">Details ▾</button></td>
   `;
   // Insert divider before late section
-  if (d.rank === 26) {
+  if (d.rank === 30) {
     const divRow = document.createElement('tr');
     divRow.innerHTML = `<td colspan="8" style="padding:0"><div style="background:#f5efe0;border-top:2px solid #c8b87a;border-bottom:1px solid #e0d4b0;padding:10px 18px;font-family:Arial,sans-serif;font-size:12px;color:#7a5a00;font-weight:600;letter-spacing:1px;text-transform:uppercase;">⏱ Late Submissions — Gradebook Only · Ranked from Round 2</div></td>`;
     tbody.appendChild(divRow);
