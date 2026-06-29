@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRA 3440 · Airline Decision History</title>
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy-mid: #122040;
+    --navy-light: #1c3260;
+    --gold: #c9a84c;
+    --gold-light: #e8c96b;
+    --gold-pale: #f5e9c4;
+    --white: #ffffff;
+    --off-white: #f8f6f0;
+    --text-dark: #0a1628;
+    --text-mid: #334466;
+    --text-light: #667799;
+    --green: #1a7a4a;
+    --green-bg: #e6f4ec;
+    --amber-bg: #fff8e8;
+    --border: #d0c9b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', serif; background: var(--off-white); color: var(--text-dark); min-height: 100vh; }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--navy-light) 100%);
+    color: var(--white); padding: 0; position: relative; overflow: hidden;
+  }
+  header::before { content:''; position:absolute; top:-40px; right:-40px; width:300px; height:300px; border-radius:50%; border:2px solid rgba(201,168,76,0.15); }
+  header::after  { content:''; position:absolute; bottom:-60px; left:20%; width:200px; height:200px; border-radius:50%; border:1px solid rgba(201,168,76,0.10); }
+  .header-inner { max-width:1100px; margin:0 auto; padding:40px 32px 36px; position:relative; z-index:1; }
+  .course-label { font-family:'Arial',sans-serif; font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
+  .header-title { font-size:clamp(22px,3.5vw,34px); font-weight:normal; color:var(--white); margin-bottom:6px; }
+  .header-title em { color:var(--gold-light); font-style:normal; }
+  .header-sub { font-family:'Arial',sans-serif; font-size:14px; color:rgba(255,255,255,0.65); margin-top:6px; }
+
+  /* NAV BAR */
+  .nav-bar { background:var(--gold); padding:0; }
+  .nav-inner { max-width:1100px; margin:0 auto; display:flex; gap:0; }
+  .nav-link { font-family:'Arial',sans-serif; font-size:13px; font-weight:600; color:var(--navy); text-decoration:none; padding:12px 20px; display:inline-block; }
+  .nav-link:hover { background:rgba(0,0,0,0.08); }
+  .nav-link.active { background:var(--navy); color:var(--gold); }
+
+  /* MAIN */
+  main { max-width:1100px; margin:0 auto; padding:36px 24px 80px; }
+
+  /* SELECTOR */
+  .selector-wrap { margin-bottom:32px; }
+  .selector-label { font-family:'Arial',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-light); margin-bottom:10px; }
+  .selector-row { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  select#airlineSelect {
+    font-family:'Arial',sans-serif; font-size:15px; color:var(--text-dark);
+    background:var(--white); border:1.5px solid var(--border); border-radius:6px;
+    padding:10px 16px; min-width:280px; cursor:pointer; appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23667799' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 14px center; padding-right:36px;
+  }
+  select#airlineSelect:focus { outline:2px solid var(--gold); border-color:var(--gold); }
+  .strat-badge { font-family:'Arial',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:4px 10px; border-radius:3px; }
+  .strat-balanced { background:#ddeeff; color:#1a3a6e; }
+  .strat-cost     { background:#e8f5e8; color:#1a5a1a; }
+  .strat-cargo    { background:#fff0d8; color:#7a4200; }
+  .strat-premium  { background:#f0e8ff; color:#4a1a7a; }
+
+  /* SECTION HEADING */
+  .section-heading { display:flex; align-items:center; gap:14px; margin:28px 0 16px; }
+  .section-heading h2 { font-size:13px; font-family:'Arial',sans-serif; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--text-mid); white-space:nowrap; }
+  .section-heading::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  /* DECISION TABLE */
+  .table-wrap { overflow-x:auto; border-radius:8px; border:1px solid var(--border); background:var(--white); margin-bottom:32px; }
+  table { width:100%; border-collapse:collapse; font-family:'Arial',sans-serif; font-size:13px; }
+  thead tr { background:var(--navy); }
+  thead th { color:var(--white); font-weight:700; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; padding:12px 14px; text-align:center; border-right:1px solid rgba(255,255,255,0.1); white-space:nowrap; }
+  thead th:first-child { text-align:left; border-radius:0; }
+  thead th.group-atl { background:#1a3a6e; }
+  thead th.group-mco { background:#3a2a0a; }
+  thead th.group-dfw { background:#1a4a1a; }
+  thead th.group-inv { background:#3a1a2a; }
+  thead th.group-result { background:#0a2a0a; }
+  .sub-header th { background:var(--navy-mid) !important; font-size:10px; letter-spacing:1px; padding:7px 14px; }
+  tbody tr { border-bottom:1px solid #eee; }
+  tbody tr:last-child { border-bottom:none; }
+  tbody tr:hover { background:#f5f3ee; }
+  td { padding:13px 14px; text-align:center; color:var(--text-mid); vertical-align:middle; }
+  td.round-cell { text-align:left; font-weight:700; color:var(--text-dark); white-space:nowrap; }
+  td.round-cell .round-num { font-size:15px; }
+  td.round-cell .round-label { font-size:11px; color:var(--text-light); margin-top:2px; }
+  td.fare { font-weight:600; color:var(--text-dark); }
+  td.profit-pos { font-weight:700; color:var(--green); }
+  td.profit-neg { font-weight:700; color:#8b1a1a; }
+  td.no-sub { color:var(--text-light); font-style:italic; }
+  .mix-badge { display:inline-block; font-size:11px; font-weight:700; background:var(--off-white); border:1px solid var(--border); border-radius:3px; padding:2px 6px; color:var(--text-mid); }
+  .mix-badge.cargo-heavy { background:#fff0d8; border-color:#e8c070; color:#7a4200; }
+  .mix-badge.cargo-mid   { background:#f0f8e8; border-color:#a0c870; color:#2a5a1a; }
+  .dot-row { display:flex; gap:3px; justify-content:center; }
+  .dot { width:8px; height:8px; border-radius:50%; }
+  .dot-on  { background:var(--gold); }
+  .dot-off { background:#ddd; }
+  .flts { font-weight:600; color:var(--navy); }
+
+  /* EMPTY STATE */
+  .empty { text-align:center; padding:60px 24px; color:var(--text-light); }
+  .empty-icon { font-size:36px; margin-bottom:16px; opacity:0.4; }
+  .empty p { font-family:'Arial',sans-serif; font-size:14px; }
+
+  /* SUMMARY CARDS */
+  .summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px; margin-bottom:28px; }
+  .summary-card { background:var(--white); border:1px solid var(--border); border-radius:8px; padding:16px 18px; }
+  .summary-card .s-label { font-family:'Arial',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-light); margin-bottom:6px; }
+  .summary-card .s-value { font-size:22px; color:var(--text-dark); font-weight:normal; }
+  .summary-card .s-value.pos { color:var(--green); }
+  .summary-card .s-value.neg { color:#8b1a1a; }
+  .summary-card .s-sub { font-family:'Arial',sans-serif; font-size:11px; color:var(--text-light); margin-top:4px; }
+
+  /* FOOTER */
+  footer { background:var(--navy); color:rgba(255,255,255,0.5); font-family:'Arial',sans-serif; font-size:12px; text-align:center; padding:20px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="course-label">TRA 3440 · Introduction to Air Transportation · University of West Florida</div>
+    <h1 class="header-title">Airline Strategy Simulation<br><em>Decision History</em></h1>
+    <div class="header-sub">Every decision, every round — select your airline to review</div>
+  </div>
+</header>
+
+<div class="nav-bar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-link">Leaderboard</a>
+    <a href="decisions.html" class="nav-link active">Decision History</a>
+    <a href="rounds.html" class="nav-link">Round Conditions</a>
+  </div>
+</div>
+
+<main>
+
+  <div class="selector-wrap">
+    <div class="selector-label">Select Airline</div>
+    <div class="selector-row">
+      <select id="airlineSelect" onchange="showAirline()">
+        <option value="">— Choose an airline —</option>
+      </select>
+      <span id="stratBadge"></span>
+    </div>
+  </div>
+
+  <div id="emptyState" class="empty">
+    <div class="empty-icon">✈</div>
+    <p>Select an airline above to view its full decision history across all rounds.</p>
+  </div>
+
+  <div id="airlinePanel" style="display:none">
+    <div class="summary-grid" id="summaryCards"></div>
+    <div class="section-heading"><h2>Round-by-Round Decisions</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2" style="text-align:left;min-width:120px">Round</th>
+            <th colspan="3" class="group-atl">PNS–ATL</th>
+            <th colspan="3" class="group-mco">PNS–MCO</th>
+            <th colspan="3" class="group-dfw">PNS–DFW</th>
+            <th colspan="2" class="group-inv">Investment</th>
+            <th class="group-result">Round Profit</th>
+            <th class="group-result">Cumulative</th>
+          </tr>
+          <tr class="sub-header">
+            <th class="group-atl">Fare</th>
+            <th class="group-atl">Mix</th>
+            <th class="group-atl">Flights</th>
+            <th class="group-mco">Fare</th>
+            <th class="group-mco">Mix</th>
+            <th class="group-mco">Flights</th>
+            <th class="group-dfw">Fare</th>
+            <th class="group-dfw">Mix</th>
+            <th class="group-dfw">Flights</th>
+            <th class="group-inv">MD</th>
+            <th class="group-inv">OC</th>
+            <th class="group-result">Profit</th>
+            <th class="group-result">Total</th>
+          </tr>
+        </thead>
+        <tbody id="decisionBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span>TRA 3440 Airline Strategy Simulation</span> · University of West Florida · Summer 2026
+</footer>
+
+<script>
+
+// ── DATA ─────────────────────────────────────────────────────────────────────
+// Each airline: strategy, and an array of rounds in order.
+// round fields: label, atl_fare, atl_mix, atl_flt, mco_fare, mco_mix, mco_flt,
+//               dfw_fare, dfw_mix, dfw_flt, md, oc, profit, cum
+// Use null for a round with no submission.
+
+
+
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const R1_CUM = {
+  "Capital Airlines":506996,"East Coast Air":394542,"Fairline":361065,
+  "Gulf Coast Air":346394,"Fareline Air":343378,"Jet Lag Logistics":340298,
+  "Skyhigh Airways":338436,"Latitude Airlines":329174,"ADAPT Airlines":327028,
+  "Emerald Argo Airlines":322658,"起飞":319410,"Lo-Povo Air":313300,
+  "Blue Knight Airways":305401,"Emerald Coast Airways":293170,"Pensacola Airlines":292322,
+  "Big Bird Airways":286257,"Gulf Coast Airways":274748,"Cargo Before Comfort Air":272222,
+  "GRY Air":250788,"Sunbelt Airways":220036,"Pelican Air":200360,
+  "Five Flags Logistics & Transit Co.":200279,"GUMPS Aviation":179660,
+  "Squawk Airlines":137407,"Cornerstone Cargo":90816,
+  "Apex Airways":178740,"Global Haul Aviation":132940,"Worldwide Airways":100596,
+  "Gulfstream Airlines":0,
+};
+
+const DATA = [
+  { name:"ADAPT Airlines", strategy:"Balanced Carrier", corrected:false, isNew:false,
+    r1:{ atl_fare:195, atl_mix:"75/25", atl_flt:15, mco_fare:125, mco_mix:"90/10", mco_flt:10, dfw_fare:260, dfw_mix:"50/50", dfw_flt:5, md:2, oc:3, profit:38366, cum:327028 },
+    r2:{ atl_fare:195, atl_mix:"75/25", atl_flt:12, mco_fare:115, mco_mix:"90/10", mco_flt:9, dfw_fare:260, dfw_mix:"40/60", dfw_flt:9, md:3, oc:2, profit:113779, cum:440807 } },
+  { name:"Apex Airways", strategy:"Cargo-Focused", corrected:false, isNew:false,
+    r1:{ atl_fare:190, atl_mix:"50/50", atl_flt:10, mco_fare:115, mco_mix:"40/60", mco_flt:8, dfw_fare:220, dfw_mix:"40/60", dfw_flt:12, md:3, oc:4, profit:178740, cum:178740 },
+    r2:{ atl_fare:195, atl_mix:"50/50", atl_flt:12, mco_fare:115, mco_mix:"40/60", mco_flt:7, dfw_fare:220, dfw_mix:"40/60", dfw_flt:11, md:3, oc:4, profit:4149, cum:182889 } },
+  { name:"Big Bird Airways", strategy:"Cargo-Focused", corrected:false, isNew:false,
+    r1:{ atl_fare:180, atl_mix:"40/60", atl_flt:10, mco_fare:65, mco_mix:"40/60", mco_flt:3, dfw_fare:220, dfw_mix:"40/60", dfw_flt:17, md:1, oc:4, profit:253365, cum:286257 },
+    r2:{ atl_fare:180, atl_mix:"75/25", atl_flt:8, mco_fare:115, mco_mix:"75/25", mco_flt:5, dfw_fare:210, dfw_mix:"40/60", dfw_flt:17, md:2, oc:4, profit:45034, cum:331291 } },
+  { name:"Blue Knight Airways", strategy:"Premium Service", corrected:false, isNew:false,
+    r1:{ atl_fare:185, atl_mix:"75/25", atl_flt:10, mco_fare:110, mco_mix:"90/10", mco_flt:12, dfw_fare:265, dfw_mix:"50/50", dfw_flt:8, md:2, oc:4, profit:64331, cum:305401 },
+    r2:{ atl_fare:225, atl_mix:"75/25", atl_flt:14, mco_fare:135, mco_mix:"75/25", mco_flt:10, dfw_fare:250, dfw_mix:"50/50", dfw_flt:6, md:3, oc:4, profit:100304, cum:405705 } },
+  { name:"Capital Airlines", strategy:"Balanced Carrier", corrected:false, isNew:false,
+    r1:{ atl_fare:203, atl_mix:"90/10", atl_flt:15, mco_fare:120, mco_mix:"90/10", mco_flt:3, dfw_fare:230, dfw_mix:"90/10", dfw_flt:12, md:3, oc:2, profit:-64968, cum:506996 },
+    r2:{ atl_fare:195, atl_mix:"90/10", atl_flt:12, mco_fare:115, mco_mix:"90/10", mco_flt:3, dfw_fare:210, dfw_mix:"90/10", dfw_flt:15, md:3, oc:3, profit:96634, cum:603630 } },
+  { name:"Cargo Before Comfort Air", strategy:"Cargo-Focused", corrected:false, isNew:false,
+    r1:{ atl_fare:195, atl_mix:"75/25", atl_flt:9, mco_fare:115, mco_mix:"90/10", mco_flt:3, dfw_fare:230, dfw_mix:"50/50", dfw_flt:18, md:2, oc:2, profit:145736, cum:272222 },
+    r2:{ atl_fare:190, atl_mix:"75/25", atl_flt:13, mco_fare:115, mco_mix:"90/10", mco_flt:4, dfw_fare:215, dfw_mix:"60/40", dfw_flt:13, md:3, oc:3, profit:103865, cum:376087 } },
+  { name:"Cornerstone Cargo", strategy:"Cargo-Focused", corrected:false, isNew:false,
+    r1:{ atl_fare:175, atl_mix:"90/10", atl_flt:10, mco_fare:115, mco_mix:"90/10", mco_flt:12, dfw_fare:200, dfw_mix:"40/60", dfw_flt:8, md:2, oc:2, profit:69992, cum:90816 },
+    r2:{ atl_fare:200, atl_mix:"90/10", atl_flt:18, mco_fare:130, mco_mix:"90/10", mco_flt:7, dfw_fare:230, dfw_mix:"60/40", dfw_flt:5, md:4, oc:4, profit:83827, cum:174643 } },
+  { name:"East Coast Air", strategy:"Balanced Carrier", corrected:false, isNew:false,
+    r1:{ atl_fare:189, atl_mix:"90/10", atl_flt:11, mco_fare:119, mco_mix:"90/10", mco_flt:10, dfw_fare:215, dfw_mix:"75/25", dfw_flt:9, md:3, oc:2, profit:59657, cum:394542 },
+    r2:{ atl_fare:225, atl_mix:"90/10", atl_flt:14, mco_fare:119, mco_mix:"90/10", mco_flt:7, dfw_fare:210, dfw_mix:"75/25", dfw_flt:9, md:3, oc:2, profit:130099, cum:524641 } },
+  { name:"Emerald Argo Airlines", strategy:"Cargo-Focused", corrected:false, isNew:false,
+    r1:{ atl_fare:185, atl_mix:"90/10", atl_flt:12, mco_fare:125, mco_mix:"90/10", mco_flt:12, dfw_fare:250, dfw_mix:"75/25", dfw_flt:6, md:4, oc:1, profit:3896, cum:322658 },
+    r2:{ atl_fare:190, atl_mix:"90/10", atl_flt:14, mco_fare:115, mco_mix:"90/10", mco_flt:11, dfw_fare:210, dfw_mix:"75/25", dfw_flt:5, md:2, oc:2, profit:87123, cum:409781 } },
+  { name:"Emerald Coast Airways", strategy:"Balanced Carrier", corrected:false, isNew:false,
+    r1:{ atl_fare:200, atl_mix:"75/25", atl_flt:12, mco_fare:110, mco_mix:"90/10", mco_flt:10, dfw_fare:250, dfw_mix:"40/60", dfw_flt:8, md:2, oc:2, profit:86590, cum:293170 },
+    r2:{ atl_fare:200, atl_mix:"90/10", atl_flt:15, mco_fare:115, mco_mix:"90/10", mco_flt:10, dfw_fare:210, dfw_mix:"40/60", dfw_flt:5, md:4, oc:3, profit:128495, cum:421665 } },
+  { name:"Fairline", strategy:"Cost Leader", corrected:true, isNew:false,
+    r1:{ atl_fare:169, atl_mix:"90/10", atl_flt:13, mco_fare:99, mco_mix:"90/10", mco_flt:11, dfw_fare:189, dfw_mix:"90/10", dfw_flt:6, md:3, oc:1, profit:23446, cum:361065 },
+    r2:{ noSub:true, profit:0, cum:361065 } },
+  { name:"Fareline Air", strategy:"Balanced Carrier", corrected:false, isNew:false,
+    r1:{ atl_fare:195, atl_mix:"75/25", atl_flt:11, mco_fare:135, mco_mix:"90/10", mco_flt:10, dfw_fare:240, dfw_mix:"75/25", dfw_flt:9, md:3, oc:2, profit:74804, cum:343378 },
+    r2:{ atl_fare:190, atl_mix:"75/25", atl_flt:12, mco_fare:115, mco_mix:"90/10", mco_flt:9, dfw_fare:210, dfw_mix:"75/25", dfw_flt:9, md:3, oc:3, profit:98222, cum:441600 } },
+  { name:"Five Flags Logistics & Transit Co.", strategy:"Balanced Carrier", corrected:true, isNew:false,
+    r1:{ atl_fare:195, atl_mix:"60/40", atl_flt:8, mco_fare:125, mco_mix:"75/25", mco_flt:8, dfw_fare:220, dfw_mix:"40/60", dfw_flt:14, md:2, oc:4, profit:138360, cum:200279 },
+    r2:{ atl_fare:180, atl_mix:"50/50", atl_flt:8, mco_fare:110, mco_mix:"60/40", mco_flt:8, dfw_fare:205, dfw_mix:"40/60", dfw_flt:14, md:4, oc:4, profit:-53977, cum:146302 } },
+  { name:"GRY Air", strategy:"Cargo-Focused", corrected:false, isNew:false,
+    r1:{ atl_fare:185, atl_mix:"75/25", atl_flt:8, mco_fare:115, mco_mix:"90/10", mco_flt:4, dfw_fare:215, dfw_mix:"50/50", dfw_flt:18, md:2, oc:3, profit:142163, cum:250788 },
+    r2:{ atl_fare:185, atl_mix:"75/25", atl_flt:10, mco_fare:115, mco_mix:"90/10", mco_flt:4, dfw_fare:210, dfw_mix:"50/50", dfw_flt:16, md:2, oc:3, profit:92682, cum:343470 } },
+  { name:"GUMPS Aviation", strategy:"Cargo-Focused", corrected:false, isNew:false,
+    r1:{ atl_fare:185, atl_mix:"75/25", atl_flt:8, mco_fare:105, mco_mix:"40/60", mco_flt:10, dfw_fare:220, dfw_mix:"50/50", dfw_flt:12, md:1, oc:3, profit:201740, cum:179660 },
+    r2:{ atl_fare:190, atl_mix:"50/50", atl_flt:11, mco_fare:110, mco_mix:"40/60", mco_flt:8, dfw_fare:215, dfw_mix:"50/50", dfw_flt:11, md:2, oc:3, profit:33434, cum:213094 } },
+  { name:"Global Haul Aviation", strategy:"Cargo-Focused", corrected:false, isNew:false,
+    r1:{ atl_fare:195, atl_mix:"90/10", atl_flt:10, mco_fare:118, mco_mix:"60/40", mco_flt:10, dfw_fare:225, dfw_mix:"40/60", dfw_flt:10, md:3, oc:3, profit:132940, cum:132940 },
+    r2:{ atl_fare:200, atl_mix:"90/10", atl_flt:13, mco_fare:125, mco_mix:"75/25", mco_flt:9, dfw_fare:210, dfw_mix:"40/60", dfw_flt:8, md:3, oc:3, profit:74967, cum:207907 } },
+  { name:"Gulf Coast Air", strategy:"Balanced Carrier", corrected:false, isNew:false,
+    r1:{ atl_fare:189, atl_mix:"75/25", atl_flt:11, mco_fare:119, mco_mix:"90/10", mco_flt:9, dfw_fare:219, dfw_mix:"75/25", dfw_flt:10, md:2, oc:2, profit:98282, cum:346394 },
+    r2:{ atl_fare:195, atl_mix:"75/25", atl_flt:13, mco_fare:115, mco_mix:"90/10", mco_flt:8, dfw_fare:215, dfw_mix:"75/25", dfw_flt:9, md:2, oc:2, profit:119300, cum:465694 } },
+  { name:"Gulf Coast Airways", strategy:"Balanced Carrier", corrected:false, isNew:false,
+    r1:{ atl_fare:185, atl_mix:"75/25", atl_flt:12, mco_fare:125, mco_mix:"90/10", mco_flt:12, dfw_fare:225, dfw_mix:"50/50", dfw_flt:6, md:2, oc:3, profit:47257, cum:274748 },
+    r2:{ atl_fare:205, atl_mix:"90/10", atl_flt:15, mco_fare:115, mco_mix:"90/10", mco_flt:7, dfw_fare:225, dfw_mix:"50/50", dfw_flt:8, md:3, oc:3, profit:137526, cum:412274 } },
+  { name:"Gulfstream Airlines", strategy:"Balanced Carrier", corrected:false, isNew:true,
+    r1:null,
+    r2:{ atl_fare:165, atl_mix:"60/40", atl_flt:12, mco_fare:105, mco_mix:"60/40", mco_flt:9, dfw_fare:190, dfw_mix:"60/40", dfw_flt:9, md:1, oc:2, profit:42568, cum:42568 } },
+  { name:"Jet Lag Logistics", strategy:"Cargo-Focused", corrected:false, isNew:false,
+    r1:{ atl_fare:185, atl_mix:"90/10", atl_flt:15, mco_fare:115, mco_mix:"90/10", mco_flt:3, dfw_fare:215, dfw_mix:"75/25", dfw_flt:12, md:2, oc:2, profit:5632, cum:340298 },
+    r2:{ atl_fare:185, atl_mix:"90/10", atl_flt:15, mco_fare:115, mco_mix:"90/10", mco_flt:3, dfw_fare:210, dfw_mix:"75/25", dfw_flt:12, md:3, oc:3, profit:83681, cum:423979 } },
+  { name:"Latitude Airlines", strategy:"Cost Leader", corrected:true, isNew:false,
+    r1:{ atl_fare:200, atl_mix:"75/25", atl_flt:11, mco_fare:125, mco_mix:"90/10", mco_flt:11, dfw_fare:310, dfw_mix:"75/25", dfw_flt:8, md:3, oc:4, profit:82857, cum:329174 },
+    r2:{ atl_fare:180, atl_mix:"90/10", atl_flt:11, mco_fare:110, mco_mix:"90/10", mco_flt:11, dfw_fare:200, dfw_mix:"90/10", dfw_flt:8, md:3, oc:4, profit:94093, cum:423267 } },
+  { name:"Lo-Povo Air", strategy:"Cost Leader", corrected:false, isNew:false,
+    r1:{ atl_fare:165, atl_mix:"75/25", atl_flt:10, mco_fare:90, mco_mix:"90/10", mco_flt:5, dfw_fare:200, dfw_mix:"60/40", dfw_flt:15, md:1, oc:4, profit:76054, cum:313300 },
+    r2:{ atl_fare:215, atl_mix:"90/10", atl_flt:15, mco_fare:105, mco_mix:"75/25", mco_flt:7, dfw_fare:190, dfw_mix:"60/40", dfw_flt:8, md:3, oc:3, profit:135558, cum:448858 } },
+  { name:"Pelican Air", strategy:"Cargo-Focused", corrected:false, isNew:false,
+    r1:{ atl_fare:185, atl_mix:"90/10", atl_flt:8, mco_fare:113, mco_mix:"90/10", mco_flt:7, dfw_fare:215, dfw_mix:"40/60", dfw_flt:15, md:2, oc:3, profit:187738, cum:200360 },
+    r2:{ atl_fare:195, atl_mix:"75/25", atl_flt:10, mco_fare:113, mco_mix:"90/10", mco_flt:7, dfw_fare:212, dfw_mix:"40/60", dfw_flt:13, md:3, oc:4, profit:54771, cum:255131 } },
+  { name:"Pensacola Airlines", strategy:"Balanced Carrier", corrected:false, isNew:false,
+    r1:{ atl_fare:180, atl_mix:"75/25", atl_flt:14, mco_fare:115, mco_mix:"90/10", mco_flt:9, dfw_fare:215, dfw_mix:"50/50", dfw_flt:7, md:3, oc:3, profit:14619, cum:292322 },
+    r2:{ atl_fare:190, atl_mix:"75/25", atl_flt:13, mco_fare:115, mco_mix:"90/10", mco_flt:9, dfw_fare:210, dfw_mix:"50/50", dfw_flt:8, md:3, oc:3, profit:96531, cum:388853 } },
+  { name:"Skyhigh Airways", strategy:"Balanced Carrier", corrected:false, isNew:false,
+    r1:{ atl_fare:189, atl_mix:"75/25", atl_flt:11, mco_fare:119, mco_mix:"75/25", mco_flt:10, dfw_fare:215, dfw_mix:"75/25", dfw_flt:9, md:2, oc:2, profit:122406, cum:338436 },
+    r2:{ atl_fare:195, atl_mix:"60/40", atl_flt:12, mco_fare:115, mco_mix:"75/25", mco_flt:7, dfw_fare:225, dfw_mix:"50/50", dfw_flt:11, md:2, oc:3, profit:81297, cum:419733 } },
+  { name:"Squawk Airlines", strategy:"Balanced Carrier", corrected:false, isNew:false,
+    r1:{ atl_fare:200, atl_mix:"50/50", atl_flt:12, mco_fare:115, mco_mix:"50/50", mco_flt:6, dfw_fare:210, dfw_mix:"40/60", dfw_flt:12, md:3, oc:3, profit:108480, cum:137407 },
+    r2:{ atl_fare:182, atl_mix:"75/25", atl_flt:14, mco_fare:115, mco_mix:"90/10", mco_flt:8, dfw_fare:225, dfw_mix:"60/40", dfw_flt:8, md:3, oc:3, profit:105657, cum:243064 } },
+  { name:"Sunbelt Airways", strategy:"Cost Leader", corrected:false, isNew:false,
+    r1:{ atl_fare:170, atl_mix:"60/40", atl_flt:10, mco_fare:105, mco_mix:"90/10", mco_flt:12, dfw_fare:190, dfw_mix:"50/50", dfw_flt:8, md:3, oc:4, profit:9730, cum:220036 },
+    r2:{ atl_fare:180, atl_mix:"90/10", atl_flt:13, mco_fare:110, mco_mix:"90/10", mco_flt:10, dfw_fare:210, dfw_mix:"75/25", dfw_flt:7, md:3, oc:2, profit:145160, cum:365196 } },
+  { name:"Worldwide Airways", strategy:"Balanced Carrier", corrected:false, isNew:false,
+    r1:{ atl_fare:200, atl_mix:"75/25", atl_flt:12, mco_fare:150, mco_mix:"90/10", mco_flt:9, dfw_fare:275, dfw_mix:"40/60", dfw_flt:9, md:2, oc:4, profit:100596, cum:100596 },
+    r2:{ atl_fare:205, atl_mix:"75/25", atl_flt:14, mco_fare:120, mco_mix:"90/10", mco_flt:7, dfw_fare:225, dfw_mix:"50/50", dfw_flt:9, md:3, oc:4, profit:105983, cum:206579 } },
+  { name:"起飞", strategy:"Cargo-Focused", corrected:true, isNew:false,
+    r1:{ atl_fare:193, atl_mix:"75/25", atl_flt:10, mco_fare:115, mco_mix:"90/10", mco_flt:3, dfw_fare:230, dfw_mix:"60/40", dfw_flt:17, md:2, oc:2, profit:103176, cum:319410 },
+    r2:{ atl_fare:185, atl_mix:"75/25", atl_flt:17, mco_fare:115, mco_mix:"90/10", mco_flt:3, dfw_fare:210, dfw_mix:"50/50", dfw_flt:10, md:2, oc:2, profit:133515, cum:452925 } },
+];
+
+// ── HELPERS  ───────────────────────────────────────────────────────────────────
+function dollar(n) {
+  if (n === null || n === undefined) return '—';
+  var abs = Math.abs(Math.round(n));
+  var str = '$' + abs.toLocaleString();
+  return n < 0 ? '-' + str : str;
+}
+
+function dots(n) {
+  if (n === null || n === undefined) return '—';
+  var h = '<div class="dot-row">';
+  for (var i = 0; i < 4; i++) h += '<div class="dot ' + (i < n ? 'dot-on' : 'dot-off') + '"></div>';
+  return h + '</div>';
+}
+
+function mixBadge(m) {
+  if (!m) return '—';
+  var cargo = parseInt(m.split('/')[1]);
+  var cls = cargo >= 60 ? 'cargo-heavy' : cargo >= 40 ? 'cargo-mid' : '';
+  return '<span class="mix-badge ' + cls + '">' + m + '</span>';
+}
+
+function stratClass(s) {
+  if (s.indexOf('Cost') >= 0)    return 'strat-cost';
+  if (s.indexOf('Premium') >= 0) return 'strat-premium';
+  if (s.indexOf('Cargo') >= 0)   return 'strat-cargo';
+  return 'strat-balanced';
+}
+
+function stratShort(s) {
+  return s.replace('Balanced Carrier','Balanced').replace('Premium Service','Premium').replace('Cargo-Focused','Cargo-Focused').replace('Cost Leader','Cost Leader');
+}
+
+// ── POPULATE DROPDOWN ────────────────────────────────────────────────────────
+var sel = document.getElementById('airlineSelect');
+DATA.slice().sort(function(a,b){ return a.name.localeCompare(b.name); }).forEach(function(d) {
+  var opt = document.createElement('option');
+  opt.value = d.name;
+  opt.textContent = d.name + (d.corrected ? ' ✓' : '') + (d.isNew ? ' (R2 debut)' : '');
+  sel.appendChild(opt);
+});
+
+// ── ROUND METADATA ───────────────────────────────────────────────────────────
+var ROUNDS = [
+  { key:'r1', num:'1', label:'Baseline Launch',           scenario:'No external scenario — baseline market conditions.' },
+  { key:'r2', num:'2', label:'ATL Business Rebound',      scenario:'ATL demand elevated, price sensitivity reduced. Business travel surge.' },
+  { key:'r3', num:'3', label:'DFW E-Commerce Cargo Surge',scenario:'DFW cargo demand +35%, yield $520→$650/unit. MCO pax dips slightly.' },
+];
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function showAirline() {
+  var name = document.getElementById('airlineSelect').value;
+  var panel = document.getElementById('airlinePanel');
+  var empty = document.getElementById('emptyState');
+
+  if (!name) { panel.style.display='none'; empty.style.display='block'; document.getElementById('stratBadge').innerHTML=''; return; }
+
+  var airline = null;
+  for (var i = 0; i < DATA.length; i++) { if (DATA[i].name === name) { airline = DATA[i]; break; } }
+  if (!airline) return;
+
+  document.getElementById('stratBadge').innerHTML = '<span class="strat-badge ' + stratClass(airline.strategy) + '">' + stratShort(airline.strategy) + '</span>' + (airline.corrected ? ' <span style="font-family:Arial;font-size:11px;color:#1a5a1a;font-weight:700;">✓ Corrected</span>' : '');
+
+  empty.style.display = 'none';
+  panel.style.display = 'block';
+
+  // Summary cards
+  var r1data = airline.r1;
+  var r2data = airline.r2;
+  var r1profit = (r1data && !r1data.noSub) ? r1data.profit : null;
+  var r1cum    = (r1data && !r1data.noSub) ? r1data.cum : 0;
+  var r2profit = (r2data && !r2data.noSub) ? r2data.profit : 0;
+  var cumTotal = r2data ? r2data.cum : r1cum;
+
+  var r1label = r1profit === null ? 'Did not participate' : (r1profit >= 0 ? 'pos' : 'neg');
+  var r1display = r1profit === null ? '—' : dollar(r1profit);
+
+  document.getElementById('summaryCards').innerHTML =
+    '<div class="summary-card"><div class="s-label">R1 Profit</div><div class="s-value ' + (r1profit !== null ? (r1profit >= 0 ? 'pos' : 'neg') : '') + '">' + r1display + '</div><div class="s-sub">Round 1 result</div></div>' +
+    '<div class="summary-card"><div class="s-label">R1 Cumulative</div><div class="s-value">' + dollar(r1cum) + '</div><div class="s-sub">after corrections</div></div>' +
+    '<div class="summary-card"><div class="s-label">R2 Profit</div><div class="s-value ' + (r2profit >= 0 ? 'pos' : 'neg') + '">' + dollar(r2profit) + '</div><div class="s-sub">Round 2 result</div></div>' +
+    '<div class="summary-card"><div class="s-label">Cumulative Total</div><div class="s-value pos">' + dollar(cumTotal) + '</div><div class="s-sub">after 2 rounds</div></div>' +
+    '<div class="summary-card"><div class="s-label">Strategy</div><div class="s-value" style="font-size:15px;margin-top:4px">' + stratShort(airline.strategy) + '</div><div class="s-sub">' + (airline.corrected ? 'corrected at registration' : 'locked at registration') + '</div></div>';
+
+  // Decision table
+  var tbody = document.getElementById('decisionBody');
+  tbody.innerHTML = '';
+
+  ROUNDS.forEach(function(rnd) {
+    var d = airline[rnd.key];
+    var tr = document.createElement('tr');
+
+    if (!d) {
+      // Round not yet played or not in dataset
+      tr.innerHTML =
+        '<td class="round-cell"><div class="round-num">Round ' + rnd.num + '</div><div class="round-label">' + rnd.label + '</div></td>' +
+        '<td colspan="13" class="no-sub">Did not participate in Round ' + rnd.num + '</td>';
+    } else if (d.noSub) {
+      tr.innerHTML =
+        '<td class="round-cell"><div class="round-num">Round ' + rnd.num + '</div><div class="round-label">' + rnd.label + '</div></td>' +
+        '<td colspan="11" class="no-sub">No submission this round</td>' +
+        '<td class="profit-pos">$0</td>' +
+        '<td class="profit-pos">' + dollar(d.cum) + '</td>';
+    } else {
+      var profitCls = d.profit >= 0 ? 'profit-pos' : 'profit-neg';
+      tr.innerHTML =
+        '<td class="round-cell"><div class="round-num">Round ' + rnd.num + '</div><div class="round-label">' + rnd.label + '</div></td>' +
+        '<td class="fare">$' + d.atl_fare + '</td>' +
+        '<td>' + mixBadge(d.atl_mix) + '</td>' +
+        '<td class="flts">' + d.atl_flt + '</td>' +
+        '<td class="fare">$' + d.mco_fare + '</td>' +
+        '<td>' + mixBadge(d.mco_mix) + '</td>' +
+        '<td class="flts">' + d.mco_flt + '</td>' +
+        '<td class="fare">$' + d.dfw_fare + '</td>' +
+        '<td>' + mixBadge(d.dfw_mix) + '</td>' +
+        '<td class="flts">' + d.dfw_flt + '</td>' +
+        '<td>' + dots(d.md) + '</td>' +
+        '<td>' + dots(d.oc) + '</td>' +
+        '<td class="' + profitCls + '">' + dollar(d.profit) + '</td>' +
+        '<td class="profit-pos">' + dollar(d.cum) + '</td>';
+    }
+    tbody.appendChild(tr);
+
+    // Scenario note row
+    var noteRow = document.createElement('tr');
+    noteRow.style.cssText = 'background:#f9f7f3;';
+    noteRow.innerHTML = '<td colspan="14" style="padding:6px 14px 8px 14px;font-family:Arial;font-size:11px;color:#667799;border-bottom:2px solid #e0d8c8;">' +
+      '<strong style="color:#334466">Round ' + rnd.num + ' scenario:</strong> ' + rnd.scenario + '</td>';
+    tbody.appendChild(noteRow);
+  });
+}
+</script>
+</body>
+</html>
